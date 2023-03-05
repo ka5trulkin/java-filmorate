@@ -5,8 +5,6 @@ import lombok.NonNull;
 import java.time.LocalDate;
 
 @lombok.Data
-@lombok.Builder
-@lombok.AllArgsConstructor
 public class User {
     private int id;
     @NonNull
@@ -16,4 +14,14 @@ public class User {
     private String name;
     @NonNull
     private LocalDate birthday;
+
+    public User(@NonNull String email, @NonNull String login, String name, @NonNull LocalDate birthday) {
+        if (name == null) {
+            name = login;
+        }
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
 }

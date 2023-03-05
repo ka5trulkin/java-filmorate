@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @lombok.AllArgsConstructor
 @lombok.NonNull
 public class Film {
-    private final int id;
+    private int id;
     private String name;
     private String description;
     private LocalDate releaseDate;

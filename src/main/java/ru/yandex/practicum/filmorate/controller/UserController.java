@@ -20,9 +20,6 @@ public class UserController {
     private int idCounter;
 
     private boolean isValid(User user) {
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
         return user.getEmail().isBlank()
                 || !user.getEmail().contains("@")
                 || user.getLogin().isBlank()
@@ -30,34 +27,36 @@ public class UserController {
                 || user.getBirthday().isAfter(LocalDate.now());
     }
 
+    private void validationError(User user) {
+        log.warn("Переданы некорректные данные о пользователе: " + user);
+        throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@RequestBody User user) {
-        System.out.println("!!!!!!!!!!!! Пользователь для обновления: " + user);
         System.out.println(user);
         if (userDatabase.containsKey(user.getId())) {
             log.warn("Ошибка добавления. Пользователь с " + user.getId() + " ID уже существует.");
             throw new ValidationException("Пользователь с " + user.getId() + " ID уже существует.");
         }
         if (isValid(user)) {
-            log.warn("Переданы некорректные данные о пользователе: " + user);
-            throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
+            validationError(user);
         }
         user.setId(++idCounter);
-        log.info("Пользователь " + user.getId() + " ID добавлен.");
         userDatabase.put(user.getId(), user);
+        log.info("Пользователь " + user.getId() + " ID добавлен.");
         return userDatabase.get(user.getId());
     }
 
     @PutMapping
     public User update(@RequestBody User user) {
         if (isValid(user)) {
-            log.warn("Переданы некорректные данные о пользователе: " + user);
-            throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
+            validationError(user);
         }
         if (!userDatabase.containsKey(user.getId())) {
             log.warn("Ошибка Обновления. Пользователя с " + user.getId() + " ID не существует.");
-            throw new ValidationException("Пользователь с " + user.getId() + " ID не существует.");
+            throw new ValidationException("Пользователя с " + user.getId() + " ID не существует.");
         }
         log.info("Пользователь " + user.getId() + " ID обновлен.");
         userDatabase.put(user.getId(), user);

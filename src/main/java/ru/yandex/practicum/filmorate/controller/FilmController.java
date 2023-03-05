@@ -16,6 +16,7 @@ import java.util.Map;
 @Slf4j
 public class FilmController {
     private final Map<Integer, Film> filmDatabase = new HashMap<>();
+    private int idCounter;
 
     private boolean isValid(Film film) {
         return film.getName().isBlank()
@@ -34,8 +35,10 @@ public class FilmController {
             log.warn("Переданы некорректные данные о фильме: " + film);
             throw new ValidationException("Данные о фильме не соответствует установленным критериям.");
         }
+        film.setId(++idCounter);
+        filmDatabase.put(film.getId(), film);
         log.info("Фильм " + film.getId() + " ID добавлен.");
-        return filmDatabase.put(film.getId(), film);
+        return filmDatabase.get(film.getId());
     }
 
     @PutMapping
@@ -44,8 +47,13 @@ public class FilmController {
             log.warn("Переданы некорректные данные о фильме: " + film);
             throw new ValidationException("Данные о фильме не соответствует установленным критериям.");
         }
+        if (!filmDatabase.containsKey(film.getId())) {
+            log.warn("Ошибка обновления. Фильма с " + film.getId() + " ID не существует.");
+            throw new ValidationException("Фильма с " + film.getId() + " ID не существует.");
+        }
+        filmDatabase.put(film.getId(), film);
         log.info("Фильм " + film.getId() + " ID обновлен.");
-        return filmDatabase.put(film.getId(), film);
+        return filmDatabase.get(film.getId());
     }
 
     @GetMapping
