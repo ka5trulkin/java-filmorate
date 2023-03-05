@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,8 +22,13 @@ public class FilmController {
     private boolean isValid(Film film) {
         return film.getName().isBlank()
                 || film.getDescription().length() > 200
-                || film.getReleaseDate().isBefore(LocalDate.of(1895, 12 , 28))
-                || film.getDuration().isNegative();
+                || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))
+                || film.getDuration() <= 0;
+    }
+
+    private void validationError(Film film) {
+        log.warn("Переданы некорректные данные о фильме: " + film);
+        throw new ValidationException("Данные о фильме не соответствует установленным критериям.");
     }
 
     @PostMapping
@@ -32,8 +38,7 @@ public class FilmController {
             throw new ValidationException("Фильм с " + film.getId() + " ID уже существует.");
         }
         if (isValid(film)) {
-            log.warn("Переданы некорректные данные о фильме: " + film);
-            throw new ValidationException("Данные о фильме не соответствует установленным критериям.");
+            validationError(film);
         }
         film.setId(++idCounter);
         filmDatabase.put(film.getId(), film);
@@ -44,8 +49,7 @@ public class FilmController {
     @PutMapping
     public Film update(@RequestBody Film film) {
         if (isValid(film)) {
-            log.warn("Переданы некорректные данные о фильме: " + film);
-            throw new ValidationException("Данные о фильме не соответствует установленным критериям.");
+            validationError(film);
         }
         if (!filmDatabase.containsKey(film.getId())) {
             log.warn("Ошибка обновления. Фильма с " + film.getId() + " ID не существует.");
