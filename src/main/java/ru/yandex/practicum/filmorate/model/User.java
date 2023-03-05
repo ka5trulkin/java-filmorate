@@ -8,8 +8,7 @@ import java.time.LocalDate;
 @lombok.Builder
 @lombok.AllArgsConstructor
 public class User {
-    @NonNull
-    private final int id;
+    private int id;
     @NonNull
     private String email;
     @NonNull

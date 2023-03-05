@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Slf4j
 public class UserController {
     private final Map<Integer, User> userDatabase = new HashMap<>();
+    private int idCounter;
 
     private boolean isValid(User user) {
         if (user.getName().isBlank()) {
@@ -24,13 +26,16 @@ public class UserController {
         return user.getEmail().isBlank()
                 || !user.getEmail().contains("@")
                 || user.getLogin().isBlank()
-                || !user.getLogin().contains(" ")
+                || user.getLogin().contains(" ")
                 || user.getBirthday().isAfter(LocalDate.now());
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User add(@RequestBody User user) {
-        if (!userDatabase.containsKey(user.getId())) {
+        System.out.println("!!!!!!!!!!!! Пользователь для обновления: " + user);
+        System.out.println(user);
+        if (userDatabase.containsKey(user.getId())) {
             log.warn("Ошибка добавления. Пользователь с " + user.getId() + " ID уже существует.");
             throw new ValidationException("Пользователь с " + user.getId() + " ID уже существует.");
         }
@@ -38,8 +43,10 @@ public class UserController {
             log.warn("Переданы некорректные данные о пользователе: " + user);
             throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
         }
+        user.setId(++idCounter);
         log.info("Пользователь " + user.getId() + " ID добавлен.");
-        return userDatabase.put(user.getId(), user);
+        userDatabase.put(user.getId(), user);
+        return userDatabase.get(user.getId());
     }
 
     @PutMapping
@@ -48,8 +55,13 @@ public class UserController {
             log.warn("Переданы некорректные данные о пользователе: " + user);
             throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
         }
+        if (!userDatabase.containsKey(user.getId())) {
+            log.warn("Ошибка Обновления. Пользователя с " + user.getId() + " ID не существует.");
+            throw new ValidationException("Пользователь с " + user.getId() + " ID не существует.");
+        }
         log.info("Пользователь " + user.getId() + " ID обновлен.");
-        return userDatabase.put(user.getId(), user);
+        userDatabase.put(user.getId(), user);
+        return userDatabase.get(user.getId());
     }
 
     @GetMapping
