@@ -1,23 +1,25 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeption.DataUpdateException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final Map<Integer, User> userDatabase = new HashMap<>();
-    private int idCounter;
+    @Autowired
+    UserRepository repository;
 
     private boolean isValid(User user) {
         return user.getEmail().isBlank()
@@ -36,17 +38,15 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@RequestBody User user) {
         System.out.println(user);
-        if (userDatabase.containsKey(user.getId())) {
-            log.warn("Ошибка добавления. Пользователь с " + user.getId() + " ID уже существует.");
-            throw new ValidationException("Пользователь с " + user.getId() + " ID уже существует.");
+        if (repository.isContains(user)) {
+            log.warn("Ошибка добавления. Пользователь с ID: " + user.getId() + " уже существует.");
+            throw new ValidationException("Пользователь с ID: " + user.getId() + " уже существует.");
         }
         if (isValid(user)) {
             validationError(user);
         }
-        user.setId(++idCounter);
-        userDatabase.put(user.getId(), user);
-        log.info("Пользователь " + user.getId() + " ID добавлен.");
-        return userDatabase.get(user.getId());
+        log.info("Пользователь " + user.getName() + " добавлен.");
+        return repository.addNewUser(user);
     }
 
     @PutMapping
@@ -54,18 +54,29 @@ public class UserController {
         if (isValid(user)) {
             validationError(user);
         }
-        if (!userDatabase.containsKey(user.getId())) {
-            log.warn("Ошибка Обновления. Пользователя с " + user.getId() + " ID не существует.");
-            throw new ValidationException("Пользователя с " + user.getId() + " ID не существует.");
+        if (!repository.isContains(user)) {
+            log.warn("Ошибка Обновления. Пользователя с ID: " + user.getId() + " не существует.");
+            throw new DataUpdateException("Пользователя с ID: " + user.getId() + " не существует.");
         }
-        log.info("Пользователь " + user.getId() + " ID обновлен.");
-        userDatabase.put(user.getId(), user);
-        return userDatabase.get(user.getId());
+        log.info("Пользователь с ID: " + user.getId() + " обновлен.");
+        return repository.updateUser(user);
     }
 
     @GetMapping
     public List<User> getUserList() {
         log.info("Получение списка пользователей.");
-        return new ArrayList<>(userDatabase.values());
+        return repository.getUserList();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public String validationException(ValidationException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(DataUpdateException.class)
+    public String updateException(DataUpdateException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 }

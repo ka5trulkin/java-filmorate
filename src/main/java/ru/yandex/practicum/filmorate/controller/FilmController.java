@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ public class FilmController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Film add(@RequestBody Film film) {
         if (filmDatabase.containsKey(film.getId())) {
             log.warn("Ошибка добавления. Фильм с " + film.getId() + " ID уже существует.");
@@ -42,7 +43,7 @@ public class FilmController {
         }
         film.setId(++idCounter);
         filmDatabase.put(film.getId(), film);
-        log.info("Фильм " + film.getId() + " ID добавлен.");
+        log.info("Фильм " + film.getName() + " добавлен.");
         return filmDatabase.get(film.getId());
     }
 
