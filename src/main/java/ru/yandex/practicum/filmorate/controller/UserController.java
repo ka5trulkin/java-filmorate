@@ -37,7 +37,6 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@RequestBody User user) {
-        System.out.println(user);
         if (repository.isContains(user)) {
             log.warn("Ошибка добавления. Пользователь с ID: " + user.getId() + " уже существует.");
             throw new ValidationException("Пользователь с ID: " + user.getId() + " уже существует.");

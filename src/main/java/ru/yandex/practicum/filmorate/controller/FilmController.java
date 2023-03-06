@@ -1,23 +1,26 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeption.DataUpdateException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    private final Map<Integer, Film> filmDatabase = new HashMap<>();
-    private int idCounter;
+    @Autowired
+    FilmRepository repository;
 
     private boolean isValid(Film film) {
         return film.getName().isBlank()
@@ -34,17 +37,15 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@RequestBody Film film) {
-        if (filmDatabase.containsKey(film.getId())) {
-            log.warn("Ошибка добавления. Фильм с " + film.getId() + " ID уже существует.");
-            throw new ValidationException("Фильм с " + film.getId() + " ID уже существует.");
+        if (repository.isContains(film)) {
+            log.warn("Ошибка добавления. Фильм с ID: " + film.getId() + " уже существует.");
+            throw new ValidationException("Фильм с ID: " + film.getId() + " уже существует.");
         }
         if (isValid(film)) {
             validationError(film);
         }
-        film.setId(++idCounter);
-        filmDatabase.put(film.getId(), film);
         log.info("Фильм " + film.getName() + " добавлен.");
-        return filmDatabase.get(film.getId());
+        return repository.addNewFilm(film);
     }
 
     @PutMapping
@@ -52,18 +53,29 @@ public class FilmController {
         if (isValid(film)) {
             validationError(film);
         }
-        if (!filmDatabase.containsKey(film.getId())) {
-            log.warn("Ошибка обновления. Фильма с " + film.getId() + " ID не существует.");
-            throw new ValidationException("Фильма с " + film.getId() + " ID не существует.");
+        if (!repository.isContains(film)) {
+            log.warn("Ошибка обновления. Фильма с ID: " + film.getId() + " не существует.");
+            throw new DataUpdateException("Фильма с ID: " + film.getId() + " не существует.");
         }
-        filmDatabase.put(film.getId(), film);
-        log.info("Фильм " + film.getId() + " ID обновлен.");
-        return filmDatabase.get(film.getId());
+        log.info("Фильм с ID: " + film.getId() + " обновлен.");
+        return repository.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getFilmList() {
         log.info("Получение списка фильмов.");
-        return new ArrayList<>(filmDatabase.values());
+        return new ArrayList<>(repository.getFilmList());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public String validationException(ValidationException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(DataUpdateException.class)
+    public String updateException(DataUpdateException exception) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 }

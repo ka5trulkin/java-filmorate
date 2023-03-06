@@ -17,7 +17,7 @@ public class User {
     private LocalDate birthday;
 
     public User(int id, @NonNull String email, @NonNull String login, String name, @NonNull LocalDate birthday) {
-        if ((name == null) || (name.equals(""))) {
+        if ((name == null) || (name.isBlank())) {
             name = login;
         }
         this.id = id;
