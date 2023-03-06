@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User add(@RequestBody User user) {
+    public User add(@Valid @RequestBody User user) {
         if (repository.isContains(user)) {
             log.warn("Ошибка добавления. Пользователь с ID: " + user.getId() + " уже существует.");
             throw new ValidationException("Пользователь с ID: " + user.getId() + " уже существует.");
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         if (isValid(user)) {
             validationError(user);
         }

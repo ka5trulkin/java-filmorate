@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class FilmController {
         return film.getName().isBlank()
                 || film.getDescription().length() > 200
                 || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))
+                || film.getReleaseDate().isAfter(LocalDate.now())
                 || film.getDuration() <= 0;
     }
 
@@ -36,7 +38,7 @@ public class FilmController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film add(@RequestBody Film film) {
+    public Film add(@Valid @RequestBody Film film) {
         if (repository.isContains(film)) {
             log.warn("Ошибка добавления. Фильм с ID: " + film.getId() + " уже существует.");
             throw new ValidationException("Фильм с ID: " + film.getId() + " уже существует.");
@@ -49,7 +51,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         if (isValid(film)) {
             validationError(film);
         }

@@ -60,17 +60,24 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldBeCreateException() throws Exception {
+    void shouldBeCreateExceptionWithEmptyRequest() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validUser)));
+                        .content(objectMapper.writeValueAsString(null)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void shouldBeCreateExceptionWithExistentId() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
         validUser.setId(1);
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().is4xxClientError());
     }
-
 
     @Test
     void shouldBeLoginException() throws Exception {
@@ -133,7 +140,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldBeUpdateExceptionNonexistentId() throws Exception {
+    void shouldBeUpdateExceptionWithNonexistentId() throws Exception {
         validUser.setId(9999);
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -156,7 +163,7 @@ class UserControllerTest {
     }
 
     @Test
-    void nameMustBeAssignedBasedOnData() throws Exception {
+    void mustBeAssignedNameBasedOnData() throws Exception {
         validUser.setName("");
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)

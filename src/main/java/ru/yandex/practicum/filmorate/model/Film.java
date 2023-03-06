@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import java.time.LocalDate;
 
 @lombok.Data
-@lombok.Builder
+@lombok.Builder(toBuilder = true)
 @lombok.AllArgsConstructor
 @lombok.NonNull
 public class Film {
