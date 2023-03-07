@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     private boolean isValid(User user) {
         return user.getEmail().isBlank()
@@ -68,7 +68,7 @@ public class UserController {
         return repository.getUserList();
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ValidationException.class)
     public String validationException(ValidationException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
