@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler
+    @ExceptionHandler(RequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError dataAlreadyExist(RequestException exception) {
         log.error(exception.getMessage(), exception);
         return new ResponseError(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoDataException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseError noData(NoDataException exception) {
         log.error(exception.getMessage(), exception);
         return new ResponseError(exception.getMessage(), HttpStatus.NOT_FOUND);
