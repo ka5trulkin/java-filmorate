@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 //@AllArgsConstructor
 @NonNull
-public class Film {
+public class Film implements IdHolder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
