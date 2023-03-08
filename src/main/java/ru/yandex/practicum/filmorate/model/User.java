@@ -1,34 +1,30 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
+import ru.yandex.practicum.filmorate.validation.NotContainSpace;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Entity
 @Data
+@AllArgsConstructor
 @Builder(toBuilder = true)
-public class User {
+public class User implements IdHolder{
+    @Id
     private int id;
     @Email
     private String email;
-    @NonNull
+    @NotBlank
+    @NotContainSpace
     private String login;
     private String name;
-    @NonNull
+    @PastOrPresent
     private LocalDate birthday;
-
-    public User(int id, @NonNull String email, @NonNull String login, String name, @NonNull LocalDate birthday) {
-        if ((name == null) || (name.isBlank())) {
-            name = login;
-        }
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-    }
 }

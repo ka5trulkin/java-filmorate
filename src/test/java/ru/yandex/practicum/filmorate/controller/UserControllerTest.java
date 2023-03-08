@@ -163,7 +163,7 @@ class UserControllerTest {
     }
 
     @Test
-    void mustBeAssignedNameBasedOnData() throws Exception {
+    void mustBeAssignedNameBasedOnLogin() throws Exception {
         validUser.setName("");
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)

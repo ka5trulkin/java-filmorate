@@ -11,10 +11,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = AfterFirstFilmValidator.class)
+@Constraint(validatedBy = NotContainSpaceValidator.class)
 @Documented
-public @interface AfterFirstFilm {
-    String message() default "{Неверная дата фильма}";
+public @interface NotContainSpace {
+    String message() default "{Данные не должны содержать пробелы}";
 
     Class<?>[] groups() default {};
 

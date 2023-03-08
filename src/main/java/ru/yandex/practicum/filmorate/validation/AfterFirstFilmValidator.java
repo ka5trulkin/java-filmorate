@@ -4,7 +4,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
-
 public class AfterFirstFilmValidator implements ConstraintValidator<AfterFirstFilm, LocalDate> {
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext context) {

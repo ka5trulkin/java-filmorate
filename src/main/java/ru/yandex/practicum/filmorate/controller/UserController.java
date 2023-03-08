@@ -1,82 +1,45 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeption.NoDataException;
-import ru.yandex.practicum.filmorate.exeption.RequestException;
+import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController {
-    @Autowired
-    private UserRepository repository;
-
-    private boolean isValid(User user) {
-        return user.getEmail().isBlank()
-                || !user.getEmail().contains("@")
-                || user.getLogin().isBlank()
-                || user.getLogin().contains(" ")
-                || user.getBirthday().isAfter(LocalDate.now());
+public class UserController extends CustomController {
+    protected UserController(UserRepository repository) {
+        super(repository);
     }
 
-    private void validationError(User user) {
-        log.warn("Переданы некорректные данные о пользователе: " + user);
-        throw new RequestException("Данные о пользователе не соответствует установленным критериям.");
+    private void checkName(User user) {
+        if ((user.getName() == null) || (user.getName().isBlank())) {
+            user.setName(user.getLogin());
+        }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User add(@Valid @RequestBody User user) {
-        if (repository.isContains(user)) {
-            log.warn("Ошибка добавления. Пользователь с ID: " + user.getId() + " уже существует.");
-            throw new RequestException("Пользователь с ID: " + user.getId() + " уже существует.");
-        }
-        if (isValid(user)) {
-            validationError(user);
-        }
-        log.info("Пользователь " + user.getName() + " добавлен.");
-        return repository.addNewUser(user);
+    public IdHolder add(@Valid @RequestBody User user) {
+        checkName(user);
+        return repository.add(user);
     }
 
     @PutMapping
-    public User update(@Valid @RequestBody User user) {
-        if (isValid(user)) {
-            validationError(user);
-        }
-        if (!repository.isContains(user)) {
-            log.warn("Ошибка Обновления. Пользователя с ID: " + user.getId() + " не существует.");
-            throw new NoDataException("Пользователя с ID: " + user.getId() + " не существует.");
-        }
-        log.info("Пользователь с ID: " + user.getId() + " обновлен.");
-        return repository.updateUser(user);
+    public IdHolder update(@Valid @RequestBody User user) {
+        checkName(user);
+        return repository.update(user);
     }
 
     @GetMapping
-    public List<User> getUserList() {
-        log.info("Получение списка пользователей.");
-        return repository.getUserList();
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RequestException.class)
-    public String validationException(RequestException exception) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoDataException.class)
-    public String updateException(NoDataException exception) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(exception.getMessage());
+    public List<IdHolder> getUserList() {
+        log.info("Получение списка пользователей");
+        return repository.getList();
     }
 }
