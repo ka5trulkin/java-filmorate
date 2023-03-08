@@ -11,9 +11,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = DateFirstFilmValidator.class)
+@Constraint(validatedBy = AfterFirstFilmValidator.class)
 @Documented
-public @interface DateFirstFilm {
+public @interface AfterFirstFilm {
 
     String message() default "{Неверная дата фильма}";
 

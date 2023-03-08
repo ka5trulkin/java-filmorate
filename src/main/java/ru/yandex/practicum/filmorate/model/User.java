@@ -1,12 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
+import lombok.Data;
 import lombok.NonNull;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
 
-@lombok.Data
-@lombok.Builder(toBuilder = true)
+@Entity
+@Data
+@Builder(toBuilder = true)
 public class User {
     private int id;
     @Email

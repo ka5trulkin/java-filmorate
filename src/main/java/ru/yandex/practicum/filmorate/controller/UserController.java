@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeption.DataUpdateException;
-import ru.yandex.practicum.filmorate.exeption.ValidationException;
+import ru.yandex.practicum.filmorate.exeption.NoDataException;
+import ru.yandex.practicum.filmorate.exeption.RequestException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
@@ -32,7 +32,7 @@ public class UserController {
 
     private void validationError(User user) {
         log.warn("Переданы некорректные данные о пользователе: " + user);
-        throw new ValidationException("Данные о пользователе не соответствует установленным критериям.");
+        throw new RequestException("Данные о пользователе не соответствует установленным критериям.");
     }
 
     @PostMapping
@@ -40,7 +40,7 @@ public class UserController {
     public User add(@Valid @RequestBody User user) {
         if (repository.isContains(user)) {
             log.warn("Ошибка добавления. Пользователь с ID: " + user.getId() + " уже существует.");
-            throw new ValidationException("Пользователь с ID: " + user.getId() + " уже существует.");
+            throw new RequestException("Пользователь с ID: " + user.getId() + " уже существует.");
         }
         if (isValid(user)) {
             validationError(user);
@@ -56,7 +56,7 @@ public class UserController {
         }
         if (!repository.isContains(user)) {
             log.warn("Ошибка Обновления. Пользователя с ID: " + user.getId() + " не существует.");
-            throw new DataUpdateException("Пользователя с ID: " + user.getId() + " не существует.");
+            throw new NoDataException("Пользователя с ID: " + user.getId() + " не существует.");
         }
         log.info("Пользователь с ID: " + user.getId() + " обновлен.");
         return repository.updateUser(user);
@@ -69,14 +69,14 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ValidationException.class)
-    public String validationException(ValidationException exception) throws JsonProcessingException {
+    @ExceptionHandler(RequestException.class)
+    public String validationException(RequestException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(DataUpdateException.class)
-    public String updateException(DataUpdateException exception) throws JsonProcessingException {
+    @ExceptionHandler(NoDataException.class)
+    public String updateException(NoDataException exception) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(exception.getMessage());
     }
 }

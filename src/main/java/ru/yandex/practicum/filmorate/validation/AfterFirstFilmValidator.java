@@ -5,10 +5,10 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 
-public class DateFirstFilmValidator implements ConstraintValidator<DateFirstFilm, LocalDate> {
+public class AfterFirstFilmValidator implements ConstraintValidator<AfterFirstFilm, LocalDate> {
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext context) {
-        final LocalDate dateFirstFilm = LocalDate.of(1895, 12, 28);
+        final LocalDate dateFirstFilm = LocalDate.of(1895, 12, 27);
         return localDate.isAfter(dateFirstFilm);
     }
 }
