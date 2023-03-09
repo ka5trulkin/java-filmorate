@@ -12,15 +12,15 @@ import java.util.Map;
 import static ru.yandex.practicum.filmorate.exeption.ExceptionMessage.OBJECT_ALREADY_EXISTS;
 import static ru.yandex.practicum.filmorate.exeption.ExceptionMessage.OBJECT_NOT_FOUND;
 
-public abstract class AbstractRepository {
-    protected final Map<Integer, IdHolder> data = new HashMap<>();
+public abstract class AbstractRepository<T extends IdHolder> {
+    protected final Map<Integer, T> data = new HashMap<>();
     protected int idCounter;
 
-    private boolean isContain(IdHolder object) {
+    private boolean isContain(T object) {
         return data.containsKey(object.getId());
     }
 
-    public IdHolder add(IdHolder object) {
+    public T add(T object) {
         if (isContain(object)) {
             throw new RequestException(OBJECT_ALREADY_EXISTS.getMessage());
         }
@@ -29,7 +29,7 @@ public abstract class AbstractRepository {
         return data.get(object.getId());
     }
 
-    public IdHolder update(IdHolder object) {
+    public T update(T object) {
         if (!isContain(object)) {
             throw new NoDataException(OBJECT_NOT_FOUND.getMessage());
         }
@@ -37,7 +37,7 @@ public abstract class AbstractRepository {
         return data.get(object.getId());
     }
 
-    public List<IdHolder> getList() {
+    public List<T> getList() {
         return new ArrayList<>(data.values());
     }
 

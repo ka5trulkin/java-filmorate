@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 import javax.validation.Valid;
@@ -23,21 +22,21 @@ public class FilmController extends AbstractController<Film> {
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public IdHolder add(@Valid @RequestBody Film film) {
+    public Film add(@Valid @RequestBody Film film) {
         log.info("Запрос на добавление фильма. Name: {}", film.getId());
         return super.add(film);
     }
 
     @Override
     @PutMapping
-    public IdHolder update(@Valid @RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         log.info("Запрос на обновление фильма. Name: {}", film.getId());
         return super.update(film);
     }
 
     @Override
     @GetMapping
-    public List<IdHolder> getList() {
+    public List<Film> getList() {
         log.info("Получение списка фильмов");
         return super.getList();
     }

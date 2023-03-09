@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractController <T extends IdHolder> {
-    protected final AbstractRepository repository;
+    protected final AbstractRepository<T> repository;
 
-    protected AbstractController(AbstractRepository repository) {
+    protected AbstractController(AbstractRepository<T> repository) {
         this.repository = repository;
     }
 
-    protected IdHolder add(T object) {
+    protected T add(T object) {
         return repository.add(object);
     }
 
-    protected IdHolder update(T object) {
+    protected T update(T object) {
         return repository.update(object);
     }
 
-    protected List<IdHolder> getList() {
+    protected List<T> getList() {
         return new ArrayList<>(repository.getList());
     }
 }

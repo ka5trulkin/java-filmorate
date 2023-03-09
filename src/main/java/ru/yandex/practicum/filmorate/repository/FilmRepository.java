@@ -2,27 +2,27 @@ package ru.yandex.practicum.filmorate.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.model.IdHolder;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 
 @Slf4j
 @Repository
-public class FilmRepository extends AbstractRepository {
+public class FilmRepository extends AbstractRepository<Film> {
     @Override
-    public IdHolder add(IdHolder object) {
-        log.info("Фильм ID:{} добавлен", object.getId());
-        return super.add(object);
+    public Film add(Film film) {
+        log.info("Фильм ID:{} добавлен", film.getId());
+        return super.add(film);
     }
 
     @Override
-    public IdHolder update(IdHolder object) {
-        log.info("Фильм ID:{} обновлен", object.getId());
-        return super.update(object);
+    public Film update(Film film) {
+        log.info("Фильм ID:{} обновлен", film.getId());
+        return super.update(film);
     }
 
     @Override
-    public List<IdHolder> getList() {
+    public List<Film> getList() {
         log.info("Получение списков фильмов");
         return super.getList();
     }

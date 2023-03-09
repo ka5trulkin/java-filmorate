@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
@@ -22,19 +21,19 @@ public class UserController extends AbstractController<User> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public IdHolder add(@Valid @RequestBody User user) {
+    public User add(@Valid @RequestBody User user) {
         log.info("Запрос на добавление пользователя. Login: {}", user.getLogin());
         return super.add(user);
     }
 
     @PutMapping
-    public IdHolder update(@Valid @RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         log.info("Запрос на обновление пользователя. Login: {}", user.getLogin());
         return super.update(user);
     }
 
     @GetMapping
-    public List<IdHolder> getUserList() {
+    public List<User> getUserList() {
         log.info("Получение списка пользователей");
         return super.getList();
     }
