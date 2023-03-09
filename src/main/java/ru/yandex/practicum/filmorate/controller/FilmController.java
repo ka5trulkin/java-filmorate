@@ -14,12 +14,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController extends AbstractController {
+public class FilmController extends AbstractController<Film> {
     @Autowired
     private FilmController(FilmRepository repository) {
         super(repository);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody Film film) {
@@ -27,12 +28,14 @@ public class FilmController extends AbstractController {
         return super.add(film);
     }
 
+    @Override
     @PutMapping
     public IdHolder update(@Valid @RequestBody Film film) {
         log.info("Запрос на обновление фильма. Name: {}", film.getId());
         return super.update(film);
     }
 
+    @Override
     @GetMapping
     public List<IdHolder> getList() {
         log.info("Получение списка фильмов");

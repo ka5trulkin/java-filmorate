@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController extends AbstractController {
+public class UserController extends AbstractController<User> {
     @Autowired
     private UserController(UserRepository repository) {
         super(repository);
