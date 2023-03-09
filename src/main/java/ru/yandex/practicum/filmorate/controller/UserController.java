@@ -23,11 +23,13 @@ public class UserController extends CustomController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody User user) {
+        log.info("Запрос на добавление пользователя. Login: {}", user.getLogin());
         return repository.add(user);
     }
 
     @PutMapping
     public IdHolder update(@Valid @RequestBody User user) {
+        log.info("Запрос на обновление пользователя. Login: {}", user.getLogin());
         return repository.update(user);
     }
 

@@ -24,11 +24,13 @@ public class FilmController extends CustomController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody Film film) {
+        log.info("Запрос на добавление фильма. Name: {}", film.getName());
         return repository.add(film);
     }
 
     @PutMapping
     public IdHolder update(@Valid @RequestBody Film film) {
+        log.info("Запрос на обновление фильма. Name: {}", film.getName());
         return repository.update(film);
     }
 
