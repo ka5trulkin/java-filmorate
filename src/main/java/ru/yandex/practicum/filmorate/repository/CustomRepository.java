@@ -18,8 +18,12 @@ public abstract class CustomRepository {
     protected final Map<Integer, IdHolder> data = new HashMap<>();
     protected int idCounter;
 
+    private boolean isContain(IdHolder object) {
+        return data.containsKey(object.getId());
+    }
+
     public IdHolder add(IdHolder object) {
-        if (data.containsKey(object.getId())) {
+        if (isContain(object)) {
             throw new RequestException(OBJECT_ALREADY_EXISTS.getMessage());
         }
         object.setId(++idCounter);
@@ -29,7 +33,7 @@ public abstract class CustomRepository {
     }
 
     public IdHolder update(IdHolder object) {
-        if (!data.containsKey(object.getId())) {
+        if (!isContain(object)) {
             throw new NoDataException(OBJECT_NOT_FOUND.getMessage());
         }
         data.put(object.getId(), object);
