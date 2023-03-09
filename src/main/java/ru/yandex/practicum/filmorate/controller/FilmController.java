@@ -9,13 +9,12 @@ import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController extends CustomController {
+public class FilmController extends AbstractController {
     @Autowired
     private FilmController(FilmRepository repository) {
         super(repository);
@@ -24,19 +23,19 @@ public class FilmController extends CustomController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody Film film) {
-        log.info("Запрос на добавление фильма. Name: {}", film.getName());
-        return repository.add(film);
+        log.info("Запрос на добавление фильма. Name: {}", film.getId());
+        return super.add(film);
     }
 
     @PutMapping
     public IdHolder update(@Valid @RequestBody Film film) {
-        log.info("Запрос на обновление фильма. Name: {}", film.getName());
-        return repository.update(film);
+        log.info("Запрос на обновление фильма. Name: {}", film.getId());
+        return super.update(film);
     }
 
     @GetMapping
-    public List<IdHolder> getFilmList() {
+    public List<IdHolder> getList() {
         log.info("Получение списка фильмов");
-        return new ArrayList<>(repository.getList());
+        return super.getList();
     }
 }

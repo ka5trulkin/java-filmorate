@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController extends CustomController {
+public class UserController extends AbstractController {
     @Autowired
     private UserController(UserRepository repository) {
         super(repository);
@@ -24,18 +24,18 @@ public class UserController extends CustomController {
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody User user) {
         log.info("Запрос на добавление пользователя. Login: {}", user.getLogin());
-        return repository.add(user);
+        return super.add(user);
     }
 
     @PutMapping
     public IdHolder update(@Valid @RequestBody User user) {
         log.info("Запрос на обновление пользователя. Login: {}", user.getLogin());
-        return repository.update(user);
+        return super.update(user);
     }
 
     @GetMapping
     public List<IdHolder> getUserList() {
         log.info("Получение списка пользователей");
-        return repository.getList();
+        return super.getList();
     }
 }

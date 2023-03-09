@@ -14,7 +14,7 @@ import static ru.yandex.practicum.filmorate.exeption.ExceptionMessage.OBJECT_ALR
 import static ru.yandex.practicum.filmorate.exeption.ExceptionMessage.OBJECT_NOT_FOUND;
 
 @Slf4j
-public abstract class CustomRepository {
+public abstract class AbstractRepository {
     protected final Map<Integer, IdHolder> data = new HashMap<>();
     protected int idCounter;
 

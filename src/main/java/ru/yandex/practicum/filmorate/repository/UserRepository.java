@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.model.User;
 
 @Repository
-public class UserRepository extends CustomRepository{
+public class UserRepository extends AbstractRepository {
     private void checkName(User user) {
         if ((user.getName() == null) || (user.getName().isBlank())) {
             user.setName(user.getLogin());
