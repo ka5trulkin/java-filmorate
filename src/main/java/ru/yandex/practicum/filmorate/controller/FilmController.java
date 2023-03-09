@@ -23,14 +23,14 @@ public class FilmController extends AbstractController<Film> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@Valid @RequestBody Film film) {
-        log.info("Запрос на добавление фильма. Name: {}", film.getId());
+        log.info("Запрос на добавление фильма Name: {}", film.getName());
         return super.add(film);
     }
 
     @Override
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Запрос на обновление фильма. Name: {}", film.getId());
+        log.info("Запрос на обновление фильма ID:{} Name: {}", film.getId(), film.getName());
         return super.update(film);
     }
 

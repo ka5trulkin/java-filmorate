@@ -18,14 +18,14 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public User add(User user) {
         checkName(user);
-        log.info("Пользователь ID:{} добавлен", user.getId());
+        log.info("Пользователь Login:{} добавлен", user.getLogin());
         return super.add(user);
     }
 
     @Override
     public User update(User user) {
         checkName(user);
-        log.info("Пользователь ID:{} обновлен", user.getId());
+        log.info("Пользователь ID:{}, Login:{} обновлен", user.getId(), user.getLogin());
         return super.update(user);
     }
 

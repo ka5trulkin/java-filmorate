@@ -11,13 +11,13 @@ import java.util.List;
 public class FilmRepository extends AbstractRepository<Film> {
     @Override
     public Film add(Film film) {
-        log.info("Фильм ID:{} добавлен", film.getId());
+        log.info("Фильм Name:{} добавлен", film.getName());
         return super.add(film);
     }
 
     @Override
     public Film update(Film film) {
-        log.info("Фильм ID:{} обновлен", film.getId());
+        log.info("Фильм ID:{}, Name:{} обновлен", film.getId(), film.getName());
         return super.update(film);
     }
 

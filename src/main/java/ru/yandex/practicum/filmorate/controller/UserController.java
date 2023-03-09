@@ -22,13 +22,13 @@ public class UserController extends AbstractController<User> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@Valid @RequestBody User user) {
-        log.info("Запрос на добавление пользователя. Login: {}", user.getLogin());
+        log.info("Запрос на добавление пользователя Login:{}", user.getLogin());
         return super.add(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        log.info("Запрос на обновление пользователя. Login: {}", user.getLogin());
+        log.info("Запрос на обновление пользователя ID:{} Login:{}", user.getId(), user.getLogin());
         return super.update(user);
     }
 

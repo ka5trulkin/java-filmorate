@@ -22,7 +22,7 @@ public abstract class AbstractRepository<T extends IdHolder> {
 
     public T add(T object) {
         if (isContain(object)) {
-            throw new RequestException(OBJECT_ALREADY_EXISTS.getMessage());
+            throw new RequestException(OBJECT_ALREADY_EXISTS.getMessage() + object);
         }
         object.setId(++idCounter);
         data.put(object.getId(), object);
@@ -31,7 +31,7 @@ public abstract class AbstractRepository<T extends IdHolder> {
 
     public T update(T object) {
         if (!isContain(object)) {
-            throw new NoDataException(OBJECT_NOT_FOUND.getMessage());
+            throw new NoDataException(OBJECT_NOT_FOUND.getMessage() + object);
         }
         data.put(object.getId(), object);
         return data.get(object.getId());
