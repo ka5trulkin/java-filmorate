@@ -20,22 +20,14 @@ public class UserController extends CustomController {
         super(repository);
     }
 
-    private void checkName(User user) {
-        if ((user.getName() == null) || (user.getName().isBlank())) {
-            user.setName(user.getLogin());
-        }
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IdHolder add(@Valid @RequestBody User user) {
-        checkName(user);
         return repository.add(user);
     }
 
     @PutMapping
     public IdHolder update(@Valid @RequestBody User user) {
-        checkName(user);
         return repository.update(user);
     }
 
