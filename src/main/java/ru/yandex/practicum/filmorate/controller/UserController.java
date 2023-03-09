@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.IdHolder;
@@ -14,7 +15,8 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 public class UserController extends CustomController {
-    protected UserController(UserRepository repository) {
+    @Autowired
+    private UserController(UserRepository repository) {
         super(repository);
     }
 
