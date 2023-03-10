@@ -6,6 +6,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+
 @Slf4j
 @Repository
 public class FilmRepository extends AbstractRepository<Film> {
@@ -23,13 +25,13 @@ public class FilmRepository extends AbstractRepository<Film> {
 
     @Override
     public List<Film> getList() {
-        log.info("Получение списков фильмов");
+        log.info(GET_FILM_LIST.message());
         return super.getList();
     }
 
     @Override
     public void deleteAll() {
-        log.info("Очистка репозитория с фильмами");
+        log.info(REPOSITORY_CLEAN.message());
         super.deleteAll();
     }
 }

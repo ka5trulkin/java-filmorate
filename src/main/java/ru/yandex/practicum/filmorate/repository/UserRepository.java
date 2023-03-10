@@ -6,6 +6,9 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.GET_USER_LIST;
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.REPOSITORY_CLEAN;
+
 @Slf4j
 @Repository
 public class UserRepository extends AbstractRepository<User> {
@@ -31,13 +34,13 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public List<User> getList() {
-        log.info("Получение списков пользователей");
+        log.info(GET_USER_LIST.message());
         return super.getList();
     }
 
     @Override
     public void deleteAll() {
-        log.info("Очистка репозитория с пользователями");
+        log.info(REPOSITORY_CLEAN.message());
         super.deleteAll();
     }
 }

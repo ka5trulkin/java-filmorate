@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.repository.UserRepository;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+
 @RestController
 @RequestMapping("/users")
 @Slf4j
@@ -19,6 +21,7 @@ public class UserController extends AbstractController<User> {
         super(repository);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@Valid @RequestBody User user) {
@@ -26,15 +29,17 @@ public class UserController extends AbstractController<User> {
         return super.add(user);
     }
 
+    @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.info("Запрос на обновление пользователя ID:{} Login:{}", user.getId(), user.getLogin());
         return super.update(user);
     }
 
+    @Override
     @GetMapping
-    public List<User> getUserList() {
-        log.info("Получение списка пользователей");
+    public List<User> getList() {
+        log.info(GET_USER_LIST.message());
         return super.getList();
     }
 }
