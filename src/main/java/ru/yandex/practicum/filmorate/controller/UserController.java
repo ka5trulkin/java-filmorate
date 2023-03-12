@@ -25,14 +25,14 @@ public class UserController extends AbstractController<User> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@Valid @RequestBody User user) {
-        log.info("Запрос на добавление пользователя Login:{}", user.getLogin());
+        log.info(REQUEST_ADD_USER.message(), user.getLogin());
         return super.add(user);
     }
 
     @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        log.info("Запрос на обновление пользователя ID:{} Login:{}", user.getId(), user.getLogin());
+        log.info(REQUEST_UPDATE_USER.message(), user.getId(), user.getLogin());
         return super.update(user);
     }
 

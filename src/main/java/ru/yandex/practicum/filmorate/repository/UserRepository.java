@@ -6,8 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.GET_USER_LIST;
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.REPOSITORY_CLEAN;
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 
 @Slf4j
 @Repository
@@ -21,14 +20,14 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public User add(User user) {
         checkName(user);
-        log.info("Пользователь Login:{} добавлен", user.getLogin());
+        log.info(USER_ADDED.message(), user.getLogin());
         return super.add(user);
     }
 
     @Override
     public User update(User user) {
         checkName(user);
-        log.info("Пользователь ID:{}, Login:{} обновлен", user.getId(), user.getLogin());
+        log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return super.update(user);
     }
 

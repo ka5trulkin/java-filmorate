@@ -13,13 +13,13 @@ import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 public class FilmRepository extends AbstractRepository<Film> {
     @Override
     public Film add(Film film) {
-        log.info("Фильм Name:{} добавлен", film.getName());
+        log.info(FILM_ADDED.message(), film.getName());
         return super.add(film);
     }
 
     @Override
     public Film update(Film film) {
-        log.info("Фильм ID:{}, Name:{} обновлен", film.getId(), film.getName());
+        log.info(FILM_UPDATED.message(), film.getId(), film.getName());
         return super.update(film);
     }
 

@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.GET_FILM_LIST;
+import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 
 @RestController
 @RequestMapping("/films")
@@ -25,14 +25,14 @@ public class FilmController extends AbstractController<Film> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@Valid @RequestBody Film film) {
-        log.info("Запрос на добавление фильма Name:{}", film.getName());
+        log.info(REQUEST_ADD_MOVIE.message(), film.getName());
         return super.add(film);
     }
 
     @Override
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Запрос на обновление фильма ID:{} Name:{}", film.getId(), film.getName());
+        log.info(REQUEST_UPDATE_MOVIE.message(), film.getId(), film.getName());
         return super.update(film);
     }
 
