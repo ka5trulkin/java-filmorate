@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exeption.RequestException;
 import ru.yandex.practicum.filmorate.exeption.user.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exeption.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.AbstractStorage;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
         } catch (RequestException e) {
             throw new UserAlreadyExistException(user.getId());
         }
-        log.info(USER_ADDED.message(), user.getLogin());
+        log.info(USER_ADDED.message(), user.getLogin(), user.getId());
         return user;
     }
 
@@ -64,7 +65,7 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
         try {
             user = super.get(id);
         } catch (RuntimeException e) {
-            throw new RequestException(String.format(USER_NOT_FOUND.message(), id));
+            throw new UserNotFoundException(id);
         }
         log.info(USER_GET.message(), id);
         return user;

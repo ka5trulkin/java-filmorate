@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -54,8 +54,8 @@ public class UserController extends AbstractController<User> {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public List<User> addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+    public void addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+        log.info(REQUEST_ADD_FRIEND.message(), id, friendId);
         service.addFriend(id, friendId);
-        return super.getList();
     }
 }

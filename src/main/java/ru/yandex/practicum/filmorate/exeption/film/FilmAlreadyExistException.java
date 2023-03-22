@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.exeption.film;
 
 import ru.yandex.practicum.filmorate.exeption.RequestException;
-import ru.yandex.practicum.filmorate.message.ExceptionMessage;
+
+import static ru.yandex.practicum.filmorate.message.ExceptionMessage.FILM_ALREADY_EXIST;
 
 public class FilmAlreadyExistException extends RequestException {
     public FilmAlreadyExistException(long id) {
-        super(String.format("Фильм ID:%s уже существует", id));
+        super(String.format(FILM_ALREADY_EXIST.message(), id));
     }
 }
