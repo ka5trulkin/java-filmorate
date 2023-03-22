@@ -15,19 +15,27 @@ public class UserService {
     @Autowired
     UserStorage storage;
 
-    private void checkUserNotNull(User user, long id) {
+    private User getFromStorage(long id) {
+        User user = storage.get(id);
         if (user == null) {
             throw new UserNotFoundException(id);
         }
+        return user;
     }
 
     public void addFriend(long id, long friendId) {
-        User user = storage.get(id);
-        User friend = storage.get(friendId);
-        checkUserNotNull(user, id);
-        checkUserNotNull(friend, friendId);
+        User user = getFromStorage(id);
+        User friend = getFromStorage(friendId);
         user.getFriendList().add(friendId);
         friend.getFriendList().add(id);
         log.info(USER_FRIEND_ADDED.message(), id, friendId);
+    }
+
+    public void removeFriend(long id, long friendId) {
+        User user = getFromStorage(id);
+        User friend = getFromStorage(friendId);
+        user.getFriendList().remove(friendId);
+        friend.getFriendList().remove(id);
+        log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 }

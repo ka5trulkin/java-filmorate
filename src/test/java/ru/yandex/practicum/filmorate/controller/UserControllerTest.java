@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
     private User validUser;
     private User invalidUser;
+    private User friend;
 
     @BeforeEach
     void beforeEach() {
@@ -39,11 +41,73 @@ class UserControllerTest {
                 .name("Иннокентий")
                 .birthday(LocalDate.of(1986, 11, 10))
                 .build();
+        friend = User.builder()
+                .email("temp@email.com")
+                .login("newLogin")
+                .name("Кеша")
+                .birthday(LocalDate.of(1986, 11, 11))
+                .build();
     }
 
     @AfterEach
     void clearRepository() {
         repository.clear();
+    }
+
+    @Test
+    void shouldBeRemovedUserFriend() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(friend)));
+        mockMvc.perform(delete("/users/1/friends/2"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldBeAddedUserFriend() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(friend)));
+        mockMvc.perform(put("/users/1/friends/2"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldBeAddNotExistUserFriendException() throws Exception {
+        mockMvc.perform(put("/users/1/friends/2"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(put("/users/1/friends/2"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(friend)));
+        mockMvc.perform(put("/users/1/friends/2"))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/users/1/friends/777"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldBeReturnCorrectUser() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(get("/users/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.email").value("email@new.org"))
+                .andExpect(jsonPath("$.login").value("temp"))
+                .andExpect(jsonPath("$.name").value("Иннокентий"))
+                .andExpect(jsonPath("$.birthday").value("1986-11-10"));
     }
 
     @Test

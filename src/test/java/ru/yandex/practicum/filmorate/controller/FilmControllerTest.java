@@ -47,6 +47,21 @@ class FilmControllerTest {
     }
 
     @Test
+    void shouldBeReturnCorrectUser() throws Exception {
+        mockMvc.perform(post("/films")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validFilm)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(get("/films/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("Чебуратино"))
+                .andExpect(jsonPath("$.description").value("Римейк Филиппа Киркорова"))
+                .andExpect(jsonPath("$.releaseDate").value("2023-03-06"))
+                .andExpect(jsonPath("$.duration").value("90"));
+    }
+
+    @Test
     void shouldBeCreated() throws Exception {
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)

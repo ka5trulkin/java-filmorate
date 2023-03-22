@@ -54,8 +54,14 @@ public class UserController extends AbstractController<User> {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
         log.info(REQUEST_ADD_FRIEND.message(), id, friendId);
         service.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
+        log.info(REQUEST_REMOVE_FRIEND.message(), id, friendId);
+        service.removeFriend(id, friendId);
     }
 }
