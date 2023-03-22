@@ -10,7 +10,7 @@ import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 
 @Slf4j
 @Repository
-public class UserRepository extends AbstractRepository<User> {
+public class UserRepository extends AbstractRepository<User> implements UserStorage {
     private void checkName(User user) {
         if ((user.getName() == null) || (user.getName().isBlank())) {
             user.setName(user.getLogin());
