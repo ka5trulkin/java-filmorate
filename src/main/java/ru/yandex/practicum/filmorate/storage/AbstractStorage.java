@@ -12,7 +12,7 @@ import java.util.Map;
 import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_ALREADY_EXISTS;
 import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_NOT_FOUND;
 
-public abstract class AbstractRepository<T extends IdHolder> {
+public abstract class AbstractStorage<T extends IdHolder> {
     protected final Map<Integer, T> data = new HashMap<>();
     protected int idCounter;
 

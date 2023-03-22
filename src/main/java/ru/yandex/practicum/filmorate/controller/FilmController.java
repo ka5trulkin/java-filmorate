@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 @Slf4j
 public class FilmController extends AbstractController<Film> {
     @Autowired
-    private FilmController(FilmRepository repository) {
+    private FilmController(InMemoryFilmStorage repository) {
         super(repository);
     }
 

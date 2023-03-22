@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 
 @Slf4j
-@Repository
-public class FilmRepository extends AbstractRepository<Film> implements FilmStorage {
+@Component
+public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmStorage {
     @Override
     public Film add(Film film) {
         log.info(FILM_ADDED.message(), film.getName());

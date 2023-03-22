@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ class FilmControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private FilmRepository repository;
+    private InMemoryFilmStorage repository;
     @Autowired
     private MockMvc mockMvc;
     private Film validFilm;

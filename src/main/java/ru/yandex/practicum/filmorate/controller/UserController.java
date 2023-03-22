@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserRepository;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
 @Slf4j
 public class UserController extends AbstractController<User> {
     @Autowired
-    private UserController(UserRepository repository) {
+    private UserController(InMemoryUserStorage repository) {
         super(repository);
     }
 
