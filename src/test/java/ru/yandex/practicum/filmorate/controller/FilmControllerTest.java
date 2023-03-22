@@ -43,7 +43,7 @@ class FilmControllerTest {
 
     @AfterEach
     void clearRepository() {
-        repository.deleteAll();
+        repository.clear();
     }
 
     @Test

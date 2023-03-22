@@ -10,6 +10,4 @@ public interface FilmStorage {
     Film update(Film film);
 
     List<Film> getList();
-
-    void deleteAll();
 }

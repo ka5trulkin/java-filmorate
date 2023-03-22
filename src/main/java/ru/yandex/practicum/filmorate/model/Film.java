@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 @NonNull
 public class Film implements IdHolder {
-    private int id;
+    private long id;
     @NotBlank
     private String name;
     @NotBlank

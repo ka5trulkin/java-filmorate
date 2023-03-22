@@ -13,8 +13,8 @@ import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_ALREADY_
 import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_NOT_FOUND;
 
 public abstract class AbstractStorage<T extends IdHolder> {
-    protected final Map<Integer, T> data = new HashMap<>();
-    protected int idCounter;
+    protected final Map<Long, T> data = new HashMap<>();
+    protected long idCounter;
 
     private boolean isContain(T object) {
         return data.containsKey(object.getId());
@@ -37,11 +37,18 @@ public abstract class AbstractStorage<T extends IdHolder> {
         return data.get(object.getId());
     }
 
+    public T get(long id) {
+        if (!data.containsKey(id)) {
+            throw new RuntimeException();
+        }
+        return data.get(id);
+    }
+
     public List<T> getList() {
         return new ArrayList<>(data.values());
     }
 
-    public void deleteAll() {
+    public void clear() {
         data.clear();
         idCounter = 0;
     }

@@ -13,7 +13,9 @@ public enum InfoMessage {
     FILM_ADDED("Фильм Name:{} добавлен"),
     FILM_UPDATED("Фильм ID:{}, Name:{} обновлен"),
     USER_ADDED("Пользователь Login:{} добавлен"),
-    USER_UPDATED("Пользователь ID:{}, Login:{} обновлен");
+    USER_UPDATED("Пользователь ID:{}, Login:{} обновлен"),
+    USER_GET("Получение пользователя ID:{}"),
+    USER_NOT_FOUND("Пользователь ID:%s не найден");
 
     private final String message;
 

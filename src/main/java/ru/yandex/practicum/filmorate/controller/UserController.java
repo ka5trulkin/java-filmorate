@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import javax.validation.Valid;
@@ -20,6 +21,9 @@ public class UserController extends AbstractController<User> {
     private UserController(InMemoryUserStorage repository) {
         super(repository);
     }
+
+    @Autowired
+    UserService service;
 
     @Override
     @PostMapping
@@ -37,9 +41,21 @@ public class UserController extends AbstractController<User> {
     }
 
     @Override
+    @GetMapping("/{id}")
+    protected User get(@PathVariable("id") long id) {
+        return super.get(id);
+    }
+
+    @Override
     @GetMapping
     public List<User> getList() {
         log.info(GET_USER_LIST.message());
+        return super.getList();
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public List<User> addFriend(@PathVariable("id") long id, @PathVariable("friendId") long friendId) {
+        service.addFriend(id, friendId);
         return super.getList();
     }
 }

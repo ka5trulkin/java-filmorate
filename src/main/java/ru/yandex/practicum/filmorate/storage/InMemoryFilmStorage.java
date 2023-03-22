@@ -30,8 +30,8 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
     }
 
     @Override
-    public void deleteAll() {
+    public void clear() {
         log.info(REPOSITORY_CLEAN.message());
-        super.deleteAll();
+        super.clear();
     }
 }

@@ -43,7 +43,7 @@ class UserControllerTest {
 
     @AfterEach
     void clearRepository() {
-        repository.deleteAll();
+        repository.clear();
     }
 
     @Test
