@@ -1,8 +1,8 @@
-package ru.yandex.practicum.filmorate.exeption;
+package ru.yandex.practicum.filmorate.message;
 
-public enum InfoMessage {
-    OBJECT_ALREADY_EXISTS("Объект уже существует: "),
-    OBJECT_NOT_FOUND("Объект не найден: "),
+public enum LogMessage {
+//    OBJECT_ALREADY_EXISTS("Объект уже существует: "),
+//    OBJECT_NOT_FOUND("Объект не найден: "),
     GET_USER_LIST("Получение списка пользователей"),
     GET_FILM_LIST("Получение списка фильмов"),
     REPOSITORY_CLEAN("Очистка репозитория"),
@@ -14,12 +14,12 @@ public enum InfoMessage {
     FILM_UPDATED("Фильм ID:{}, Name:{} обновлен"),
     USER_ADDED("Пользователь Login:{} добавлен"),
     USER_UPDATED("Пользователь ID:{}, Login:{} обновлен"),
-    USER_GET("Получение пользователя ID:{}"),
-    USER_NOT_FOUND("Пользователь ID:%s не найден");
+    USER_GET("Получение пользователя ID:{}");
+//    USER_NOT_FOUND("Пользователь ID:%s не найден");
 
     private final String message;
 
-    InfoMessage(String message) {
+    LogMessage(String message) {
         this.message = message;
     }
 

@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_ALREADY_EXISTS;
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.OBJECT_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.message.ExceptionMessage.*;
 
 public abstract class AbstractStorage<T extends IdHolder> {
     protected final Map<Long, T> data = new HashMap<>();
@@ -22,7 +21,7 @@ public abstract class AbstractStorage<T extends IdHolder> {
 
     public T add(T object) {
         if (isContain(object)) {
-            throw new RequestException(OBJECT_ALREADY_EXISTS.message() + object);
+            throw new RequestException();
         }
         object.setId(++idCounter);
         data.put(object.getId(), object);

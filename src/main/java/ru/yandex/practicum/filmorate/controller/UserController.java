@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+import static ru.yandex.practicum.filmorate.message.LogMessage.*;
 
 @RestController
 @RequestMapping("/users")

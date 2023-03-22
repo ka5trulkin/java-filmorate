@@ -2,19 +2,26 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exeption.FilmAlreadyExistException;
+import ru.yandex.practicum.filmorate.exeption.RequestException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+import static ru.yandex.practicum.filmorate.message.LogMessage.*;
 
 @Slf4j
 @Component
 public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmStorage {
     @Override
     public Film add(Film film) {
+        try {
+            super.add(film);
+        } catch (RequestException e) {
+            throw new FilmAlreadyExistException(film.getId());
+        }
         log.info(FILM_ADDED.message(), film.getName());
-        return super.add(film);
+        return film;
     }
 
     @Override

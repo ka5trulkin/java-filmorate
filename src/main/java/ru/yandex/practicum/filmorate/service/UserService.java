@@ -2,16 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exeption.InfoMessage;
 import ru.yandex.practicum.filmorate.exeption.RequestException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+import static ru.yandex.practicum.filmorate.message.ExceptionMessage.*;
 
 @Service
 public class UserService {

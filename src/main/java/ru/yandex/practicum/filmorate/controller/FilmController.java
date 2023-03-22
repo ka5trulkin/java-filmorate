@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+import static ru.yandex.practicum.filmorate.message.LogMessage.*;
 
 @RestController
 @RequestMapping("/films")
