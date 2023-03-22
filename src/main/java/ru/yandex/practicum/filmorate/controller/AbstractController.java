@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import ru.yandex.practicum.filmorate.model.IdHolder;
-import ru.yandex.practicum.filmorate.repository.AbstractRepository;
+import ru.yandex.practicum.filmorate.storage.AbstractRepository;
 
 import java.util.ArrayList;
 import java.util.List;
