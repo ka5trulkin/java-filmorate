@@ -42,4 +42,10 @@ public class FilmController extends AbstractController<Film> {
         log.info(GET_FILM_LIST.message());
         return super.getList();
     }
+
+    @Override
+    @GetMapping("/{id}")
+    protected Film get(@PathVariable("id") long id) {
+        return super.get(id);
+    }
 }

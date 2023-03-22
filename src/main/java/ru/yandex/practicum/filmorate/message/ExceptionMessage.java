@@ -3,7 +3,8 @@ package ru.yandex.practicum.filmorate.message;
 public enum ExceptionMessage {
     USER_ALREADY_EXISTS("Пользователь ID:%s уже существует"),
     FILM_ALREADY_EXISTS("Фильм ID:%s уже существует"),
-    OBJECT_NOT_FOUND("Объект не найден: "),
+    USER_NOT_FOUND("Пользователь ID:%s не найден"),
+    FILM_NOT_FOUND("Объект не найден: ");
 //    GET_USER_LIST("Получение списка пользователей"),
 //    GET_FILM_LIST("Получение списка фильмов"),
 //    REPOSITORY_CLEAN("Очистка репозитория"),
@@ -15,8 +16,7 @@ public enum ExceptionMessage {
 //    FILM_UPDATED("Фильм ID:{}, Name:{} обновлен"),
 //    USER_ADDED("Пользователь Login:{} добавлен"),
 //    USER_UPDATED("Пользователь ID:{}, Login:{} обновлен"),
-//    USER_GET("Получение пользователя ID:{}"),
-    USER_NOT_FOUND("Пользователь ID:%s не найден");
+//    USER_GET("Получение пользователя ID:{}");
 
     private final String message;
 

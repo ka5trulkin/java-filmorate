@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exeption.FilmAlreadyExistException;
+import ru.yandex.practicum.filmorate.exeption.NoDataException;
+import ru.yandex.practicum.filmorate.exeption.film.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exeption.RequestException;
+import ru.yandex.practicum.filmorate.exeption.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
@@ -26,8 +28,13 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
 
     @Override
     public Film update(Film film) {
+        try {
+            super.update(film);
+        } catch (NoDataException e) {
+            throw new FilmNotFoundException(film.getId());
+        }
         log.info(FILM_UPDATED.message(), film.getId(), film.getName());
-        return super.update(film);
+        return film;
     }
 
     @Override
@@ -40,5 +47,17 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
     public void clear() {
         log.info(REPOSITORY_CLEAN.message());
         super.clear();
+    }
+
+    @Override
+    public Film get(long id) {
+        Film film;
+        try {
+            film = super.get(id);
+        } catch (NoDataException e) {
+            throw new FilmNotFoundException(id);
+        }
+        log.info(FILM_GET.message(), id);
+        return film;
     }
 }

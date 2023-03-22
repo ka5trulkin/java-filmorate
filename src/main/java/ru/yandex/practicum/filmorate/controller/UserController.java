@@ -41,16 +41,16 @@ public class UserController extends AbstractController<User> {
     }
 
     @Override
-    @GetMapping("/{id}")
-    protected User get(@PathVariable("id") long id) {
-        return super.get(id);
-    }
-
-    @Override
     @GetMapping
     public List<User> getList() {
         log.info(GET_USER_LIST.message());
         return super.getList();
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    protected User get(@PathVariable("id") long id) {
+        return super.get(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

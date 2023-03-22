@@ -30,7 +30,7 @@ public abstract class AbstractStorage<T extends IdHolder> {
 
     public T update(T object) {
         if (!isContain(object)) {
-            throw new NoDataException(OBJECT_NOT_FOUND.message() + object);
+            throw new NoDataException();
         }
         data.put(object.getId(), object);
         return data.get(object.getId());
@@ -38,7 +38,7 @@ public abstract class AbstractStorage<T extends IdHolder> {
 
     public T get(long id) {
         if (!data.containsKey(id)) {
-            throw new RuntimeException();
+            throw new NoDataException();
         }
         return data.get(id);
     }

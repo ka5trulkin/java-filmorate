@@ -21,11 +21,11 @@ public abstract class AbstractController <T extends IdHolder> {
         return repository.update(object);
     }
 
-    protected T get(long id) {
-        return repository.get(id);
-    }
-
     protected List<T> getList() {
         return new ArrayList<>(repository.getList());
+    }
+
+    protected T get(long id) {
+        return repository.get(id);
     }
 }

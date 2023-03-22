@@ -14,7 +14,8 @@ public enum LogMessage {
     FILM_UPDATED("Фильм ID:{}, Name:{} обновлен"),
     USER_ADDED("Пользователь Login:{} добавлен"),
     USER_UPDATED("Пользователь ID:{}, Login:{} обновлен"),
-    USER_GET("Получение пользователя ID:{}");
+    USER_GET("Получение пользователя ID:{}"),
+    FILM_GET("Получение фильма ID:{}");
 //    USER_NOT_FOUND("Пользователь ID:%s не найден");
 
     private final String message;
