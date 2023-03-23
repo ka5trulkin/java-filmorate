@@ -45,7 +45,6 @@ class FilmControllerTest {
                 .duration(90)
                 .build();
         validUser = User.builder()
-                .id(1)
                 .email("email@new.org")
                 .login("temp")
                 .name("Иннокентий")
@@ -60,6 +59,91 @@ class FilmControllerTest {
     }
 
     @Test
+    void shouldBeReturnPopularList() throws Exception {
+        mockMvc.perform(get("/films/popular"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        int mostPopularFilmId = 2;
+        int lessPopularFilmId = 1;
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(put("/films/1/like/1"));
+        mockMvc.perform(put("/films/2/like/1"));
+        mockMvc.perform(put("/films/2/like/2"));
+        mockMvc.perform(get("/films/popular"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(mostPopularFilmId))
+                .andExpect(jsonPath("$[1].id").value(lessPopularFilmId));
+    }
+
+    @Test
+    void shouldBeReturnMostPopularFilm() throws Exception {
+        mockMvc.perform(get("/films/popular"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        int mostPopularFilmId = 2;
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(put("/films/1/like/1"));
+        mockMvc.perform(put("/films/2/like/1"));
+        mockMvc.perform(put("/films/2/like/2"));
+        mockMvc.perform(get("/films/popular?count=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value(mostPopularFilmId));
+    }
+
+    @Test
+    void shouldBeRemoveLikeIsOk() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(put("/films/1/like/1"));
+        mockMvc.perform(delete("/films/1/like/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldBeRemoveLikeException_LikeNotExist() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(delete("/films/1/like/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void shouldBeAddLikeIsOk() throws Exception {
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,6 +153,19 @@ class FilmControllerTest {
                         .content(objectMapper.writeValueAsString(validFilm)));
         mockMvc.perform(put("/films/1/like/1"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldBeAddLikeException_LikeIsAlreadyExist() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(put("/films/1/like/1"));
+        mockMvc.perform(put("/films/1/like/1"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

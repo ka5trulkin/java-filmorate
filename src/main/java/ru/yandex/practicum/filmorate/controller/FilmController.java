@@ -48,4 +48,15 @@ public class FilmController {
         log.info(REQUEST_ADD_FILM_LIKE.message(), id, userId);
         service.addLike(id, userId);
     }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable long id, @PathVariable long userId) {
+        log.info(REQUEST_REMOVE_FILM_LIKE_.message(), id, userId);
+        service.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularList(@RequestParam(defaultValue = "10") long count) {
+        return service.getPopularList(count);
+    }
 }
