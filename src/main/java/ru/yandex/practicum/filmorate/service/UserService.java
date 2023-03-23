@@ -27,14 +27,14 @@ public class UserService {
         return storage.update(user);
     }
 
-    public List<User> getList() {
-        log.info(GET_USER_LIST.message());
-        return storage.getList();
-    }
-
     public User get(long id) {
         log.info(GET_USER.message(), id);
         return storage.get(id);
+    }
+
+    public List<User> getList() {
+        log.info(GET_USER_LIST.message());
+        return storage.getList();
     }
 
     public void addFriend(long id, long friendId) {

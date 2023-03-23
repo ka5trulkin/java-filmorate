@@ -32,15 +32,15 @@ public class UserController {
         return service.update(user);
     }
 
+    @GetMapping("/{id}")
+    protected User get(@PathVariable("id") long id) {
+        return service.get(id);
+    }
+
     @GetMapping
     public List<User> getList() {
         log.info(GET_USER_LIST.message());
         return service.getList();
-    }
-
-    @GetMapping("/{id}")
-    protected User get(@PathVariable("id") long id) {
-        return service.get(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

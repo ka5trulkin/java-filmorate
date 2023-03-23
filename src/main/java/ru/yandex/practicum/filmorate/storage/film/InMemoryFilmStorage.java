@@ -23,7 +23,6 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
         } catch (RequestException e) {
             throw new FilmAlreadyExistException(film.getId());
         }
-        log.info(FILM_ADDED.message(), film.getName());
         return film;
     }
 
@@ -34,20 +33,7 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
         } catch (NoDataException e) {
             throw new FilmNotFoundException(film.getId());
         }
-        log.info(FILM_UPDATED.message(), film.getId(), film.getName());
         return film;
-    }
-
-    @Override
-    public List<Film> getList() {
-        log.info(GET_FILM_LIST.message());
-        return super.getList();
-    }
-
-    @Override
-    public void clear() {
-        log.info(FILM_STORAGE_CLEAN.message());
-        super.clear();
     }
 
     @Override
@@ -58,7 +44,17 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
         } catch (NoDataException e) {
             throw new FilmNotFoundException(id);
         }
-        log.info(GET_FILM.message(), id);
         return film;
+    }
+
+    @Override
+    public List<Film> getList() {
+        return super.getList();
+    }
+
+    @Override
+    public void clear() {
+        log.info(FILM_STORAGE_CLEAN.message());
+        super.clear();
     }
 }

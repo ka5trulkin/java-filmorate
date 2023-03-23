@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.yandex.practicum.filmorate.message.ExceptionMessage.*;
-
 public abstract class AbstractStorage<T extends IdHolder> {
     protected final Map<Long, T> data = new HashMap<>();
     protected long idCounter;

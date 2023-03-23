@@ -46,17 +46,6 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
     }
 
     @Override
-    public List<User> getList() {
-        return super.getList();
-    }
-
-    @Override
-    public void clear() {
-        log.info(USER_STORAGE_CLEAN.message());
-        super.clear();
-    }
-
-    @Override
     public User get(long id) {
         User user;
         try {
@@ -65,6 +54,17 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
             throw new UserNotFoundException(id);
         }
         return user;
+    }
+
+    @Override
+    public List<User> getList() {
+        return super.getList();
+    }
+
+    @Override
+    public void clear() {
+        log.info(USER_STORAGE_CLEAN.message());
+        super.clear();
     }
 
     @Override
