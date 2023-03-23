@@ -50,7 +50,7 @@ public class UserService {
     public List<User> getCommonFriendList(long id, long otherId) {
         List<User> userFriendList = storage.getFriendIdList(id);
         List<User> otherFriendList = storage.getFriendIdList(otherId);
-
+        log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
         return storage.getList().stream()
                 .filter(user -> userFriendList.contains(user) && otherFriendList.contains(user))
                 .collect(Collectors.toList());
