@@ -64,4 +64,10 @@ public class UserController extends AbstractController<User> {
         log.info(REQUEST_REMOVE_FRIEND.message(), id, friendId);
         service.removeFriend(id, friendId);
     }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriendList(@PathVariable long id) {
+        log.info(REQUEST_GET_USER_FRIEND_LIST.message(), id);
+        return service.getFriendList(id);
+    }
 }

@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.exeption.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static ru.yandex.practicum.filmorate.message.LogMessage.*;
 
 @Slf4j
@@ -37,5 +40,12 @@ public class UserService {
         user.getFriendList().remove(friendId);
         friend.getFriendList().remove(id);
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
+    }
+
+    public List<User> getFriendList(long id) {
+        log.info(GET_USER_FRIEND_LIST.message(), id);
+        return storage.getList().stream()
+                .filter(user -> storage.get(id).getFriendList().contains(user.getId()))
+                .collect(Collectors.toList());
     }
 }

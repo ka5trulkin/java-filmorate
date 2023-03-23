@@ -55,6 +55,32 @@ class UserControllerTest {
     }
 
     @Test
+    void shouldBeReturnFriendList() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(friend)));
+        mockMvc.perform(put("/users/1/friends/2"));
+        mockMvc.perform(get("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)));
+        User newFriend = friend.toBuilder()
+                .name("NewBestFriend")
+                .build();
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newFriend)));
+        mockMvc.perform(put("/users/1/friends/3"));
+        mockMvc.perform(get("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+        @Test
     void shouldBeRemovedUserFriend() throws Exception {
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
