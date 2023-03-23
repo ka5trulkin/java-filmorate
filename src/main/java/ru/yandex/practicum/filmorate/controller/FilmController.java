@@ -22,13 +22,13 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@Valid @RequestBody Film film) {
-        log.info(REQUEST_ADD_MOVIE.message(), film.getName());
+        log.info(REQUEST_ADD_FILM.message(), film.getName());
         return service.add(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info(REQUEST_UPDATE_MOVIE.message(), film.getId(), film.getName());
+        log.info(REQUEST_UPDATE_FILM.message(), film.getId(), film.getName());
         return service.update(film);
     }
 
@@ -41,5 +41,11 @@ public class FilmController {
     public List<Film> getList() {
         log.info(REQUEST_GET_FILM_LIST.message());
         return service.getList();
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
+        log.info(REQUEST_ADD_FILM_LIKE.message(), id, userId);
+        service.addLike(id, userId);
     }
 }

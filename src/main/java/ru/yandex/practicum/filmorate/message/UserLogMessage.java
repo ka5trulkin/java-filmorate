@@ -15,8 +15,7 @@ public enum UserLogMessage {
     GET_USER("Получение пользователя ID:{}"),
     GET_USER_LIST("Получение списка пользователей"),
     GET_USER_FRIEND_LIST("Получение списка друзей пользователя ID:{}"),
-    GET_USER_COMMON_FRIEND_LIST("Получение списка общих друзей у пользователя ID:{} с пользователем ID:{}")
-    ;
+    GET_USER_COMMON_FRIEND_LIST("Получение списка общих друзей у пользователя ID:{} с пользователем ID:{}");
 
     private final String message;
 

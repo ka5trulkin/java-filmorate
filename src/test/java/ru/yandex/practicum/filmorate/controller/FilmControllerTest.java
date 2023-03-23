@@ -10,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -25,11 +27,14 @@ class FilmControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private InMemoryFilmStorage repository;
+    private InMemoryFilmStorage filmStorage;
+    @Autowired
+    InMemoryUserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
     private Film validFilm;
     private Film invalidFilm;
+    private User validUser;
 
     @BeforeEach
     void beforeEach() {
@@ -39,11 +44,50 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(2023, 3, 6))
                 .duration(90)
                 .build();
+        validUser = User.builder()
+                .id(1)
+                .email("email@new.org")
+                .login("temp")
+                .name("Иннокентий")
+                .birthday(LocalDate.of(1986, 11, 10))
+                .build();
     }
 
     @AfterEach
     void clearRepository() {
-        repository.clear();
+        filmStorage.clear();
+        userStorage.clear();
+    }
+
+    @Test
+    void shouldBeAddLikeIsOk() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/films")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validFilm)));
+        mockMvc.perform(put("/films/1/like/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldBeAddLikeException_UserNotFound() throws Exception {
+        mockMvc.perform(post("/films")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validFilm)))
+                .andExpect(status().isCreated());
+        mockMvc.perform(put("/films/1/like/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldBeAddLikeException_FilmNotFound() throws Exception {
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(put("/films/1/like/1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
