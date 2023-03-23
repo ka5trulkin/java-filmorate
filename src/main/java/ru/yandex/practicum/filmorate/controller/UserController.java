@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,41 +15,32 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController extends AbstractController<User> {
-    @Autowired
-    private UserController(InMemoryUserStorage repository) {
-        super(repository);
-    }
-
+public class UserController {
     @Autowired
     UserService service;
 
-    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User add(@Valid @RequestBody User user) {
         log.info(REQUEST_ADD_USER.message(), user.getLogin());
-        return super.add(user);
+        return service.add(user);
     }
 
-    @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.info(REQUEST_UPDATE_USER.message(), user.getId(), user.getLogin());
-        return super.update(user);
+        return service.update(user);
     }
 
-    @Override
     @GetMapping
     public List<User> getList() {
         log.info(GET_USER_LIST.message());
-        return super.getList();
+        return service.getList();
     }
 
-    @Override
     @GetMapping("/{id}")
     protected User get(@PathVariable("id") long id) {
-        return super.get(id);
+        return service.get(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")

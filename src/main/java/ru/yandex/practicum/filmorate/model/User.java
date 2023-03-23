@@ -25,5 +25,5 @@ public class User implements IdHolder{
     private String name;
     @PastOrPresent
     private LocalDate birthday;
-    private final Set<Long> friendList = new HashSet<>();
+    private final Set<Long> friends = new HashSet<>();
 }
