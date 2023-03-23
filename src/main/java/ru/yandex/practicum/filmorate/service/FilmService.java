@@ -69,6 +69,7 @@ public class FilmService {
     }
 
     public List<Film> getPopularList(long count) {
+        log.info(GET_POPULAR_FILM_LIST.message());
         return filmStorage.getList().stream()
                 .sorted(Comparator.comparing(film -> film.getLikes().size(), Comparator.reverseOrder()))
                 .limit(count)

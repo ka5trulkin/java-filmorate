@@ -57,6 +57,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getPopularList(@RequestParam(defaultValue = "10") long count) {
+        log.info(REQUEST_GET_POPULAR_FILM_LIST.message());
         return service.getPopularList(count);
     }
 }

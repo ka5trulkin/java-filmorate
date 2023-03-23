@@ -26,34 +26,36 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
     @Override
     public User add(User user) {
         checkName(user);
+        User returnedUser;
         try {
-            super.add(user);
+            returnedUser = super.add(user);
         } catch (RequestException e) {
             throw new UserAlreadyExistException(user.getId());
         }
-        return user;
+        return returnedUser;
     }
 
     @Override
     public User update(User user) {
         checkName(user);
+        User returnedUser;
         try {
-            super.update(user);
+            returnedUser = super.update(user);
         } catch (NoDataException e) {
             throw new UserNotFoundException(user.getId());
         }
-        return user;
+        return returnedUser;
     }
 
     @Override
     public User get(long id) {
-        User user;
+        User returnedUser;
         try {
-            user = super.get(id);
+            returnedUser = super.get(id);
         } catch (RuntimeException e) {
             throw new UserNotFoundException(id);
         }
-        return user;
+        return returnedUser;
     }
 
     @Override

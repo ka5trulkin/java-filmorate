@@ -18,33 +18,35 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmStorage {
     @Override
     public Film add(Film film) {
+        Film returnedFilm;
         try {
-            super.add(film);
+            returnedFilm = super.add(film);
         } catch (RequestException e) {
             throw new FilmAlreadyExistException(film.getId());
         }
-        return film;
+        return returnedFilm;
     }
 
     @Override
     public Film update(Film film) {
+        Film returnedFilm;
         try {
-            super.update(film);
+            returnedFilm = super.update(film);
         } catch (NoDataException e) {
             throw new FilmNotFoundException(film.getId());
         }
-        return film;
+        return returnedFilm;
     }
 
     @Override
     public Film get(long id) {
-        Film film;
+        Film returnedFilm;
         try {
-            film = super.get(id);
+            returnedFilm = super.get(id);
         } catch (NoDataException e) {
             throw new FilmNotFoundException(id);
         }
-        return film;
+        return returnedFilm;
     }
 
     @Override
