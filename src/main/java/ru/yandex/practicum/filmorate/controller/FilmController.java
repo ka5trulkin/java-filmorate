@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.message.LogMessage.*;
+import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @RestController
 @RequestMapping("/films")
@@ -39,7 +39,7 @@ public class FilmController extends AbstractController<Film> {
     @Override
     @GetMapping
     public List<Film> getList() {
-        log.info(GET_FILM_LIST.message());
+        log.info(REQUEST_GET_FILM_LIST.message());
         return super.getList();
     }
 

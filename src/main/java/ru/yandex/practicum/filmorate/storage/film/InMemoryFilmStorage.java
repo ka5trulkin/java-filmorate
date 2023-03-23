@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.storage.AbstractStorage;
 
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.message.LogMessage.*;
+import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Component
@@ -46,7 +46,7 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
 
     @Override
     public void clear() {
-        log.info(REPOSITORY_CLEAN.message());
+        log.info(FILM_STORAGE_CLEAN.message());
         super.clear();
     }
 
@@ -58,7 +58,7 @@ public class InMemoryFilmStorage extends AbstractStorage<Film> implements FilmSt
         } catch (NoDataException e) {
             throw new FilmNotFoundException(id);
         }
-        log.info(FILM_GET.message(), id);
+        log.info(GET_FILM.message(), id);
         return film;
     }
 }

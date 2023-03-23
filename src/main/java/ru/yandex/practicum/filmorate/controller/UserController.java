@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.message.LogMessage.*;
+import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @RestController
 @RequestMapping("/users")
@@ -69,5 +69,11 @@ public class UserController extends AbstractController<User> {
     public List<User> getFriendList(@PathVariable long id) {
         log.info(REQUEST_GET_USER_FRIEND_LIST.message(), id);
         return service.getFriendList(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriendList(@PathVariable long id, @PathVariable long otherId) {
+        log.info(REQUEST_GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
+        return service.getCommonFriendList(id, otherId);
     }
 }

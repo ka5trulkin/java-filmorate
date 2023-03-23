@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,21 +30,31 @@ class UserControllerTest {
     private MockMvc mockMvc;
     private User validUser;
     private User invalidUser;
-    private User friend;
+    private User firstFriend;
+    private User secondFriend;
 
     @BeforeEach
     void beforeEach() {
         validUser = User.builder()
+                .id(1)
                 .email("email@new.org")
                 .login("temp")
                 .name("Иннокентий")
                 .birthday(LocalDate.of(1986, 11, 10))
                 .build();
-        friend = User.builder()
+        firstFriend = User.builder()
+                .id(2)
                 .email("temp@email.com")
-                .login("newLogin")
+                .login("firstFriend")
                 .name("Кеша")
                 .birthday(LocalDate.of(1986, 11, 11))
+                .build();
+        secondFriend = User.builder()
+                .id(3)
+                .email("temptwo@email.com")
+                .login("secondFriend")
+                .name("Петя")
+                .birthday(LocalDate.of(1986, 11, 12))
                 .build();
     }
 
@@ -55,28 +64,55 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldBeReturnFriendList() throws Exception {
+    void shouldBeReturnCommonFriendList() throws Exception {
+        mockMvc.perform(get("/users/1/friends/common/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(friend)));
+                .content(objectMapper.writeValueAsString(firstFriend)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(secondFriend)));
+        mockMvc.perform(put("/users/1/friends/3"));
+        mockMvc.perform(put("/users/2/friends/3"));
+        mockMvc.perform(get("/users/1/friends/common/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(secondFriend.getId()))
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void shouldBeReturnFriendList() throws Exception {
+        mockMvc.perform(get("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validUser)));
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(firstFriend)));
         mockMvc.perform(put("/users/1/friends/2"));
         mockMvc.perform(get("/users/1/friends"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(firstFriend.getId()))
                 .andExpect(jsonPath("$", hasSize(1)));
-        User newFriend = friend.toBuilder()
-                .name("NewBestFriend")
-                .build();
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newFriend)));
+                .content(objectMapper.writeValueAsString(secondFriend)));
         mockMvc.perform(put("/users/1/friends/3"));
         mockMvc.perform(get("/users/1/friends"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[1].id").value(secondFriend.getId()))
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
@@ -87,7 +123,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(validUser)));
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(friend)));
+                .content(objectMapper.writeValueAsString(firstFriend)));
         mockMvc.perform(delete("/users/1/friends/2"))
                 .andExpect(status().isOk());
     }
@@ -99,7 +135,7 @@ class UserControllerTest {
                 .content(objectMapper.writeValueAsString(validUser)));
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(friend)));
+                .content(objectMapper.writeValueAsString(firstFriend)));
         mockMvc.perform(put("/users/1/friends/2"))
                 .andExpect(status().isOk());
     }
@@ -115,7 +151,7 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(friend)));
+                .content(objectMapper.writeValueAsString(firstFriend)));
         mockMvc.perform(put("/users/1/friends/2"))
                 .andExpect(status().isOk());
         mockMvc.perform(put("/users/1/friends/777"))

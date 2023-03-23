@@ -10,9 +10,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.AbstractStorage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.message.ExceptionMessage.*;
-import static ru.yandex.practicum.filmorate.message.LogMessage.*;
+import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Repository
@@ -55,7 +55,7 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
 
     @Override
     public void clear() {
-        log.info(REPOSITORY_CLEAN.message());
+        log.info(USER_STORAGE_CLEAN.message());
         super.clear();
     }
 
@@ -67,7 +67,14 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
         } catch (RuntimeException e) {
             throw new UserNotFoundException(id);
         }
-        log.info(USER_GET.message(), id);
+        log.info(GET_USER.message(), id);
         return user;
+    }
+
+    @Override
+    public List<User> getFriendIdList(long id) {
+        return super.getList().stream()
+                .filter(user -> super.get(id).getFriendList().contains(user.getId()))
+                .collect(Collectors.toList());
     }
 }

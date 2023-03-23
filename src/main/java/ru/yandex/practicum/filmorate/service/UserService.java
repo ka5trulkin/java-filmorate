@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.message.LogMessage.*;
+import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
@@ -44,8 +44,15 @@ public class UserService {
 
     public List<User> getFriendList(long id) {
         log.info(GET_USER_FRIEND_LIST.message(), id);
+        return storage.getFriendIdList(id);
+    }
+
+    public List<User> getCommonFriendList(long id, long otherId) {
+        List<User> userFriendList = storage.getFriendIdList(id);
+        List<User> otherFriendList = storage.getFriendIdList(otherId);
+
         return storage.getList().stream()
-                .filter(user -> storage.get(id).getFriendList().contains(user.getId()))
+                .filter(user -> userFriendList.contains(user) && otherFriendList.contains(user))
                 .collect(Collectors.toList());
     }
 }
