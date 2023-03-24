@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.message;
 
 public enum UserLogMessage {
-    USER_STORAGE_CLEAN("Очистка репозитория с пользователями"),
     REQUEST_ADD_USER("Запрос на добавление пользователя Login:{}"),
     REQUEST_ADD_FRIEND("Запрос пользователю ID:{} на добавление в друзья от пользователя ID:{}"),
     REQUEST_REMOVE_FRIEND("Запрос пользователю ID:{} на удаление из друзей от пользователя ID:{}"),

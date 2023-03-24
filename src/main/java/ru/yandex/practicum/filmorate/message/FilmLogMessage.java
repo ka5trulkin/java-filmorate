@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.message;
 
 public enum FilmLogMessage {
-    FILM_STORAGE_CLEAN("Очистка репозитория с фильмами"),
     REQUEST_GET_FILM("Запрос на получение фильма ID:{}"),
     REQUEST_GET_FILM_LIST("Запрос на получение списка фильмов"),
     REQUEST_GET_POPULAR_FILM_LIST("Запрос на получение списка популярных фильмов"),
