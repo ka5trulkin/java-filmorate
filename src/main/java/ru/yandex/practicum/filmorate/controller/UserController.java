@@ -34,6 +34,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User get(@PathVariable("id") long id) {
+        log.info(REQUEST_GET_USER.message(), id);
         return service.get(id);
     }
 

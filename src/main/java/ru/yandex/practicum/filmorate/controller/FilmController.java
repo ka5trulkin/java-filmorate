@@ -34,6 +34,7 @@ public class FilmController {
 
     @GetMapping("/{id}")
     protected Film get(@PathVariable("id") long id) {
+        log.info(REQUEST_GET_FILM.message(), id);
         return service.get(id);
     }
 
