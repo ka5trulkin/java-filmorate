@@ -38,13 +38,14 @@ class FilmControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        validFilm = Film.builder()
+        validFilm = Film.filmBuilder()
                 .name("Чебуратино")
                 .description("Римейк Филиппа Киркорова")
                 .releaseDate(LocalDate.of(2023, 3, 6))
                 .duration(90)
                 .build();
-        validUser = User.builder()
+        invalidFilm = validFilm;
+        validUser = User.userBuilder()
                 .email("email@new.org")
                 .login("temp")
                 .name("Иннокентий")
@@ -237,9 +238,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeNameException() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .name("")
-                .build();
+        invalidFilm.setName("");
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -248,11 +247,9 @@ class FilmControllerTest {
 
     @Test
     void shouldBeDescriptionException() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .description("Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль. Здесь они хотят " +
-                        "разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. " +
-                        "о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.")
-                .build();
+        invalidFilm.setDescription("Пятеро друзей ( комик-группа «Шарло»), приезжают в город Бризуль. Здесь они хотят " +
+                "разыскать господина Огюста Куглова, который задолжал им деньги, а именно 20 миллионов. " +
+                "о Куглов, который за время «своего отсутствия», стал кандидатом Коломбани.");
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -261,9 +258,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeReleaseDateExceptionAfter1895_12_28() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1895, 12 , 27))
-                .build();
+        invalidFilm.setReleaseDate(LocalDate.of(1895, 12 , 27));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -272,9 +267,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeReleaseDateExceptionBeforeNow() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.now().plusDays(1))
-                .build();
+        invalidFilm.setReleaseDate(LocalDate.now().plusDays(1));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -283,9 +276,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithReleaseDate1895_12_28() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(1895, 12 , 28))
-                .build();
+        invalidFilm.setReleaseDate(LocalDate.of(1895, 12 , 28));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -294,9 +285,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithReleaseDate2000_10_16() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .releaseDate(LocalDate.of(2000, 10 , 16))
-                .build();
+        invalidFilm.setReleaseDate(LocalDate.of(2000, 10 , 16));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -305,9 +294,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeDurationExceptionWith0() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .duration(0)
-                .build();
+        invalidFilm.setDuration(0);
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -316,9 +303,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithDuration1() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .duration(1)
-                .build();
+        invalidFilm.setDuration(1);
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -327,9 +312,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithDuration300() throws Exception {
-        invalidFilm = validFilm.toBuilder()
-                .duration(300)
-                .build();
+        invalidFilm.setDuration(300);
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -345,7 +328,7 @@ class FilmControllerTest {
         String updDescription = "NewDescription";
         LocalDate updReleaseDate = LocalDate.of(2000, 12, 31);
         final int updDuration = 777;
-        validFilm = validFilm.toBuilder()
+        Film updatedFilm = Film.filmBuilder()
                 .id(1)
                 .name(updName)
                 .description(updDescription)
@@ -354,7 +337,7 @@ class FilmControllerTest {
                 .build();
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validFilm)))
+                        .content(objectMapper.writeValueAsString(updatedFilm)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.name").value(updName))

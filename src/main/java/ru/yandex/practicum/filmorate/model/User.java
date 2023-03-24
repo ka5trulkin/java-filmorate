@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.filmorate.validation.NotContainSpace;
 
 import javax.validation.constraints.Email;
@@ -13,16 +14,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class User implements IdHolder{
-    private long id;
+@SuperBuilder(builderMethodName = "userBuilder")
+public class User extends IdHolder{
+    private String name;
     @Email
     private String email;
     @NotBlank
     @NotContainSpace
     private String login;
-    private String name;
     @PastOrPresent
     private LocalDate birthday;
     private final Set<Long> friends = new HashSet<>();

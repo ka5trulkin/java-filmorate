@@ -35,21 +35,22 @@ class UserControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        validUser = User.builder()
+        validUser = User.userBuilder()
                 .id(1)
                 .email("email@new.org")
                 .login("temp")
                 .name("Иннокентий")
                 .birthday(LocalDate.of(1986, 11, 10))
                 .build();
-        firstFriend = User.builder()
+        invalidUser = validUser;
+        firstFriend = User.userBuilder()
                 .id(2)
                 .email("temp@email.com")
                 .login("firstFriend")
                 .name("Кеша")
                 .birthday(LocalDate.of(1986, 11, 11))
                 .build();
-        secondFriend = User.builder()
+        secondFriend = User.userBuilder()
                 .id(3)
                 .email("temptwo@email.com")
                 .login("secondFriend")
@@ -116,7 +117,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
-        @Test
+    @Test
     void shouldBeRemovedUserFriend() throws Exception {
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -207,9 +208,7 @@ class UserControllerTest {
 
     @Test
     void shouldBeLoginException() throws Exception {
-        invalidUser = validUser.toBuilder()
-                .login("one two")
-                .build();
+        invalidUser.setLogin("one two");
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
@@ -218,9 +217,7 @@ class UserControllerTest {
 
     @Test
     void shouldBeEmailException() throws Exception {
-        invalidUser = validUser.toBuilder()
-                .email("email.org")
-                .build();
+        invalidUser.setEmail("email.org");
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
@@ -229,9 +226,7 @@ class UserControllerTest {
 
     @Test
     void shouldBeBirthdayException() throws Exception {
-        invalidUser = validUser.toBuilder()
-                .birthday(LocalDate.of(2986, 11, 10))
-                .build();
+        invalidUser.setBirthday(LocalDate.of(2986, 11, 10));
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
@@ -247,7 +242,7 @@ class UserControllerTest {
         String updLogin = "newLogin";
         String updName = "NewName";
         LocalDate updBirthday = LocalDate.of(2000, 12, 31);
-        validUser = validUser.toBuilder()
+        User updatedUser = User.userBuilder()
                 .id(1)
                 .email(updEmail)
                 .login(updLogin)
@@ -256,7 +251,7 @@ class UserControllerTest {
                 .build();
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validUser)))
+                        .content(objectMapper.writeValueAsString(updatedUser)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.email").value(updEmail))
