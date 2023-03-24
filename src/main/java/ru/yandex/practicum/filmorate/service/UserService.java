@@ -55,10 +55,11 @@ public class UserService {
     }
 
     public List<User> getCommonFriendList(long id, long otherId) {
+        List<User> userFriends = storage.getFriendList(id);
+        List<User> otherFriends = storage.getFriendList(otherId);
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
-        return storage.getList().stream()
-                .filter(user -> storage.getFriendList(id).contains(user)
-                        && storage.getFriendList(otherId).contains(user))
+        return userFriends.stream()
+                .filter(otherFriends::contains)
                 .collect(Collectors.toList());
     }
 }
