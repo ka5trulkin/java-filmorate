@@ -1,8 +1,12 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import ru.yandex.practicum.filmorate.exeption.NoDataException;
-import ru.yandex.practicum.filmorate.exeption.RequestException;
+import ru.yandex.practicum.filmorate.exeption.film.FilmAlreadyExistException;
+import ru.yandex.practicum.filmorate.exeption.film.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeption.user.UserAlreadyExistException;
+import ru.yandex.practicum.filmorate.exeption.user.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.IdHolder;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +21,36 @@ public abstract class AbstractStorage<T extends IdHolder> {
         return data.containsKey(object.getId());
     }
 
+    private void getAlreadyExistException(T object) {
+        if (object.getClass() == User.class) {
+            throw new UserAlreadyExistException(object.getId());
+        }
+        if (object.getClass() == Film.class) {
+            throw new FilmAlreadyExistException(object.getId());
+        }
+    }
+
+    private void getNotFoundException(T object) {
+        if (object.getClass() == User.class) {
+            throw new UserNotFoundException(object.getId());
+        }
+        if (object.getClass() == Film.class) {
+            throw new FilmNotFoundException(object.getId());
+        }
+    }
+
+    private void getNotFoundException(long id, Class<T> objectClass) {
+        if (objectClass == User.class) {
+            throw new UserNotFoundException(id);
+        }
+        if (objectClass == Film.class) {
+            throw new FilmNotFoundException(id);
+        }
+    }
+
     public T add(T object) {
         if (isContain(object)) {
-            throw new RequestException();
+            getAlreadyExistException(object);
         }
         object.setId(++idCounter);
         data.put(object.getId(), object);
@@ -28,15 +59,15 @@ public abstract class AbstractStorage<T extends IdHolder> {
 
     public T update(T object) {
         if (!isContain(object)) {
-            throw new NoDataException();
+            getNotFoundException(object);
         }
         data.put(object.getId(), object);
         return data.get(object.getId());
     }
 
-    public T get(long id) {
+    public T get(long id, Class<T> objectClass) {
         if (!data.containsKey(id)) {
-            throw new NoDataException();
+            getNotFoundException(id, objectClass);
         }
         return data.get(id);
     }
