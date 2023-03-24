@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Slf4j
 public class UserController {
     @Autowired
-    UserService service;
+    private UserService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    protected User get(@PathVariable("id") long id) {
+    public User get(@PathVariable("id") long id) {
         return service.get(id);
     }
 

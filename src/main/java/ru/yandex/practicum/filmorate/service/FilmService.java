@@ -19,9 +19,9 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @Service
 public class FilmService {
     @Autowired
-    FilmStorage filmStorage;
+    private FilmStorage filmStorage;
     @Autowired
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     private void checkUserExist(long userId) {
         userStorage.get(userId);

@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @Slf4j
 public class FilmController {
     @Autowired
-    FilmService service;
+    private FilmService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

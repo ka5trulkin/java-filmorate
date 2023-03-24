@@ -15,7 +15,7 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Service
 public class UserService {
     @Autowired
-    UserStorage storage;
+    private UserStorage storage;
 
     public User add(User user) {
         log.info(USER_ADDED.message(), user.getLogin(), user.getId());
