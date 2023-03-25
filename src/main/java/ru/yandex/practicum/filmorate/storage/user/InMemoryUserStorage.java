@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.AbstractStorage;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,8 +37,9 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
 
     @Override
     public List<User> getFriendList(long id) {
+        Set<Long> friendsList = super.get(id, User.class).getFriends();
         return super.getList().stream()
-                .filter(user -> super.get(id, User.class).getFriends().contains(user.getId()))
+                .filter(user -> friendsList.contains(user.getId()))
                 .collect(Collectors.toList());
     }
 }

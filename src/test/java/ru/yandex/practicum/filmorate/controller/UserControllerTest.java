@@ -67,9 +67,7 @@ class UserControllerTest {
     @Test
     void shouldBeReturnCommonFriendList() throws Exception {
         mockMvc.perform(get("/users/1/friends/common/2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(status().isNotFound());
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
@@ -91,9 +89,7 @@ class UserControllerTest {
     @Test
     void shouldBeReturnFriendList() throws Exception {
         mockMvc.perform(get("/users/1/friends"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(status().isNotFound());
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
