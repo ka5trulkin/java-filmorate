@@ -18,12 +18,20 @@ public class UserService {
     @Autowired
     private UserStorage storage;
 
+    private void checkName(User user) {
+        if ((user.getName() == null) || (user.getName().isBlank())) {
+            user.setName(user.getLogin());
+        }
+    }
+
     public User add(User user) {
+        checkName(user);
         log.info(USER_ADDED.message(), user.getLogin(), user.getId());
         return storage.add(user);
     }
 
     public User update(User user) {
+        checkName(user);
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return storage.update(user);
     }
