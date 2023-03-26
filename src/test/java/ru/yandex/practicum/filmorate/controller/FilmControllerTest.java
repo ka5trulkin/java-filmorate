@@ -150,8 +150,8 @@ class FilmControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
         mockMvc.perform(post("/films")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validFilm)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
         mockMvc.perform(put("/films/1/like/1"))
                 .andExpect(status().isOk());
     }
@@ -227,8 +227,8 @@ class FilmControllerTest {
     @Test
     void shouldBeCreateExceptionWithExistentId() throws Exception {
         mockMvc.perform(post("/films")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validFilm)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(validFilm)));
         validFilm.setId(1);
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -258,7 +258,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeReleaseDateExceptionAfter1895_12_28() throws Exception {
-        invalidFilm.setReleaseDate(LocalDate.of(1895, 12 , 27));
+        invalidFilm.setReleaseDate(LocalDate.of(1895, 12, 27));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -276,7 +276,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithReleaseDate1895_12_28() throws Exception {
-        invalidFilm.setReleaseDate(LocalDate.of(1895, 12 , 28));
+        invalidFilm.setReleaseDate(LocalDate.of(1895, 12, 28));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
@@ -285,7 +285,7 @@ class FilmControllerTest {
 
     @Test
     void shouldBeCreatedWithReleaseDate2000_10_16() throws Exception {
-        invalidFilm.setReleaseDate(LocalDate.of(2000, 10 , 16));
+        invalidFilm.setReleaseDate(LocalDate.of(2000, 10, 16));
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidFilm)))
