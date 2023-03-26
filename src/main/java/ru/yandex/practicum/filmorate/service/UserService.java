@@ -25,13 +25,13 @@ public class UserService {
     }
 
     public User add(User user) {
-        checkName(user);
+        this.checkName(user);
         log.info(USER_ADDED.message(), user.getLogin(), user.getId());
         return storage.add(user);
     }
 
     public User update(User user) {
-        checkName(user);
+        this.checkName(user);
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return storage.update(user);
     }
@@ -53,8 +53,10 @@ public class UserService {
     }
 
     public void removeFriend(long id, long friendId) {
-        storage.get(id).getFriends().remove(friendId);
-        storage.get(friendId).getFriends().remove(id);
+        Set<Long> userFriendsList = storage.get(id).getFriends();
+        Set<Long> friendFriendsList = storage.get(friendId).getFriends();
+        userFriendsList.remove(friendId);
+        friendFriendsList.remove(id);
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 

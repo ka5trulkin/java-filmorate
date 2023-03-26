@@ -28,6 +28,10 @@ public class FilmService {
         userStorage.get(userId);
     }
 
+    private Set<Long> getLikeList(long id) {
+        return filmStorage.get(id).getLikes();
+    }
+
     public Film add(Film film) {
         log.info(FILM_ADDED.message(), film.getName());
         return filmStorage.add(film);
@@ -49,8 +53,8 @@ public class FilmService {
     }
 
     public void addLike(long id, long userId) {
-        checkUserExist(userId);
-        Set<Long> likeList = filmStorage.get(id).getLikes();
+        this.checkUserExist(userId);
+        Set<Long> likeList = this.getLikeList(id);
         if (likeList.add(userId)) {
             log.info(FILM_LIKE_ADDED.message(), id, userId);
             return;
@@ -59,8 +63,8 @@ public class FilmService {
     }
 
     public void removeLike(long id, long userId) {
-        checkUserExist(userId);
-        Set<Long> likeList = filmStorage.get(id).getLikes();
+        this.checkUserExist(userId);
+        Set<Long> likeList = this.getLikeList(id);
         if (likeList.remove(userId)) {
             log.info(FILM_LIKE_REMOVED.message(), id, userId);
             return;
