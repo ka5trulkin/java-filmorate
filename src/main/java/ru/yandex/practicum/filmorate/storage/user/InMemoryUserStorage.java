@@ -32,14 +32,14 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
 
     @Override
     public User get(long id) {
-        return super.get(id, User.class);
+        return super.get(id);
     }
 
     @Override
     public List<User> getFriendList(long id) {
-        Set<Long> friendsList = super.get(id, User.class).getFriends();
+        Set<Long> friendList = super.get(id).getFriends();
         return super.getList().stream()
-                .filter(user -> friendsList.contains(user.getId()))
+                .filter(user -> friendList.contains(user.getId()))
                 .collect(Collectors.toList());
     }
 }
