@@ -24,6 +24,10 @@ public class UserService {
         }
     }
 
+    private Set<Long> getIdFriendList(long id) {
+        return storage.get(id).getFriends();
+    }
+
     public User add(User user) {
         this.checkName(user);
         log.info(USER_ADDED.message(), user.getLogin(), user.getId());
@@ -47,14 +51,16 @@ public class UserService {
     }
 
     public void addFriend(long id, long friendId) {
-        storage.get(id).getFriends().add(friendId);
-        storage.get(friendId).getFriends().add(id);
+        Set<Long> userFriendsList = this.getIdFriendList(id);
+        Set<Long> friendFriendsList = this.getIdFriendList(friendId);
+        userFriendsList.add(friendId);
+        friendFriendsList.add(id);
         log.info(USER_FRIEND_ADDED.message(), id, friendId);
     }
 
     public void removeFriend(long id, long friendId) {
-        Set<Long> userFriendsList = storage.get(id).getFriends();
-        Set<Long> friendFriendsList = storage.get(friendId).getFriends();
+        Set<Long> userFriendsList = this.getIdFriendList(id);
+        Set<Long> friendFriendsList = this.getIdFriendList(friendId);
         userFriendsList.remove(friendId);
         friendFriendsList.remove(id);
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
