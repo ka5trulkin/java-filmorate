@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
@@ -50,13 +51,15 @@ public class UserService {
     }
 
     public List<User> getFriendList(long id) {
-        log.info(GET_USER_FRIEND_LIST.message(), id);
-        return storage.getFriendList(id);
+        Set<Long> friendList = storage.get(id).getFriends();
+        return storage.getList().stream()
+                .filter(user -> friendList.contains(user.getId()))
+                .collect(Collectors.toList());
     }
 
     public List<User> getCommonFriendList(long id, long otherId) {
-        List<User> userFriends = storage.getFriendList(id);
-        List<User> otherFriends = storage.getFriendList(otherId);
+        List<User> userFriends = this.getFriendList(id);
+        List<User> otherFriends = this.getFriendList(otherId);
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
         return userFriends.stream()
                 .filter(otherFriends::contains)

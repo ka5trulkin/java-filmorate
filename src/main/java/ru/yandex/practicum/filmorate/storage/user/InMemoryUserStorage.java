@@ -5,10 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.AbstractStorage;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Component
 public class InMemoryUserStorage extends AbstractStorage<User> implements UserStorage {
@@ -28,18 +24,5 @@ public class InMemoryUserStorage extends AbstractStorage<User> implements UserSt
     public User update(User user) {
         checkName(user);
         return super.update(user);
-    }
-
-    @Override
-    public User get(long id) {
-        return super.get(id);
-    }
-
-    @Override
-    public List<User> getFriendList(long id) {
-        Set<Long> friendList = super.get(id).getFriends();
-        return super.getList().stream()
-                .filter(user -> friendList.contains(user.getId()))
-                .collect(Collectors.toList());
     }
 }
