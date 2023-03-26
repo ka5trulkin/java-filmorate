@@ -17,7 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "userBuilder")
-public class User extends IdHolder{
+public class User extends IdHolder {
     private String name;
     @Email
     private String email;
