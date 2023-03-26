@@ -18,38 +18,44 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmService {
-    @Autowired
-    private FilmStorage filmStorage;
+public class FilmService extends AbstractService<Film> {
     @Autowired
     private UserStorage userStorage;
+
+    private FilmService(@Autowired FilmStorage storage) {
+        super(storage);
+    }
 
     private void checkUserExist(long userId) {
         userStorage.get(userId);
     }
 
     private Set<Long> getLikeList(long id) {
-        return filmStorage.get(id).getLikes();
+        return super.get(id).getLikes();
     }
 
+    @Override
     public Film add(Film film) {
         log.info(FILM_ADDED.message(), film.getName());
-        return filmStorage.add(film);
+        return super.add(film);
     }
 
+    @Override
     public Film update(Film film) {
         log.info(FILM_UPDATED.message(), film.getId(), film.getName());
-        return filmStorage.update(film);
+        return super.update(film);
     }
 
+    @Override
     public Film get(long id) {
         log.info(GET_FILM.message(), id);
-        return filmStorage.get(id);
+        return super.get(id);
     }
 
+    @Override
     public List<Film> getList() {
         log.info(GET_FILM_LIST.message());
-        return filmStorage.getList();
+        return super.getList();
     }
 
     public void addLike(long id, long userId) {
@@ -74,7 +80,7 @@ public class FilmService {
 
     public List<Film> getPopularList(long count) {
         log.info(GET_POPULAR_FILM_LIST.message());
-        return filmStorage.getList().stream()
+        return super.getList().stream()
                 .sorted(Comparator.comparing(film -> film.getLikes().size(), Comparator.reverseOrder()))
                 .limit(count)
                 .collect(Collectors.toList());

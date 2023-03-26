@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractStorage<T extends IdHolder> {
-    protected final Map<Long, T> data = new HashMap<>();
-    protected long idCounter;
+    private final Map<Long, T> data = new HashMap<>();
+    private long idCounter;
 
     private boolean isContain(T object) {
         return data.containsKey(object.getId());

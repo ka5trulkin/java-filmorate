@@ -14,9 +14,10 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
-public class UserService {
-    @Autowired
-    private UserStorage storage;
+public class UserService extends AbstractService<User> {
+    private UserService(@Autowired UserStorage storage) {
+        super(storage);
+    }
 
     private void checkName(User user) {
         if ((user.getName() == null) || (user.getName().isBlank())) {
@@ -25,29 +26,33 @@ public class UserService {
     }
 
     private Set<Long> getIdFriendList(long id) {
-        return storage.get(id).getFriends();
+        return super.get(id).getFriends();
     }
 
+    @Override
     public User add(User user) {
         this.checkName(user);
         log.info(USER_ADDED.message(), user.getLogin(), user.getId());
-        return storage.add(user);
+        return super.add(user);
     }
 
+    @Override
     public User update(User user) {
         this.checkName(user);
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
-        return storage.update(user);
+        return super.update(user);
     }
 
+    @Override
     public User get(long id) {
         log.info(GET_USER.message(), id);
-        return storage.get(id);
+        return super.get(id);
     }
 
+    @Override
     public List<User> getList() {
         log.info(GET_USER_LIST.message());
-        return storage.getList();
+        return super.getList();
     }
 
     public void addFriend(long id, long friendId) {
@@ -67,8 +72,8 @@ public class UserService {
     }
 
     public List<User> getFriendList(long id) {
-        Set<Long> friendList = storage.get(id).getFriends();
-        return storage.getList().stream()
+        Set<Long> friendList = super.get(id).getFriends();
+        return super.getList().stream()
                 .filter(user -> friendList.contains(user.getId()))
                 .collect(Collectors.toList());
     }
