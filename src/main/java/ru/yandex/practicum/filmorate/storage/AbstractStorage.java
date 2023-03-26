@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import ru.yandex.practicum.filmorate.exeption.ObjectAlreadyExistException;
-import ru.yandex.practicum.filmorate.exeption.ObjectNotFoundExistException;
+import ru.yandex.practicum.filmorate.exception.object.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.IdHolder;
 
 import java.util.ArrayList;

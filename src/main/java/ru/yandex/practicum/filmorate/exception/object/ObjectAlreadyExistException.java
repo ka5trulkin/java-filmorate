@@ -1,4 +1,6 @@
-package ru.yandex.practicum.filmorate.exeption;
+package ru.yandex.practicum.filmorate.exception.object;
+
+import ru.yandex.practicum.filmorate.exception.RequestException;
 
 import static ru.yandex.practicum.filmorate.message.ExceptionMessage.OBJECT_ALREADY_EXIST;
 

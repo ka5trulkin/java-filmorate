@@ -1,6 +1,6 @@
-package ru.yandex.practicum.filmorate.exeption.film;
+package ru.yandex.practicum.filmorate.exception.film;
 
-import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import static ru.yandex.practicum.filmorate.message.ExceptionMessage.FILM_LIKE_NOT_FOUND;
 

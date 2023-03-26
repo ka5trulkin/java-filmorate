@@ -56,18 +56,18 @@ public class UserService extends AbstractService<User> {
     }
 
     public void addFriend(long id, long friendId) {
-        Set<Long> userFriendsList = this.getIdFriendList(id);
-        Set<Long> friendFriendsList = this.getIdFriendList(friendId);
-        userFriendsList.add(friendId);
-        friendFriendsList.add(id);
+        Set<Long> userFriendList = this.getIdFriendList(id);
+        Set<Long> friendFriendList = this.getIdFriendList(friendId);
+        userFriendList.add(friendId);
+        friendFriendList.add(id);
         log.info(USER_FRIEND_ADDED.message(), id, friendId);
     }
 
     public void removeFriend(long id, long friendId) {
-        Set<Long> userFriendsList = this.getIdFriendList(id);
-        Set<Long> friendFriendsList = this.getIdFriendList(friendId);
-        userFriendsList.remove(friendId);
-        friendFriendsList.remove(id);
+        Set<Long> userFriendList = this.getIdFriendList(id);
+        Set<Long> friendFriendList = this.getIdFriendList(friendId);
+        userFriendList.remove(friendId);
+        friendFriendList.remove(id);
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 
