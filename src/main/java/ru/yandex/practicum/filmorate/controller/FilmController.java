@@ -5,41 +5,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.exeption.InfoMessage.*;
+import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController extends AbstractController<Film> {
+public class FilmController {
     @Autowired
-    private FilmController(FilmRepository repository) {
-        super(repository);
-    }
+    private FilmService service;
 
-    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@Valid @RequestBody Film film) {
-        log.info(REQUEST_ADD_MOVIE.message(), film.getName());
-        return super.add(film);
+        log.info(REQUEST_ADD_FILM.message(), film.getName());
+        return service.add(film);
     }
 
-    @Override
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info(REQUEST_UPDATE_MOVIE.message(), film.getId(), film.getName());
-        return super.update(film);
+        log.info(REQUEST_UPDATE_FILM.message(), film.getId(), film.getName());
+        return service.update(film);
     }
 
-    @Override
+    @GetMapping("/{id}")
+    protected Film get(@PathVariable("id") long id) {
+        log.info(REQUEST_GET_FILM.message(), id);
+        return service.get(id);
+    }
+
     @GetMapping
     public List<Film> getList() {
-        log.info(GET_FILM_LIST.message());
-        return super.getList();
+        log.info(REQUEST_GET_FILM_LIST.message());
+        return service.getList();
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable long id, @PathVariable long userId) {
+        log.info(REQUEST_ADD_FILM_LIKE.message(), id, userId);
+        service.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable long id, @PathVariable long userId) {
+        log.info(REQUEST_REMOVE_FILM_LIKE_.message(), id, userId);
+        service.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularList(@RequestParam(defaultValue = "10") long count) {
+        log.info(REQUEST_GET_POPULAR_FILM_LIST.message());
+        return service.getPopularList(count);
     }
 }
