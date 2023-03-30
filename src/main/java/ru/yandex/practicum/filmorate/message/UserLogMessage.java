@@ -8,7 +8,7 @@ public enum UserLogMessage {
     REQUEST_GET_USER("Запрос на получение пользователя ID:{}"),
     REQUEST_GET_USER_FRIEND_LIST("Запрос на получение списка друзей пользователя ID:{}"),
     REQUEST_GET_USER_COMMON_FRIEND_LIST("Запрос на получение списка общих друзей у пользователя ID:{} с пользователем ID:{}"),
-    USER_ADDED("Пользователь Login:{}"),
+    USER_ADDED("Пользователь Login:{} добавлен"),
     USER_UPDATED("Пользователь ID:{}, Login:{} обновлен"),
     USER_FRIEND_ADDED("Пользователю ID:{} добавлен в друзья пользователь ID:{}"),
     USER_FRIEND_REMOVED("У пользователя ID:{} удален из друзей пользователь ID:{}"),
