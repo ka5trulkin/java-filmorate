@@ -47,7 +47,24 @@
 ### Примеры SQL запросов
 
 **Получение данных о фильме**
-- **SELECT** name, description, release_date, duration **FROM** film **GROUP BY** name **ORDER BY** name;
-
+```
+SELECT name, 
+    description, 
+    release_date, 
+    duration 
+FROM film 
+WHERE film_id=1
+GROUP BY name 
+ORDER BY name;
+```
 **Получение данных о пользователе**
-- **SELECT** name, email, login, birthday **FROM** user **GROUP BY** name **ORDER BY** name;
+```
+SELECT name, 
+    email, 
+    login, 
+    birthday 
+FROM user
+WHERE user_id=1
+GROUP BY name 
+ORDER BY name;
+```
