@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = NotContainSpaceValidator.class)
 @Documented
 public @interface NotContainSpace {
-    String message() default "{Данные не должны содержать пробелы}";
+    String message() default "должны отсутствовать пробелы";
 
     Class<?>[] groups() default {};
 

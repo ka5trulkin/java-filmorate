@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = AfterFirstFilmValidator.class)
 @Documented
 public @interface AfterFirstFilm {
-    String message() default "{Неверная дата фильма}";
+    String message() default "должна быть дата не ранее 1985.12.28";
 
     Class<?>[] groups() default {};
 
