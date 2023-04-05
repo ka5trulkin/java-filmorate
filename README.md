@@ -54,7 +54,7 @@ SELECT name,
     duration,
     mpa
 FROM film 
-WHERE film_id=1;
+WHERE id=1;
 ```
 **Получение данных о пользователе**
 ```
@@ -63,5 +63,5 @@ SELECT name,
     login, 
     birthday 
 FROM user
-WHERE user_id=1;
+WHERE id=1;
 ```

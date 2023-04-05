@@ -75,8 +75,8 @@ public class UserService extends AbstractService<User> {
     public List<User> getFriendList(long id) {
         Set<Long> friendList = super.get(id).getFriends();
         log.info(GET_USER_FRIEND_LIST.message(), id);
-        return super.getList().stream()
-                .filter(user -> friendList.contains(user.getId()))
+        return friendList.stream()
+                .map(super::get)
                 .collect(Collectors.toList());
     }
 
