@@ -51,11 +51,10 @@
 SELECT name, 
     description, 
     release_date, 
-    duration 
+    duration,
+    mpa
 FROM film 
-WHERE film_id=1
-GROUP BY name 
-ORDER BY name;
+WHERE film_id=1;
 ```
 **Получение данных о пользователе**
 ```
@@ -64,7 +63,5 @@ SELECT name,
     login, 
     birthday 
 FROM user
-WHERE user_id=1
-GROUP BY name 
-ORDER BY name;
+WHERE user_id=1;
 ```
