@@ -18,15 +18,15 @@ import java.util.Set;
 @AllArgsConstructor
 @NonNull
 public class Film extends IdHolder {
-    @NotBlank
+    @NotBlank(message = "Name не должно быть пустым")
     private String name;
-    @NotBlank
-    @Size(max = 200)
+    @NotBlank(message = "Description не должно быть пустым")
+    @Size(max = 200, message = "Description размер должен находиться в диапазоне от 0 до 200")
     private String description;
-    @PastOrPresent
+    @PastOrPresent(message = "ReleaseDate должна содержать прошедшую дату или сегодняшнее число")
     @AfterFirstFilm
     private LocalDate releaseDate;
-    @Positive
+    @Positive(message = "Duration должна быть больше 0")
     private int duration;
     private final Set<Long> likes = new HashSet<>();
 }

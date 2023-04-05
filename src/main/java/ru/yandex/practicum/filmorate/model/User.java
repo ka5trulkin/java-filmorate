@@ -19,12 +19,12 @@ import java.util.Set;
 @SuperBuilder(builderMethodName = "userBuilder")
 public class User extends IdHolder {
     private String name;
-    @Email
+    @Email(message = "Email не соответствует формату электронной почты")
     private String email;
-    @NotBlank
-    @NotContainSpace
+    @NotBlank(message = "Login не должен быть пустым")
+    @NotContainSpace(message = "Login не должен содержать пробелы")
     private String login;
-    @PastOrPresent
+    @PastOrPresent(message = "Birthday должно содержать прошедшую дату или сегодняшнее число")
     private LocalDate birthday;
     private final Set<Long> friends = new HashSet<>();
 }

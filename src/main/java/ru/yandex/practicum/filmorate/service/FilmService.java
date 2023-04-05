@@ -19,11 +19,12 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @Slf4j
 @Service
 public class FilmService extends AbstractService<Film> {
-    @Autowired
-    private UserStorage userStorage;
+    private final UserStorage userStorage;
 
-    private FilmService(@Autowired FilmStorage storage) {
+    @Autowired
+    private FilmService(FilmStorage storage, UserStorage userStorage) {
         super(storage);
+        this.userStorage = userStorage;
     }
 
     private void checkUserExist(long userId) {
