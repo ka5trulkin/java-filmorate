@@ -18,13 +18,20 @@ public class FilmDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private Long getLastIdFromDataBase() {
+        return jdbcTemplate.queryForObject("SELECT id FROM film ORDER BY id desc LIMIT 1", Long.class);
+    }
+
     public Film add(Film film) {
-//        jdbcTemplate.query();
-        return null;
+        jdbcTemplate.update("INSERT INTO film(name, description, release_date, duration, mpa) VALUES(?, ?, ?, ?, ?)",
+                film.getName(), film.getDescription(),film.getReleaseDate(), film.getDuration(), film.getMpa());
+        return this.get(this.getLastIdFromDataBase());
     }
 
     public Film update(Film film) {
-        return null;
+        jdbcTemplate.update("UPDATE film SET name=?, description=?, release_date=?, duration=?, mpa=? WHERE id=?",
+                film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa(), film.getId());
+        return this.get(film.getId());
     }
 
     public List<Film> getList() {

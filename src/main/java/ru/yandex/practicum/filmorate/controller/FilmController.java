@@ -26,13 +26,13 @@ public class FilmController {
     @ResponseStatus(HttpStatus.CREATED)
     public Film add(@Valid @RequestBody Film film) {
         log.info(REQUEST_ADD_FILM.message(), film.getName());
-        return service.add(film);
+        return filmDao.add(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.info(REQUEST_UPDATE_FILM.message(), film.getId(), film.getName());
-        return service.update(film);
+        return filmDao.update(film);
     }
 
     @GetMapping("/{id}")
