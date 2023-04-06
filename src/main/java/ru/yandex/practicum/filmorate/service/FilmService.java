@@ -2,10 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -18,11 +19,11 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmService extends AbstractService<Film> {
+public class FilmService extends AbstractService<FilmInMemory> {
     private final UserStorage userStorage;
 
     @Autowired
-    private FilmService(FilmStorage storage, UserStorage userStorage) {
+    private FilmService(@Qualifier("inMemoryFilmStorage") FilmStorage storage, UserStorage userStorage) {
         super(storage);
         this.userStorage = userStorage;
     }
@@ -36,25 +37,25 @@ public class FilmService extends AbstractService<Film> {
     }
 
     @Override
-    public Film add(Film film) {
+    public FilmInMemory add(FilmInMemory film) {
         log.info(FILM_ADDED.message(), film.getName());
         return super.add(film);
     }
 
     @Override
-    public Film update(Film film) {
+    public FilmInMemory update(FilmInMemory film) {
         log.info(FILM_UPDATED.message(), film.getId(), film.getName());
         return super.update(film);
     }
 
     @Override
-    public Film get(long id) {
+    public FilmInMemory get(long id) {
         log.info(GET_FILM.message(), id);
         return super.get(id);
     }
 
     @Override
-    public List<Film> getList() {
+    public List<FilmInMemory> getList() {
         log.info(GET_FILM_LIST.message());
         return super.getList();
     }
@@ -79,7 +80,7 @@ public class FilmService extends AbstractService<Film> {
         throw new FilmLikeNotFoundException(id, userId);
     }
 
-    public List<Film> getPopularList(long count) {
+    public List<FilmInMemory> getPopularList(long count) {
         log.info(GET_POPULAR_FILM_LIST.message());
         return super.getList().stream()
                 .sorted(Comparator.comparing(film -> film.getLikes().size(), Comparator.reverseOrder()))

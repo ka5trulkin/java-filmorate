@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.FilmDao;
 
@@ -17,35 +17,39 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
+    private final FilmService service;
+    private final FilmDao filmDao; // |!| временно |!|
+
     @Autowired
-    private FilmService service;
-    @Autowired
-    private FilmDao filmDao;
+    public FilmController(FilmService service, FilmDao filmDao) {
+        this.service = service;
+        this.filmDao = filmDao;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film add(@Valid @RequestBody Film film) {
+    public FilmInMemory add(@Valid @RequestBody FilmInMemory film) {
         log.info(REQUEST_ADD_FILM.message(), film.getName());
-        return filmDao.add(film);
+        return service.add(film);
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
+    public FilmInMemory update(@Valid @RequestBody FilmInMemory film) {
         log.info(REQUEST_UPDATE_FILM.message(), film.getId(), film.getName());
-        return filmDao.update(film);
+        return service.update(film);
     }
 
     @GetMapping("/{id}")
-    protected Film get(@PathVariable("id") long id) {
+    protected FilmInMemory get(@PathVariable("id") long id) {
         log.info(REQUEST_GET_FILM.message(), id);
-        return filmDao.get(id);
+        return service.get(id);
     }
 
     @GetMapping
-    public List<Film> getList() {
+    public List<FilmInMemory> getList() {
         log.info(REQUEST_GET_FILM_LIST.message());
 //        return service.getList();
-        return filmDao.getList();
+        return service.getList();
     }
 
     @PutMapping("/{id}/like/{userId}")
@@ -61,7 +65,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularList(@RequestParam(defaultValue = "10") long count) {
+    public List<FilmInMemory> getPopularList(@RequestParam(defaultValue = "10") long count) {
         log.info(REQUEST_GET_POPULAR_FILM_LIST.message());
         return service.getPopularList(count);
     }

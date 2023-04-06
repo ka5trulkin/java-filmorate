@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
@@ -32,13 +32,13 @@ class FilmControllerTest {
     InMemoryUserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
-    private Film validFilm;
-    private Film invalidFilm;
+    private FilmInMemory validFilm;
+    private FilmInMemory invalidFilm;
     private User validUser;
 
     @BeforeEach
     void beforeEach() {
-        validFilm = Film.filmBuilder()
+        validFilm = FilmInMemory.filmBuilder()
                 .name("Чебуратино")
                 .description("Римейк Филиппа Киркорова")
                 .releaseDate(LocalDate.of(2023, 3, 6))
@@ -328,7 +328,7 @@ class FilmControllerTest {
         String updDescription = "NewDescription";
         LocalDate updReleaseDate = LocalDate.of(2000, 12, 31);
         final int updDuration = 777;
-        Film updatedFilm = Film.filmBuilder()
+        FilmInMemory updatedFilm = FilmInMemory.filmBuilder()
                 .id(1)
                 .name(updName)
                 .description(updDescription)

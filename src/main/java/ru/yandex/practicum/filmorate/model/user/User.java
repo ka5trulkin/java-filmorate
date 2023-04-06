@@ -1,9 +1,10 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.validation.NotContainSpace;
 
 import javax.validation.constraints.Email;

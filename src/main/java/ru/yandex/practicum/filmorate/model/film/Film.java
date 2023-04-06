@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.validation.AfterFirstFilm;
 
 import javax.validation.constraints.NotBlank;
@@ -9,8 +10,6 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -29,6 +28,4 @@ public class Film extends IdHolder {
     private LocalDate releaseDate;
     @Positive(message = "Duration должна быть больше 0")
     private int duration;
-    private String mpa;
-    private final Set<Long> likes = new HashSet<>();
 }
