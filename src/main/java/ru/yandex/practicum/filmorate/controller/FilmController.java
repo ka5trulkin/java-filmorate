@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmDao;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,6 +19,8 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 public class FilmController {
     @Autowired
     private FilmService service;
+    @Autowired
+    private FilmDao filmDao;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +44,8 @@ public class FilmController {
     @GetMapping
     public List<Film> getList() {
         log.info(REQUEST_GET_FILM_LIST.message());
-        return service.getList();
+//        return service.getList();
+        return filmDao.getList();
     }
 
     @PutMapping("/{id}/like/{userId}")

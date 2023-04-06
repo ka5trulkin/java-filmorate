@@ -15,6 +15,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(builderMethodName = "filmBuilder")
+@NoArgsConstructor
 @AllArgsConstructor
 @NonNull
 public class Film extends IdHolder {
@@ -28,5 +29,6 @@ public class Film extends IdHolder {
     private LocalDate releaseDate;
     @Positive(message = "Duration должна быть больше 0")
     private int duration;
+    private String mpa;
     private final Set<Long> likes = new HashSet<>();
 }
