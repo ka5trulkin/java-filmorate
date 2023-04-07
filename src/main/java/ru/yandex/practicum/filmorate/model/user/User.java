@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.filmorate.model.IdHolder;
 import ru.yandex.practicum.filmorate.validation.NotContainSpace;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "userBuilder")
 public class User extends IdHolder {

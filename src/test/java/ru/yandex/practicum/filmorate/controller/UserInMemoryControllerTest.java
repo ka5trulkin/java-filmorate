@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.model.user.UserInMemory;
+import ru.yandex.practicum.filmorate.storage.memory.UserInMemoryStorage;
 
 import java.time.LocalDate;
 
@@ -21,21 +21,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class UserInMemoryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private InMemoryUserStorage repository;
+    private UserInMemoryStorage storage;
     @Autowired
     private MockMvc mockMvc;
-    private User validUser;
-    private User invalidUser;
-    private User firstFriend;
-    private User secondFriend;
+    private UserInMemory validUser;
+    private UserInMemory invalidUser;
+    private UserInMemory firstFriend;
+    private UserInMemory secondFriend;
 
     @BeforeEach
     void beforeEach() {
-        validUser = User.userBuilder()
+        validUser = UserInMemory.userBuilder()
                 .id(1)
                 .email("email@new.org")
                 .login("temp")
@@ -43,14 +43,14 @@ class UserControllerTest {
                 .birthday(LocalDate.of(1986, 11, 10))
                 .build();
         invalidUser = validUser;
-        firstFriend = User.userBuilder()
+        firstFriend = UserInMemory.userBuilder()
                 .id(2)
                 .email("temp@email.com")
                 .login("firstFriend")
                 .name("Кеша")
                 .birthday(LocalDate.of(1986, 11, 11))
                 .build();
-        secondFriend = User.userBuilder()
+        secondFriend = UserInMemory.userBuilder()
                 .id(3)
                 .email("temptwo@email.com")
                 .login("secondFriend")
@@ -61,25 +61,25 @@ class UserControllerTest {
 
     @AfterEach
     void clearRepository() {
-        repository.clear();
+        storage.clear();
     }
 
     @Test
     void shouldBeReturnCommonFriendList() throws Exception {
-        mockMvc.perform(get("/users/1/friends/common/2"))
+        mockMvc.perform(get("/in-memory-users/1/friends/common/2"))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(secondFriend)));
-        mockMvc.perform(put("/users/1/friends/3"));
-        mockMvc.perform(put("/users/2/friends/3"));
-        mockMvc.perform(get("/users/1/friends/common/2"))
+        mockMvc.perform(put("/in-memory-users/1/friends/3"));
+        mockMvc.perform(put("/in-memory-users/2/friends/3"));
+        mockMvc.perform(get("/in-memory-users/1/friends/common/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(secondFriend.getId()))
@@ -88,25 +88,25 @@ class UserControllerTest {
 
     @Test
     void shouldBeReturnFriendList() throws Exception {
-        mockMvc.perform(get("/users/1/friends"))
+        mockMvc.perform(get("/in-memory-users/1/friends"))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
-        mockMvc.perform(put("/users/1/friends/2"));
-        mockMvc.perform(get("/users/1/friends"))
+        mockMvc.perform(put("/in-memory-users/1/friends/2"));
+        mockMvc.perform(get("/in-memory-users/1/friends"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(firstFriend.getId()))
                 .andExpect(jsonPath("$", hasSize(1)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(secondFriend)));
-        mockMvc.perform(put("/users/1/friends/3"));
-        mockMvc.perform(get("/users/1/friends"))
+        mockMvc.perform(put("/in-memory-users/1/friends/3"));
+        mockMvc.perform(get("/in-memory-users/1/friends"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[1].id").value(secondFriend.getId()))
@@ -115,52 +115,52 @@ class UserControllerTest {
 
     @Test
     void shouldBeRemovedUserFriend() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
-        mockMvc.perform(delete("/users/1/friends/2"))
+        mockMvc.perform(delete("/in-memory-users/1/friends/2"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldBeAddedUserFriend() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
-        mockMvc.perform(put("/users/1/friends/2"))
+        mockMvc.perform(put("/in-memory-users/1/friends/2"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldBeAddNotExistUserFriendException() throws Exception {
-        mockMvc.perform(put("/users/1/friends/2"))
+        mockMvc.perform(put("/in-memory-users/1/friends/2"))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(put("/users/1/friends/2"))
+        mockMvc.perform(put("/in-memory-users/1/friends/2"))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
-        mockMvc.perform(put("/users/1/friends/2"))
+        mockMvc.perform(put("/in-memory-users/1/friends/2"))
                 .andExpect(status().isOk());
-        mockMvc.perform(put("/users/1/friends/777"))
+        mockMvc.perform(put("/in-memory-users/1/friends/777"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldBeReturnCorrectUser() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
-        mockMvc.perform(get("/users/1"))
+        mockMvc.perform(get("/in-memory-users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.email").value("email@new.org"))
@@ -171,7 +171,7 @@ class UserControllerTest {
 
     @Test
     void shouldBeCreated() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().isCreated())
@@ -184,7 +184,7 @@ class UserControllerTest {
 
     @Test
     void shouldBeCreateExceptionWithEmptyRequest() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().is4xxClientError());
@@ -192,11 +192,11 @@ class UserControllerTest {
 
     @Test
     void shouldBeCreateExceptionWithExistentId() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
         validUser.setId(1);
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().is4xxClientError());
@@ -205,7 +205,7 @@ class UserControllerTest {
     @Test
     void shouldBeLoginException() throws Exception {
         invalidUser.setLogin("one two");
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
                 .andExpect(status().is4xxClientError());
@@ -214,7 +214,7 @@ class UserControllerTest {
     @Test
     void shouldBeEmailException() throws Exception {
         invalidUser.setEmail("email.org");
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
                 .andExpect(status().is4xxClientError());
@@ -223,7 +223,7 @@ class UserControllerTest {
     @Test
     void shouldBeBirthdayException() throws Exception {
         invalidUser.setBirthday(LocalDate.of(2986, 11, 10));
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
                 .andExpect(status().is4xxClientError());
@@ -231,21 +231,21 @@ class UserControllerTest {
 
     @Test
     void shouldBeUpdated() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
         String updEmail = "newEmail@new.org";
         String updLogin = "newLogin";
         String updName = "NewName";
         LocalDate updBirthday = LocalDate.of(2000, 12, 31);
-        User updatedUser = User.userBuilder()
+        UserInMemory updatedUser = UserInMemory.userBuilder()
                 .id(1)
                 .email(updEmail)
                 .login(updLogin)
                 .name(updName)
                 .birthday(updBirthday)
                 .build();
-        mockMvc.perform(put("/users")
+        mockMvc.perform(put("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedUser)))
                 .andExpect(status().isOk())
@@ -259,7 +259,7 @@ class UserControllerTest {
     @Test
     void shouldBeUpdateExceptionWithNonexistentId() throws Exception {
         validUser.setId(9999);
-        mockMvc.perform(put("/users")
+        mockMvc.perform(put("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().is4xxClientError());
@@ -267,11 +267,11 @@ class UserControllerTest {
 
     @Test
     void shouldBeReturnedList() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(validUser)));
         validUser.setId(1);
-        mockMvc.perform(get("/users")
+        mockMvc.perform(get("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().isOk())
@@ -282,14 +282,14 @@ class UserControllerTest {
     @Test
     void mustBeAssignedNameBasedOnLogin() throws Exception {
         validUser.setName("");
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(validUser.getLogin()));
         validUser.setId(1);
         validUser.setName(null);
-        mockMvc.perform(put("/users")
+        mockMvc.perform(put("/in-memory-users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validUser)))
                 .andExpect(status().isOk())

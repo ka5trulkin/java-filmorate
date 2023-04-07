@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.model.user.UserInMemory;
+import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
 import java.util.Set;
@@ -14,13 +15,13 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
-public class UserInMemoryService extends AbstractInMemoryService<User> {
+public class UserInMemoryService extends AbstractInMemoryService<UserInMemory> {
     @Autowired
-    private UserInMemoryService(UserStorage storage) {
+    private UserInMemoryService(@Qualifier("userInMemoryStorage") Storage<UserInMemory> storage) {
         super(storage);
     }
 
-    private void checkName(User user) {
+    private void checkName(UserInMemory user) {
         if ((user.getName() == null) || (user.getName().isBlank())) {
             user.setName(user.getLogin());
         }
@@ -31,27 +32,27 @@ public class UserInMemoryService extends AbstractInMemoryService<User> {
     }
 
     @Override
-    public User add(User user) {
+    public UserInMemory add(UserInMemory user) {
         this.checkName(user);
         log.info(USER_ADDED.message(), user.getLogin());
         return super.add(user);
     }
 
     @Override
-    public User update(User user) {
+    public UserInMemory update(UserInMemory user) {
         this.checkName(user);
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return super.update(user);
     }
 
     @Override
-    public User get(long id) {
+    public UserInMemory get(long id) {
         log.info(GET_USER.message(), id);
         return super.get(id);
     }
 
     @Override
-    public List<User> getList() {
+    public List<UserInMemory> getList() {
         log.info(GET_USER_LIST.message());
         return super.getList();
     }
@@ -72,7 +73,7 @@ public class UserInMemoryService extends AbstractInMemoryService<User> {
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 
-    public List<User> getFriendList(long id) {
+    public List<UserInMemory> getFriendList(long id) {
         Set<Long> friendList = super.get(id).getFriends();
         log.info(GET_USER_FRIEND_LIST.message(), id);
         return friendList.stream()
@@ -80,9 +81,9 @@ public class UserInMemoryService extends AbstractInMemoryService<User> {
                 .collect(Collectors.toList());
     }
 
-    public List<User> getCommonFriendList(long id, long otherId) {
-        List<User> userFriends = this.getFriendList(id);
-        List<User> otherFriends = this.getFriendList(otherId);
+    public List<UserInMemory> getCommonFriendList(long id, long otherId) {
+        List<UserInMemory> userFriends = this.getFriendList(id);
+        List<UserInMemory> otherFriends = this.getFriendList(otherId);
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
         return userFriends.stream()
                 .filter(otherFriends::contains)

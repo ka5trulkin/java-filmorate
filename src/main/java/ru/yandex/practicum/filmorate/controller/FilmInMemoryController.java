@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.service.FilmInMemoryService;
-import ru.yandex.practicum.filmorate.storage.film.FilmDaoStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FilmDaoStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @RestController
-@RequestMapping("/films")
+@RequestMapping("/in-memory-films")
 @Slf4j
 public class FilmInMemoryController {
     private final FilmInMemoryService service;

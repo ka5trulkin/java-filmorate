@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.model.user.UserInMemory;
 import ru.yandex.practicum.filmorate.service.UserInMemoryService;
 
 import javax.validation.Valid;
@@ -13,33 +13,33 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/in-memory-users")
 @Slf4j
-public class UserController {
+public class UserInMemoryController {
     @Autowired
     private UserInMemoryService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User add(@Valid @RequestBody User user) {
+    public UserInMemory add(@Valid @RequestBody UserInMemory user) {
         log.info(REQUEST_ADD_USER.message(), user.getLogin());
         return service.add(user);
     }
 
     @PutMapping
-    public User update(@Valid @RequestBody User user) {
+    public UserInMemory update(@Valid @RequestBody UserInMemory user) {
         log.info(REQUEST_UPDATE_USER.message(), user.getId(), user.getLogin());
         return service.update(user);
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable("id") long id) {
+    public UserInMemory get(@PathVariable("id") long id) {
         log.info(REQUEST_GET_USER.message(), id);
         return service.get(id);
     }
 
     @GetMapping
-    public List<User> getList() {
+    public List<UserInMemory> getList() {
         log.info(GET_USER_LIST.message());
         return service.getList();
     }
@@ -57,13 +57,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getFriendList(@PathVariable long id) {
+    public List<UserInMemory> getFriendList(@PathVariable long id) {
         log.info(REQUEST_GET_USER_FRIEND_LIST.message(), id);
         return service.getFriendList(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriendList(@PathVariable long id, @PathVariable long otherId) {
+    public List<UserInMemory> getCommonFriendList(@PathVariable long id, @PathVariable long otherId) {
         log.info(REQUEST_GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
         return service.getCommonFriendList(id, otherId);
     }
