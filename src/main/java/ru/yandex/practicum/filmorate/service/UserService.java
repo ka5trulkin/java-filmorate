@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Service
 public class UserService extends AbstractService<UserInMemory> {
     @Autowired
-    private UserService(@Qualifier("userStorage") Dao<UserInMemory> storage) {
+    protected UserService(@Qualifier("userStorage") Dao<UserInMemory> storage) {
         super(storage);
     }
 

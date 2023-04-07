@@ -24,7 +24,7 @@ public class FilmService extends AbstractService<FilmInMemory> implements FilmDa
     private final Dao<UserInMemory> userStorage;
 
     @Autowired
-    private FilmService(@Qualifier("filmStorage") Dao<FilmInMemory> storage,
+    protected FilmService(@Qualifier("filmStorage") Dao<FilmInMemory> storage,
                         @Qualifier("userStorage") Dao<UserInMemory> userStorage) {
         super(storage);
         this.userStorage = userStorage;

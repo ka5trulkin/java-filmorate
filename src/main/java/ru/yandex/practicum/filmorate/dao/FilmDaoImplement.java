@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.interfaces.FilmDao;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
@@ -14,7 +13,7 @@ import java.util.List;
 @Service
 public class FilmDaoImplement extends AbstractDao implements FilmDao<Film> {
     @Autowired
-    public FilmDaoImplement(JdbcTemplate jdbcTemplate) {
+    protected FilmDaoImplement(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
