@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmDao;
+import ru.yandex.practicum.filmorate.service.FilmInMemoryService;
+import ru.yandex.practicum.filmorate.storage.film.FilmDaoStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,14 +16,12 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController {
-    private final FilmService service;
-    private final FilmDao filmDao; // |!| временно |!|
+public class FilmInMemoryController {
+    private final FilmInMemoryService service;
 
     @Autowired
-    public FilmController(FilmService service, FilmDao filmDao) {
+    public FilmInMemoryController(FilmInMemoryService service, FilmDaoStorage filmDao) {
         this.service = service;
-        this.filmDao = filmDao;
     }
 
     @PostMapping
@@ -48,7 +46,6 @@ public class FilmController {
     @GetMapping
     public List<FilmInMemory> getList() {
         log.info(REQUEST_GET_FILM_LIST.message());
-//        return service.getList();
         return service.getList();
     }
 

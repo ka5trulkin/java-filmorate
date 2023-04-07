@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.UserInMemoryService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Slf4j
 public class UserController {
     @Autowired
-    private UserService service;
+    private UserInMemoryService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

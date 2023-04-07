@@ -6,46 +6,42 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.film.FilmDB;
+import ru.yandex.practicum.filmorate.storage.AbstractDaoStorage;
 
 import java.util.List;
 
 @Component
-public class FilmDao {
-    private final JdbcTemplate jdbcTemplate;
-
+public class FilmDaoStorage extends AbstractDaoStorage<FilmDB> {
     @Autowired
-    private FilmDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public FilmDaoStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
     }
 
-    private Long getLastIdFromDataBase() {
-        return jdbcTemplate.queryForObject("SELECT (id) FROM (film) ORDER BY (id) DESC LIMIT (1)", Long.class);
-    }
-
-//    @Override
-    public FilmDB add(FilmDB film) {
+    @Override
+    public FilmDB add(FilmDB object) {
         jdbcTemplate.update("INSERT INTO film(name, description, release_date, duration, mpa) VALUES(?, ?, ?, ?, ?)",
-                film.getName(), film.getDescription(),film.getReleaseDate(), film.getDuration(), film.getMpa());
-        return this.get(this.getLastIdFromDataBase());
+                object.getName(), object.getDescription(), object.getReleaseDate(), object.getDuration(), object.getMpa());
+        String tableName = "film";
+        return this.get(this.getLastIdFromDataBase(tableName));
     }
 
-//    @Override
-    public FilmDB update(FilmDB film) {
+    @Override
+    public FilmDB update(FilmDB object) {
         jdbcTemplate.update("UPDATE film SET name=?, description=?, release_date=?, duration=?, mpa=? WHERE id=?",
-                film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa(), film.getId());
-        return this.get(film.getId());
+                object.getName(), object.getDescription(), object.getReleaseDate(), object.getDuration(), object.getMpa(), object.getId());
+        return this.get(object.getId());
     }
 
-//    @Override
-    public List<FilmDB> getList() {
-        return jdbcTemplate.query("SELECT * FROM film", new BeanPropertyRowMapper<>(FilmDB.class));
-    }
-
-//    @Override
+    @Override
     public FilmDB get(long id) {
         return jdbcTemplate.query("SELECT * FROM film WHERE id=?", new BeanPropertyRowMapper<>(FilmDB.class), id)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new ObjectNotFoundExistException(id));
+    }
+
+    @Override
+    public List<FilmDB> getList() {
+        return jdbcTemplate.query("SELECT * FROM film", new BeanPropertyRowMapper<>(FilmDB.class));
     }
 }

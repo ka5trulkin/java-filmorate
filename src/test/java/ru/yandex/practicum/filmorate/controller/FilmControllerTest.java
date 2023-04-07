@@ -9,9 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmInMemoryStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
@@ -27,18 +26,18 @@ class FilmControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private InMemoryFilmStorage filmStorage;
+    private FilmInMemoryStorage filmStorage;
     @Autowired
     InMemoryUserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
-    private FilmInMemory validFilm;
-    private FilmInMemory invalidFilm;
+    private ru.yandex.practicum.filmorate.model.film.FilmInMemory validFilm;
+    private ru.yandex.practicum.filmorate.model.film.FilmInMemory invalidFilm;
     private User validUser;
 
     @BeforeEach
     void beforeEach() {
-        validFilm = FilmInMemory.filmBuilder()
+        validFilm = ru.yandex.practicum.filmorate.model.film.FilmInMemory.filmBuilder()
                 .name("Чебуратино")
                 .description("Римейк Филиппа Киркорова")
                 .releaseDate(LocalDate.of(2023, 3, 6))
@@ -328,7 +327,7 @@ class FilmControllerTest {
         String updDescription = "NewDescription";
         LocalDate updReleaseDate = LocalDate.of(2000, 12, 31);
         final int updDuration = 777;
-        FilmInMemory updatedFilm = FilmInMemory.filmBuilder()
+        ru.yandex.practicum.filmorate.model.film.FilmInMemory updatedFilm = ru.yandex.practicum.filmorate.model.film.FilmInMemory.filmBuilder()
                 .id(1)
                 .name(updName)
                 .description(updDescription)

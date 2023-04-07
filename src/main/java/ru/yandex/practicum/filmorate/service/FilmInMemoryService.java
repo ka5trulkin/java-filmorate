@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.Storage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Comparator;
@@ -19,11 +19,11 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmService extends AbstractService<FilmInMemory> {
+public class FilmInMemoryService extends AbstractInMemoryService<FilmInMemory> {
     private final UserStorage userStorage;
 
     @Autowired
-    private FilmService(@Qualifier("inMemoryFilmStorage") FilmStorage storage, UserStorage userStorage) {
+    private FilmInMemoryService(@Qualifier("filmInMemory") Storage<FilmInMemory> storage, UserStorage userStorage) {
         super(storage);
         this.userStorage = userStorage;
     }

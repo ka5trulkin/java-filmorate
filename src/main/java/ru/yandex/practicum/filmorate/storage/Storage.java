@@ -5,9 +5,9 @@ import ru.yandex.practicum.filmorate.model.IdHolder;
 import java.util.List;
 
 public interface Storage<T extends IdHolder> {
-    T add(T film);
+    T add(T object);
 
-    T update(T film);
+    T update(T object);
 
     List<T> getList();
 
