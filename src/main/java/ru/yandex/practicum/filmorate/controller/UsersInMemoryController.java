@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
-import ru.yandex.practicum.filmorate.service.UserInMemoryService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,9 +15,9 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @RestController
 @RequestMapping("/in-memory-users")
 @Slf4j
-public class UserInMemoryController {
+public class UsersInMemoryController {
     @Autowired
-    private UserInMemoryService service;
+    private UserService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

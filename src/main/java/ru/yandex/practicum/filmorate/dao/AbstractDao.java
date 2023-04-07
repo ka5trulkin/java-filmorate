@@ -1,13 +1,11 @@
-package ru.yandex.practicum.filmorate.storage.dao;
+package ru.yandex.practicum.filmorate.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.model.IdHolder;
-import ru.yandex.practicum.filmorate.storage.Storage;
 
-public abstract class AbstractDaoStorage<T extends IdHolder> implements Storage<T> {
+public abstract class AbstractDao {
     protected final JdbcTemplate jdbcTemplate;
 
-    public AbstractDaoStorage(JdbcTemplate jdbcTemplate) {
+    public AbstractDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

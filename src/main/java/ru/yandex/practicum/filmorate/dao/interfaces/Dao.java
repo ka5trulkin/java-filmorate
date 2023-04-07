@@ -1,15 +1,15 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.dao.interfaces;
 
 import ru.yandex.practicum.filmorate.model.IdHolder;
 
 import java.util.List;
 
-public interface Storage<T extends IdHolder> {
+public interface Dao<T extends IdHolder> {
     T add(T object);
 
     T update(T object);
 
-    List<T> getList();
-
     T get(long id);
+
+    List<T> getList();
 }

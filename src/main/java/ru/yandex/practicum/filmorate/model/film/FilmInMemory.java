@@ -11,6 +11,6 @@ import java.util.Set;
 @SuperBuilder(builderMethodName = "filmBuilder")
 @NoArgsConstructor
 @NonNull
-public class FilmInMemory extends Film {
+public class FilmInMemory extends AbstractFilm {
     private final Set<Long> likes = new HashSet<>();
 }

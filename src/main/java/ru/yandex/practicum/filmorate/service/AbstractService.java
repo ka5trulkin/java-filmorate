@@ -5,10 +5,10 @@ import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
 
-public abstract class AbstractInMemoryService<T extends IdHolder> {
+public abstract class AbstractService<T extends IdHolder> {
     private final Storage<T> storage;
 
-    protected AbstractInMemoryService(Storage<T> storage) {
+    protected AbstractService(Storage<T> storage) {
         this.storage = storage;
     }
 

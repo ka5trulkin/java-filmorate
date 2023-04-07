@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
+import ru.yandex.practicum.filmorate.dao.interfaces.FilmDao;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
@@ -19,12 +21,12 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmInMemoryService extends AbstractInMemoryService<FilmInMemory> {
-    private final Storage<UserInMemory> userStorage;
+public class FilmService extends AbstractService<FilmInMemory> implements FilmDao<FilmInMemory> {
+    private final Dao<UserInMemory> userStorage;
 
     @Autowired
-    private FilmInMemoryService(@Qualifier("filmInMemoryStorage") Storage<FilmInMemory> storage,
-                                @Qualifier("userInMemoryStorage") Storage<UserInMemory> userStorage) {
+    private FilmService(@Qualifier("filmStorage") Storage<FilmInMemory> storage,
+                        @Qualifier("userStorage") Storage<UserInMemory> userStorage) {
         super(storage);
         this.userStorage = userStorage;
     }
@@ -61,6 +63,7 @@ public class FilmInMemoryService extends AbstractInMemoryService<FilmInMemory> {
         return super.getList();
     }
 
+    @Override
     public void addLike(long id, long userId) {
         this.checkUserExist(userId);
         Set<Long> likeList = this.getLikeList(id);
@@ -71,6 +74,7 @@ public class FilmInMemoryService extends AbstractInMemoryService<FilmInMemory> {
         throw new FilmLikeAlreadyExistException(id, userId);
     }
 
+    @Override
     public void removeLike(long id, long userId) {
         this.checkUserExist(userId);
         Set<Long> likeList = this.getLikeList(id);
@@ -81,6 +85,7 @@ public class FilmInMemoryService extends AbstractInMemoryService<FilmInMemory> {
         throw new FilmLikeNotFoundException(id, userId);
     }
 
+    @Override
     public List<FilmInMemory> getPopularList(long count) {
         log.info(GET_POPULAR_FILM_LIST.message());
         return super.getList().stream()

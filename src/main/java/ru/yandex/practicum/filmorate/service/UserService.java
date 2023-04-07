@@ -15,9 +15,9 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
-public class UserInMemoryService extends AbstractInMemoryService<UserInMemory> {
+public class UserService extends AbstractService<UserInMemory> {
     @Autowired
-    private UserInMemoryService(@Qualifier("userInMemoryStorage") Storage<UserInMemory> storage) {
+    private UserService(@Qualifier("userStorage") Storage<UserInMemory> storage) {
         super(storage);
     }
 

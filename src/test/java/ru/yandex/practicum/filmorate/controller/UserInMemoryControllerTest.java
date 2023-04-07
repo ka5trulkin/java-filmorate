@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
-import ru.yandex.practicum.filmorate.storage.memory.UserInMemoryStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ class UserInMemoryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private UserInMemoryStorage storage;
+    private UserStorage storage;
     @Autowired
     private MockMvc mockMvc;
     private UserInMemory validUser;
