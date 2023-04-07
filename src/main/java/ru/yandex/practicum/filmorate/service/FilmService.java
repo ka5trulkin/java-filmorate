@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistExceptio
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
-import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,8 +24,8 @@ public class FilmService extends AbstractService<FilmInMemory> implements FilmDa
     private final Dao<UserInMemory> userStorage;
 
     @Autowired
-    private FilmService(@Qualifier("filmStorage") Storage<FilmInMemory> storage,
-                        @Qualifier("userStorage") Storage<UserInMemory> userStorage) {
+    private FilmService(@Qualifier("filmStorage") Dao<FilmInMemory> storage,
+                        @Qualifier("userStorage") Dao<UserInMemory> userStorage) {
         super(storage);
         this.userStorage = userStorage;
     }

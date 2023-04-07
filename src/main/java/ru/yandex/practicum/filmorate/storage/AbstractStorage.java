@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
 import ru.yandex.practicum.filmorate.exception.object.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.IdHolder;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractStorage<T extends IdHolder> implements Storage<T> {
+public abstract class AbstractStorage<T extends IdHolder> implements Dao<T> {
     private final Map<Long, T> data = new HashMap<>();
     private long idCounter;
 

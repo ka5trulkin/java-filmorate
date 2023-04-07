@@ -1,14 +1,14 @@
 package ru.yandex.practicum.filmorate.service;
 
+import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
 import ru.yandex.practicum.filmorate.model.IdHolder;
-import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
 
 public abstract class AbstractService<T extends IdHolder> {
-    private final Storage<T> storage;
+    private final Dao<T> storage;
 
-    protected AbstractService(Storage<T> storage) {
+    protected AbstractService(Dao<T> storage) {
         this.storage = storage;
     }
 

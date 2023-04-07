@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
-import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,7 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Service
 public class UserService extends AbstractService<UserInMemory> {
     @Autowired
-    private UserService(@Qualifier("userStorage") Storage<UserInMemory> storage) {
+    private UserService(@Qualifier("userStorage") Dao<UserInMemory> storage) {
         super(storage);
     }
 
