@@ -3,14 +3,16 @@ package ru.yandex.practicum.filmorate.model.film;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(builderMethodName = "filmBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @NonNull
-public class Film extends AbstractFilm {
-    @NonNull
+public class FilmDb extends AbstractFilm {
+    @NotBlank
     private String mpa;
 
     @Data

@@ -1,15 +1,15 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.memory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
-import ru.yandex.practicum.filmorate.dao.interfaces.FilmDao;
+import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
+import ru.yandex.practicum.filmorate.service.interfaces.Dao;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
-import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,12 +20,12 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmService extends AbstractService<FilmInMemory> implements FilmDao<FilmInMemory> {
+public class FilmInMemoryService extends AbstractService<FilmInMemory> implements FilmService<FilmInMemory> {
     private final Dao<UserInMemory> userStorage;
 
     @Autowired
-    protected FilmService(@Qualifier("filmStorage") Dao<FilmInMemory> storage,
-                        @Qualifier("userStorage") Dao<UserInMemory> userStorage) {
+    protected FilmInMemoryService(@Qualifier("filmStorage") Dao<FilmInMemory> storage,
+                                  @Qualifier("userStorage") Dao<UserInMemory> userStorage) {
         super(storage);
         this.userStorage = userStorage;
     }

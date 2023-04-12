@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.dao.interfaces.FilmDao;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 
 @RestController
 @RequestMapping("/in-memory-films")
 @Slf4j
 public class FilmsInMemoryController extends AbstractFilmsController<FilmInMemory> {
     @Autowired
-    protected FilmsInMemoryController(@Qualifier("filmService") FilmDao<FilmInMemory> service) {
+    protected FilmsInMemoryController(@Qualifier("filmInMemoryService") FilmService<FilmInMemory> service) {
         super(service);
     }
 }

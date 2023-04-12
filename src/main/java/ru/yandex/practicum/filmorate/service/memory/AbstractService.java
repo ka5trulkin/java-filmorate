@@ -1,6 +1,6 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.memory;
 
-import ru.yandex.practicum.filmorate.dao.interfaces.Dao;
+import ru.yandex.practicum.filmorate.service.interfaces.Dao;
 import ru.yandex.practicum.filmorate.model.IdHolder;
 
 import java.util.List;

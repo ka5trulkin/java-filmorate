@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dao.interfaces.FilmDao;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 import ru.yandex.practicum.filmorate.model.film.AbstractFilm;
 
 import javax.validation.Valid;
@@ -14,11 +14,11 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 public abstract class AbstractFilmsController<T extends AbstractFilm> {
-    protected final FilmDao<T> service;
+    private final FilmService<T> service;
 
     @Autowired
-    protected AbstractFilmsController(FilmDao<T> filmDao) {
-        this.service = filmDao;
+    protected AbstractFilmsController(FilmService<T> service) {
+        this.service = service;
     }
 
     @PostMapping
@@ -35,7 +35,7 @@ public abstract class AbstractFilmsController<T extends AbstractFilm> {
     }
 
     @GetMapping("/{id}")
-    protected T get(@PathVariable("id") long id) {
+    public T get(@PathVariable("id") long id) {
         log.info(REQUEST_GET_FILM.message(), id);
         return service.get(id);
     }

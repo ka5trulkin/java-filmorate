@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.controller.film;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -28,16 +29,16 @@ class FilmInMemoryControllerTest {
     @Autowired
     private FilmStorage filmStorage;
     @Autowired
-    UserStorage userStorage;
+    private UserStorage userStorage;
     @Autowired
     private MockMvc mockMvc;
-    private ru.yandex.practicum.filmorate.model.film.FilmInMemory validFilm;
-    private ru.yandex.practicum.filmorate.model.film.FilmInMemory invalidFilm;
+    private FilmInMemory validFilm;
+    private FilmInMemory invalidFilm;
     private UserInMemory validUser;
 
     @BeforeEach
     void beforeEach() {
-        validFilm = ru.yandex.practicum.filmorate.model.film.FilmInMemory.filmBuilder()
+        validFilm = FilmInMemory.filmBuilder()
                 .name("Чебуратино")
                 .description("Римейк Филиппа Киркорова")
                 .releaseDate(LocalDate.of(2023, 3, 6))
@@ -327,7 +328,7 @@ class FilmInMemoryControllerTest {
         String updDescription = "NewDescription";
         LocalDate updReleaseDate = LocalDate.of(2000, 12, 31);
         final int updDuration = 777;
-        ru.yandex.practicum.filmorate.model.film.FilmInMemory updatedFilm = ru.yandex.practicum.filmorate.model.film.FilmInMemory.filmBuilder()
+        FilmInMemory updatedFilm = FilmInMemory.filmBuilder()
                 .id(1)
                 .name(updName)
                 .description(updDescription)
