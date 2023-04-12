@@ -37,7 +37,6 @@ class FilmsDaoControllerTest {
                 .description("Римейк Филиппа Киркорова")
                 .releaseDate(LocalDate.of(2023, 3, 6))
                 .duration(90)
-                .mpa("R")
                 .build();
     }
 
@@ -51,7 +50,6 @@ class FilmsDaoControllerTest {
                 .andExpect(jsonPath("$.name").value("Чебуратино"))
                 .andExpect(jsonPath("$.description").value("Римейк Филиппа Киркорова"))
                 .andExpect(jsonPath("$.releaseDate").value("2023-03-06"))
-                .andExpect(jsonPath("$.duration").value("90"))
-                .andExpect(jsonPath("$.mpa").value("R"));
+                .andExpect(jsonPath("$.duration").value("90"));
     }
 }

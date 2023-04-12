@@ -1,40 +1,53 @@
 package ru.yandex.practicum.filmorate.service.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
 import java.util.List;
 
 @Service
 public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
+    private final String sqlReceiveFilmData =
+            "SELECT f.id, f.name, f.description, f.release_date, f.duration, g.id genreId, g.name genreName " +
+            "FROM film f " +
+            "LEFT JOIN film_genre fg ON f.id = fg.film_id " +
+            "LEFT JOIN genre g ON fg.genre_id = g.id";
+
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
     @Override
-    public FilmDb add(FilmDb object) {
-        jdbcTemplate.update("INSERT INTO film(name, description, release_date, duration, mpa) VALUES(?, ?, ?, ?, ?)",
-                object.getName(), object.getDescription(), object.getReleaseDate(), object.getDuration(), object.getMpa());
+    public FilmDb add(FilmDb film) {
+        jdbcTemplate.update("INSERT INTO film(name, description, release_date, duration) VALUES(?, ?, ?, ?)",
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration());
         String tableName = "film";
-        return this.get(this.getLastIdFromDataBase(tableName));
+        return this.get(super.getLastIdFromDataBase(tableName));
     }
 
     @Override
-    public FilmDb update(FilmDb object) {
+    public FilmDb update(FilmDb film) {
         jdbcTemplate.update("UPDATE film SET name=?, description=?, release_date=?, duration=?, mpa=? WHERE id=?",
-                object.getName(), object.getDescription(), object.getReleaseDate(), object.getDuration(), object.getMpa(), object.getId());
-        return this.get(object.getId());
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getMpa(),
+                film.getId());
+        return this.get(film.getId());
     }
 
     @Override
     public FilmDb get(long id) {
-        return jdbcTemplate.query("SELECT * FROM film WHERE id=?", new BeanPropertyRowMapper<>(FilmDb.class), id)
+        return jdbcTemplate.query((sqlReceiveFilmData + " WHERE f.id = ?"), new FilmMapper(), id)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new ObjectNotFoundExistException(id));
@@ -42,7 +55,7 @@ public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
 
     @Override
     public List<FilmDb> getList() {
-        return jdbcTemplate.query("SELECT * FROM film", new BeanPropertyRowMapper<>(FilmDb.class));
+        return jdbcTemplate.query(sqlReceiveFilmData, new FilmMapper());
     }
 
     @Override

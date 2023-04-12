@@ -1,12 +1,10 @@
 package ru.yandex.practicum.filmorate.service.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public abstract class AbstractDao {
     protected final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     protected AbstractDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

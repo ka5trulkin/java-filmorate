@@ -3,26 +3,27 @@ package ru.yandex.practicum.filmorate.model.film;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(builderMethodName = "filmBuilder")
 @NoArgsConstructor
-@AllArgsConstructor
 @NonNull
 public class FilmDb extends AbstractFilm {
-    @NotBlank
-    private String mpa;
+    private int rate;
+    private Mpa mpa;
+    private List<Genre> genres;
 
     @Data
-    private class Mpa {
+    public class Mpa {
         private byte id;
         private String name;
     }
 
     @Data
-    private class Genre {
+    @AllArgsConstructor
+    public class Genre {
         private byte id;
         private String name;
     }
