@@ -15,7 +15,7 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
+public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmDb> {
     private final String tableName = "film";
     private final String sqlReceiveFilmData = "SELECT " +
             "f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
@@ -117,11 +117,17 @@ public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
     @Override
     public FilmDb get(long id) {
         log.info(GET_FILM.message(), id);
-        return jdbcTemplate.query((sqlReceiveFilmData + " WHERE f.id = ?"), new FilmMapper(), id)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new ObjectNotFoundExistException(id));
+        return super.get(sqlReceiveFilmData, new FilmMapper(), id);
     }
+
+//    @Override
+//    public FilmDb get(long id) {
+//        log.info(GET_FILM.message(), id);
+//        return jdbcTemplate.query((sqlReceiveFilmData + " WHERE f.id = ?"), new FilmMapper(), id)
+//                .stream()
+//                .findAny()
+//                .orElseThrow(() -> new ObjectNotFoundExistException(id));
+//    }
 
     @Override
     public List<FilmDb> getList() {
