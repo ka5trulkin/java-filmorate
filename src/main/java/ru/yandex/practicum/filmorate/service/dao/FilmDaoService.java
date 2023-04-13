@@ -11,11 +11,17 @@ import java.util.List;
 
 @Service
 public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
-    private final String sqlReceiveFilmData =
-            "SELECT f.id, f.name, f.description, f.release_date, f.duration, g.id genreId, g.name genreName " +
-            "FROM film f " +
-            "LEFT JOIN film_genre fg ON f.id = fg.film_id " +
-            "LEFT JOIN genre g ON fg.genre_id = g.id";
+    private final String sqlReceiveFilmData = "SELECT " +
+            "f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
+            "r.RATE rate, " +
+            "m.ID mpaId, m.NAME mpaName, " +
+            "g.ID genreId, g.NAME genreName " +
+            "FROM FILM f " +
+            "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
+            "LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID " +
+            "LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID " +
+            "LEFT JOIN MPA m ON fm.MPA_ID = m.ID " +
+            "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
 
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
@@ -24,23 +30,40 @@ public class FilmDaoService extends AbstractDao implements FilmDao<FilmDb> {
 
     @Override
     public FilmDb add(FilmDb film) {
+        long filmId;
+        String tableName = "film";
         jdbcTemplate.update("INSERT INTO film(name, description, release_date, duration) VALUES(?, ?, ?, ?)",
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration());
-        String tableName = "film";
-        return this.get(super.getLastIdFromDataBase(tableName));
+        filmId = super.getLastIdFromDataBase(tableName);
+        jdbcTemplate.update("INSERT INTO RATE (FILM_ID, RATE) VALUES(?, ?)",
+                filmId,
+                film.getRate());
+        if (film.getMpa() != null) {
+            jdbcTemplate.update("INSERT INTO FILM_MPA (FILM_ID, MPA_ID) VALUES(?, ?)",
+                    filmId,
+                    film.getMpa().getId());
+        }
+        if (film.getGenres().size() > 0) {
+            film.getGenres().forEach(
+                    genre -> jdbcTemplate.update("INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES(?, ?)",
+                            filmId,
+                            genre.getId()));
+        }
+        return this.get(filmId);
     }
 
     @Override
     public FilmDb update(FilmDb film) {
-        jdbcTemplate.update("UPDATE film SET name=?, description=?, release_date=?, duration=?, mpa=? WHERE id=?",
-                film.getName(),
+        jdbcTemplate.update("UPDATE FILM " +
+                        "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
+                        "WHERE id = ? ",
+        film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getMpa(),
                 film.getId());
         return this.get(film.getId());
     }

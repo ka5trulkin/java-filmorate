@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model.film;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,17 +14,20 @@ import java.util.List;
 public class FilmDb extends AbstractFilm {
     private int rate;
     private Mpa mpa;
-    private List<Genre> genres;
+    private final List<Genre> genres = new ArrayList<>();
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public class Mpa {
         private byte id;
         private String name;
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
-    public class Genre {
+    public static class Genre {
         private byte id;
         private String name;
     }
