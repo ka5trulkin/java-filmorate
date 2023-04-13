@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.IdHolder;
 
+import java.util.List;
+
 public abstract class AbstractDao<T extends IdHolder> {
     protected final JdbcTemplate jdbcTemplate;
 
@@ -22,5 +24,9 @@ public abstract class AbstractDao<T extends IdHolder> {
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new ObjectNotFoundExistException(id));
+    }
+
+    public List<T> getList(String sql, RowMapper<T> mapper) {
+        return jdbcTemplate.query(sql, mapper);
     }
 }

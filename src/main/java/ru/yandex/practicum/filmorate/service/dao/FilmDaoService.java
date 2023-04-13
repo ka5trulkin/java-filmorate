@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundExistException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
@@ -120,19 +119,10 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
         return super.get(sqlReceiveFilmData, new FilmMapper(), id);
     }
 
-//    @Override
-//    public FilmDb get(long id) {
-//        log.info(GET_FILM.message(), id);
-//        return jdbcTemplate.query((sqlReceiveFilmData + " WHERE f.id = ?"), new FilmMapper(), id)
-//                .stream()
-//                .findAny()
-//                .orElseThrow(() -> new ObjectNotFoundExistException(id));
-//    }
-
     @Override
     public List<FilmDb> getList() {
         log.info(GET_FILM_LIST.message());
-        return jdbcTemplate.query(sqlReceiveFilmData, new FilmMapper());
+        return super.getList(sqlReceiveFilmData, new FilmMapper());
     }
 
     @Override
