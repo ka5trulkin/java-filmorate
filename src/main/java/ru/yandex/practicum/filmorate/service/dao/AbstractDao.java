@@ -20,7 +20,7 @@ public abstract class AbstractDao<T extends IdHolder> {
     }
 
     public T get(String sql, RowMapper<T> mapper, long id) {
-        return jdbcTemplate.query((sql + " WHERE f.id = ?"), mapper, id)
+        return jdbcTemplate.query((sql), mapper, id)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new ObjectNotFoundExistException(id));

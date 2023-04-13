@@ -16,7 +16,7 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @Service
 public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmDb> {
     private final String tableName = "film";
-    private final String sqlReceiveFilmData = "SELECT " +
+    private final String sqlReceiveFilmList = "SELECT " +
             "f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
             "r.RATE rate, " +
             "m.ID mpaId, m.NAME mpaName, " +
@@ -27,6 +27,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             "LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID " +
             "LEFT JOIN MPA m ON fm.MPA_ID = m.ID " +
             "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
+    private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.id = ?");
     private final String filmAddSql = "INSERT INTO FILM(NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
     private final String rateAddSql = "INSERT INTO RATE (RATE, FILM_ID) VALUES(?, ?)";
     private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
@@ -36,7 +37,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             "WHERE id = ? ";
     private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
     private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
-    private final String genreUpdateSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
+    private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
 
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
@@ -72,7 +73,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     }
 
     private void updateGenreInFilm(FilmDb film) {
-        jdbcTemplate.update(genreUpdateSql, film.getId());
+        jdbcTemplate.update(genreDeleteSql, film.getId());
         addGenreToDb(film, film.getId());
     }
 
@@ -100,7 +101,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             this.addGenreToDb(film, filmId);
         }
         log.info(FILM_ADDED.message(), film.getName());
-        return this.get(filmId);
+        return super.get(sqlReceiveFilmById, new FilmMapper(), filmId);
     }
 
     @Override
@@ -110,19 +111,19 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
         this.putMpaToDb(film, mpaUpdateSql, film.getId());
         this.updateGenreInFilm(film);
         log.info(FILM_UPDATED.message(), film.getId(), film.getName());
-        return this.get(film.getId());
+        return super.get(sqlReceiveFilmById, new FilmMapper(), film.getId());
     }
 
     @Override
     public FilmDb get(long id) {
         log.info(GET_FILM.message(), id);
-        return super.get(sqlReceiveFilmData, new FilmMapper(), id);
+        return super.get(sqlReceiveFilmById, new FilmMapper(), id);
     }
 
     @Override
     public List<FilmDb> getList() {
         log.info(GET_FILM_LIST.message());
-        return super.getList(sqlReceiveFilmData, new FilmMapper());
+        return super.getList(sqlReceiveFilmList, new FilmMapper());
     }
 
     @Override

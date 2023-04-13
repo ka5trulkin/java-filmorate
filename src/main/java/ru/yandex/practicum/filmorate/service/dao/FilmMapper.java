@@ -35,7 +35,7 @@ public class FilmMapper implements RowMapper<FilmDb> {
                         new FilmDb.Genre(
                                 rs.getByte("genreId"),
                                 rs.getString("genreName")));
-            } while (rs.next() && filmDb.getId() == rs.getLong("id"));
+            } while (rs.next() && (filmDb.getId() == rs.getLong("id")));
         }
     }
 

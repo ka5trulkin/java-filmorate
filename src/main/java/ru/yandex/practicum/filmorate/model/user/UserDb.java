@@ -12,15 +12,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "userBuilder")
-public class User extends IdHolder {
+public class UserDb extends IdHolder {
     private String name;
     @Email(message = "Email не соответствует формату электронной почты")
     private String email;
@@ -29,5 +27,4 @@ public class User extends IdHolder {
     private String login;
     @PastOrPresent(message = "Birthday должно содержать прошедшую дату или сегодняшнее число")
     private LocalDate birthday;
-    private final Set<Long> friends = new HashSet<>();
 }
