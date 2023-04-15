@@ -1,17 +1,21 @@
 package ru.yandex.practicum.filmorate.service.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.user.UserDb;
 import ru.yandex.practicum.filmorate.service.interfaces.UserDao;
 
 import java.util.List;
 
+@Slf4j
+@Service
 public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserDb> {
     private final String tableName = "USER_DB";
     private final String sqlReceiveUserList = "SELECT " +
-            "ID, NAME, DESCRIPTION, RELEASE_DATE, DURATION, " +
+            "ID, NAME, EMAIL, LOGIN, BIRTHDAY " +
             "FROM USER_DB ";
     private final String sqlReceiveFilmById = String.join(" ", sqlReceiveUserList, "WHERE ID = ?");
     private final String userAddSql = "INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)";
