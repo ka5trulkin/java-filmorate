@@ -19,11 +19,22 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Service
 public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserDb> {
     private final String tableName = "USER_DB";
-    private final String sqlReceiveUserList = "SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB";
-    private final String sqlReceiveFilmById = String.join(" ", sqlReceiveUserList, "WHERE ID = ?");
-    private final String sqlReceiveUserFriendList = String.join(" ", sqlReceiveUserList,
-            "ud JOIN FRIENDS f ON ud.ID = f.FRIEND_ONE OR ud.ID = f.FRIEND_TWO " +
-                    "WHERE FRIEND_ONE = %d AND ID != %d OR FRIEND_TWO = %d AND ID != %d");
+    private final String sqlReceiveList = "SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB";
+    private final String sqlReceiveById = String.join(" ", sqlReceiveList, "WHERE ID = ?");
+    private final String existsFriends = "EXISTS (SELECT * FROM FRIENDS " +
+            "WHERE ID = FRIEND_ONE AND FRIEND_TWO = %d OR FRIEND_ONE = %d AND ID = FRIEND_TWO)";
+    private final String sqlReceiveFriendList =
+            String.join(
+                    " ",
+                    sqlReceiveList,
+                    "WHERE",
+                    existsFriends);
+    private final String sqlReceiveCommonFriendList =
+            String.join(
+                    " ",
+                    sqlReceiveFriendList,
+                    "AND",
+                    existsFriends);
     private final String userAddSql = "INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)";
     private final String friendAddSql = "INSERT INTO FRIENDS (FRIEND_ONE, FRIEND_TWO) VALUES(?, ?)";
     private final String friendDeleteSql = "DELETE FROM FRIENDS WHERE FRIEND_ONE = ? AND FRIEND_TWO = ?";
@@ -50,7 +61,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
                 user.getBirthday());
         long userId = super.getLastIdFromDataBase(tableName);
         log.info(USER_ADDED.message(), user.getLogin());
-        return super.get(sqlReceiveFilmById, new BeanPropertyRowMapper<>(UserDb.class), userId);
+        return super.get(sqlReceiveById, new BeanPropertyRowMapper<>(UserDb.class), userId);
     }
 
     @Override
@@ -63,19 +74,19 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
                 user.getBirthday(),
                 user.getId());
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
-        return super.get(sqlReceiveFilmById, new BeanPropertyRowMapper<>(UserDb.class), user.getId());
+        return super.get(sqlReceiveById, new BeanPropertyRowMapper<>(UserDb.class), user.getId());
     }
 
     @Override
     public UserDb get(long id) {
         log.info(GET_USER.message(), id);
-        return super.get(sqlReceiveFilmById, new BeanPropertyRowMapper<>(UserDb.class), id);
+        return super.get(sqlReceiveById, new BeanPropertyRowMapper<>(UserDb.class), id);
     }
 
     @Override
     public List<UserDb> getList() {
         log.info(GET_USER_LIST.message());
-        return super.getList(sqlReceiveUserList, new BeanPropertyRowMapper<>(UserDb.class));
+        return super.getList(sqlReceiveList, new BeanPropertyRowMapper<>(UserDb.class));
     }
 
     @Override
@@ -105,13 +116,15 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     @Override
     public List<UserDb> getFriendList(long id) {
         return super.getList(
-                String.format(sqlReceiveUserFriendList, id, id, id, id),
+                String.format(sqlReceiveFriendList, id, id),
                 new BeanPropertyRowMapper<>(UserDb.class));
     }
 
     @Override
-    public List<UserDb> getCommonFriendList(long id, long otherId) {
-        return null;
+    public List<UserDb> getCommonFriendList(long id, long friendId) {
+        return super.getList(
+                String.format(sqlReceiveCommonFriendList, id, id, friendId, friendId),
+                new BeanPropertyRowMapper<>(UserDb.class));
     }
 
     @Override
