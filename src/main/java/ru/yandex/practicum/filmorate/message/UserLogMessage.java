@@ -11,11 +11,12 @@ public enum UserLogMessage {
     USER_ADDED("Пользователь Login:'{}' добавлен"),
     USER_UPDATED("Пользователь ID:'{}', Login:'{}' обновлен"),
     USER_FRIEND_ADDED("Пользователю ID:'{}' добавлен в друзья пользователь ID:'{}'"),
-    USER_FRIEND_REMOVED("У пользователя ID:'{}' удален из друзей пользователь ID:'{}'"),
+    USER_FRIEND_REMOVED("Пользователь ID:'{}' удален из друзей пользователя ID:'{}'"),
     GET_USER("Получение пользователя ID:'{}'"),
     GET_USER_LIST("Получение списка пользователей"),
     GET_USER_FRIEND_LIST("Получение списка друзей пользователя ID:'{}'"),
-    GET_USER_COMMON_FRIEND_LIST("Получение списка общих друзей у пользователя ID:'{}' с пользователем ID:'{}'");
+    GET_USER_COMMON_FRIEND_LIST("Получение списка общих друзей у пользователя ID:'{}' с пользователем ID:'{}'"),
+    WARN_FRIENDSHIP_ALREADY_EXIST("Пользователь ID:'{}' уже дружит с пользователем ID:'{}'");
 
     private final String message;
 
