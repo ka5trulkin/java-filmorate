@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.model.user.UserDb;
 import ru.yandex.practicum.filmorate.service.interfaces.UserDao;
@@ -8,15 +9,40 @@ import ru.yandex.practicum.filmorate.service.interfaces.UserDao;
 import java.util.List;
 
 public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserDb> {
+    private final String tableName = "USER_DB";
+    private final String sqlReceiveUserList = "SELECT " +
+            "ID, NAME, DESCRIPTION, RELEASE_DATE, DURATION, " +
+            "FROM USER_DB ";
+    private final String sqlReceiveFilmById = String.join(" ", sqlReceiveUserList, "WHERE ID = ?");
+    private final String userAddSql = "INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)";
+    private final String rateAddSql = "INSERT INTO RATE (RATE, FILM_ID) VALUES(?, ?)";
+    private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
+    private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
+    private final String filmUpdateSql = "UPDATE FILM_DB " +
+            "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
+            "WHERE id = ? ";
+    private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
+    private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
+    private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
 
     @Autowired
     protected UserDaoService(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
+    private void addUserToDb(UserDb user) {
+        jdbcTemplate.update(userAddSql,
+                user.getName(),
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday());
+    }
+
     @Override
-    public UserDb add(UserDb object) {
-        return null;
+    public UserDb add(UserDb user) {
+        this.addUserToDb(user);
+        long userId = super.getLastIdFromDataBase(tableName);
+        return super.get(sqlReceiveFilmById, new BeanPropertyRowMapper<>(UserDb.class), userId);
     }
 
     @Override
