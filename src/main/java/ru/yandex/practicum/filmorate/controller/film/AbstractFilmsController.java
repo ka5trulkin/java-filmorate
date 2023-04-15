@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,11 +13,11 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
-public abstract class AbstractFilmsController<T extends Film> {
-    private final FilmService<T> service;
+public abstract class AbstractFilmsController<T extends Film, S extends FilmService<T>> {
+    protected S service;
 
     @Autowired
-    protected AbstractFilmsController(FilmService<T> service) {
+    protected AbstractFilmsController(S service) {
         this.service = service;
     }
 

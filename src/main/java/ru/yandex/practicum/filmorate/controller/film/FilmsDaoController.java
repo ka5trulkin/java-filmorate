@@ -10,13 +10,10 @@ import ru.yandex.practicum.filmorate.model.film.FilmDb;
 
 @RestController
 @RequestMapping("/films")
-public class FilmsDaoController extends AbstractFilmsController<FilmDb> {
-    private final FilmDao<FilmDb> service;
-
+public class FilmsDaoController extends AbstractFilmsController<FilmDb, FilmDao<FilmDb>> {
     @Autowired
     protected FilmsDaoController(@Qualifier("filmDaoService") FilmDao<FilmDb> service) {
         super(service);
-        this.service = service;
     }
 
     @GetMapping("/test")

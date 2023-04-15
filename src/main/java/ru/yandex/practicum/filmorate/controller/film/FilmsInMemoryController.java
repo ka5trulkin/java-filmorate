@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
 @RestController
 @RequestMapping("/in-memory-films")
 @Slf4j
-public class FilmsInMemoryController extends AbstractFilmsController<FilmInMemory> {
+public class FilmsInMemoryController extends AbstractFilmsController<FilmInMemory, FilmService<FilmInMemory>> {
     @Autowired
     protected FilmsInMemoryController(@Qualifier("filmInMemoryService") FilmService<FilmInMemory> service) {
         super(service);
