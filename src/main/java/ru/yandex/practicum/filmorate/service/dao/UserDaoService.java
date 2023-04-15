@@ -19,11 +19,14 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Service
 public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserDb> {
     private final String tableName = "USER_DB";
-    private final String sqlReceiveUserList = "SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB ";
+    private final String sqlReceiveUserList = "SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB";
     private final String sqlReceiveFilmById = String.join(" ", sqlReceiveUserList, "WHERE ID = ?");
+    private final String sqlReceiveUserFriendList = String.join(" ", sqlReceiveUserList,
+            "ud JOIN FRIENDS f ON ud.ID = f.FRIEND_ONE OR ud.ID = f.FRIEND_TWO " +
+                    "WHERE FRIEND_ONE = %d AND ID != %d OR FRIEND_TWO = %d AND ID != %d");
     private final String userAddSql = "INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)";
     private final String friendAddSql = "INSERT INTO FRIENDS (FRIEND_ONE, FRIEND_TWO) VALUES(?, ?)";
-    private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
+    private final String friendDeleteSql = "DELETE FROM FRIENDS WHERE FRIEND_ONE = ? AND FRIEND_TWO = ?";
     private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
     private final String userUpdateSql = "UPDATE USER_DB " +
             "SET NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? " +
@@ -37,18 +40,10 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
         super(jdbcTemplate);
     }
 
-//    private void addUserToDb(UserDb user) {
-//        jdbcTemplate.update(userAddSql,
-//                user.getName(),
-//                user.getEmail(),
-//                user.getLogin(),
-//                user.getBirthday());
-//    }
-
     @Override
     public UserDb add(UserDb user) {
-//        this.addUserToDb(user);
-        jdbcTemplate.update(userAddSql,
+        jdbcTemplate.update(
+                userAddSql,
                 user.getName(),
                 user.getEmail(),
                 user.getLogin(),
@@ -60,7 +55,8 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
 
     @Override
     public UserDb update(UserDb user) {
-        jdbcTemplate.update(userUpdateSql,
+        jdbcTemplate.update(
+                userUpdateSql,
                 user.getName(),
                 user.getEmail(),
                 user.getLogin(),
@@ -85,7 +81,8 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     @Override
     public void addFriend(long id, long friendId) {
         try {
-            jdbcTemplate.update(friendAddSql,
+            jdbcTemplate.update(
+                    friendAddSql,
                     Math.min(id, friendId),
                     Math.max(id, friendId));
             log.info(USER_FRIEND_ADDED.message(), id, friendId);
@@ -98,12 +95,18 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
 
     @Override
     public void removeFriend(long id, long friendId) {
-
+        jdbcTemplate.update(
+                friendDeleteSql,
+                Math.min(id, friendId),
+                Math.max(id, friendId));
+        log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 
     @Override
     public List<UserDb> getFriendList(long id) {
-        return null;
+        return super.getList(
+                String.format(sqlReceiveUserFriendList, id, id, id, id),
+                new BeanPropertyRowMapper<>(UserDb.class));
     }
 
     @Override

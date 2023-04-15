@@ -45,7 +45,8 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     }
 
     private void addFilmToDb(FilmDb film) {
-        jdbcTemplate.update(filmAddSql,
+        jdbcTemplate.update(
+                filmAddSql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -53,7 +54,8 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     }
 
     private void updateFilmInDb(FilmDb film) {
-        jdbcTemplate.update(filmUpdateSql,
+        jdbcTemplate.update(
+                filmUpdateSql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -78,7 +80,8 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     }
 
     private void putRateToDb(FilmDb film, String sql, long filmId) {
-        jdbcTemplate.update(sql,
+        jdbcTemplate.update(
+                sql,
                 film.getRate(),
                 filmId);
     }
