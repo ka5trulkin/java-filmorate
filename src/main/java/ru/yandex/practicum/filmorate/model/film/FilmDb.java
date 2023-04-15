@@ -11,7 +11,7 @@ import java.util.List;
 @SuperBuilder(builderMethodName = "filmBuilder")
 @NoArgsConstructor
 @NonNull
-public class FilmDb extends AbstractFilm {
+public class FilmDb extends Film {
     private int rate;
     private Mpa mpa;
     private final List<Genre> genres = new ArrayList<>();

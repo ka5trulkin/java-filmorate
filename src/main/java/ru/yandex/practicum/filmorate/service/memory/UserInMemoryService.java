@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.service.interfaces.Dao;
 import ru.yandex.practicum.filmorate.model.user.UserInMemory;
+import ru.yandex.practicum.filmorate.service.interfaces.UserService;
 
 import java.util.List;
 import java.util.Set;
@@ -15,9 +16,9 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
-public class UserService extends AbstractService<UserInMemory> {
+public class UserInMemoryService extends AbstractService<UserInMemory> implements UserService<UserInMemory> {
     @Autowired
-    protected UserService(@Qualifier("userStorage") Dao<UserInMemory> storage) {
+    protected UserInMemoryService(@Qualifier("userStorage") Dao<UserInMemory> storage) {
         super(storage);
     }
 
@@ -57,6 +58,7 @@ public class UserService extends AbstractService<UserInMemory> {
         return super.getList();
     }
 
+    @Override
     public void addFriend(long id, long friendId) {
         Set<Long> userFriendList = this.getIdFriendList(id);
         Set<Long> friendFriendList = this.getIdFriendList(friendId);
@@ -65,6 +67,7 @@ public class UserService extends AbstractService<UserInMemory> {
         log.info(USER_FRIEND_ADDED.message(), id, friendId);
     }
 
+    @Override
     public void removeFriend(long id, long friendId) {
         Set<Long> userFriendList = this.getIdFriendList(id);
         Set<Long> friendFriendList = this.getIdFriendList(friendId);
@@ -73,6 +76,7 @@ public class UserService extends AbstractService<UserInMemory> {
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 
+    @Override
     public List<UserInMemory> getFriendList(long id) {
         Set<Long> friendList = super.get(id).getFriends();
         log.info(GET_USER_FRIEND_LIST.message(), id);
@@ -81,6 +85,7 @@ public class UserService extends AbstractService<UserInMemory> {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<UserInMemory> getCommonFriendList(long id, long otherId) {
         List<UserInMemory> userFriends = this.getFriendList(id);
         List<UserInMemory> otherFriends = this.getFriendList(otherId);

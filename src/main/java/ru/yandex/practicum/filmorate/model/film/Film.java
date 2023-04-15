@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @NonNull
-public abstract class AbstractFilm extends IdHolder {
+public abstract class Film extends IdHolder {
     @NotBlank(message = "Name не должно быть пустым")
     private String name;
     @NotBlank(message = "Description не должно быть пустым")

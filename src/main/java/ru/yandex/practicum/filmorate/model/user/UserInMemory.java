@@ -12,6 +12,6 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(builderMethodName = "userBuilder")
-public class UserInMemory extends UserDb {
+public class UserInMemory extends User {
     private final Set<Long> friends = new HashSet<>();
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmService;
-import ru.yandex.practicum.filmorate.model.film.AbstractFilm;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
-public abstract class AbstractFilmsController<T extends AbstractFilm> {
+public abstract class AbstractFilmsController<T extends Film> {
     private final FilmService<T> service;
 
     @Autowired
