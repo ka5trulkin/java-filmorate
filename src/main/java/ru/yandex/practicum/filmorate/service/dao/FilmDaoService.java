@@ -15,24 +15,24 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @Slf4j
 @Service
 public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmDb> {
-    private final String tableName = "film";
+    private final String tableName = "FILM_DB";
     private final String sqlReceiveFilmList = "SELECT " +
             "f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
             "r.RATE rate, " +
             "m.ID mpaId, m.NAME mpaName, " +
             "g.ID genreId, g.NAME genreName " +
-            "FROM FILM f " +
+            "FROM FILM_DB f " +
             "LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID " +
             "LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID " +
             "LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID " +
             "LEFT JOIN MPA m ON fm.MPA_ID = m.ID " +
             "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
     private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.id = ?");
-    private final String filmAddSql = "INSERT INTO FILM(NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
+    private final String filmAddSql = "INSERT INTO FILM_DB (NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
     private final String rateAddSql = "INSERT INTO RATE (RATE, FILM_ID) VALUES(?, ?)";
     private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
     private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
-    private final String filmUpdateSql = "UPDATE FILM " +
+    private final String filmUpdateSql = "UPDATE FILM_DB " +
             "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
             "WHERE id = ? ";
     private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
