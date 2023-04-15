@@ -22,26 +22,18 @@ public class UserInMemoryService extends AbstractService<UserInMemory> implement
         super(storage);
     }
 
-    private void checkName(UserInMemory user) {
-        if ((user.getName() == null) || (user.getName().isBlank())) {
-            user.setName(user.getLogin());
-        }
-    }
-
     private Set<Long> getIdFriendList(long id) {
         return super.get(id).getFriends();
     }
 
     @Override
     public UserInMemory add(UserInMemory user) {
-        this.checkName(user);
         log.info(USER_ADDED.message(), user.getLogin());
         return super.add(user);
     }
 
     @Override
     public UserInMemory update(UserInMemory user) {
-        this.checkName(user);
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return super.update(user);
     }

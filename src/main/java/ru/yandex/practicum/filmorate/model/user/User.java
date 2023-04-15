@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.filmorate.model.IdHolder;
+import ru.yandex.practicum.filmorate.validation.DefaultUserName;
 import ru.yandex.practicum.filmorate.validation.NotContainSpace;
 
 import javax.validation.constraints.Email;
@@ -18,7 +19,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "userBuilder")
+@DefaultUserName
 public abstract class User extends IdHolder {
+//    @DefaultUserName
     private String name;
     @Email(message = "Email не соответствует формату электронной почты")
     private String email;
