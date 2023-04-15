@@ -27,14 +27,14 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             "LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID " +
             "LEFT JOIN MPA m ON fm.MPA_ID = m.ID " +
             "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
-    private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.id = ?");
+    private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.ID = ?");
     private final String filmAddSql = "INSERT INTO FILM_DB (NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
     private final String rateAddSql = "INSERT INTO RATE (RATE, FILM_ID) VALUES(?, ?)";
     private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
     private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
     private final String filmUpdateSql = "UPDATE FILM_DB " +
             "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
-            "WHERE id = ? ";
+            "WHERE ID = ? ";
     private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
     private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
     private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
