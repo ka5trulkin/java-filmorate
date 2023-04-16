@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.film.BadFilmLikeException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
+import ru.yandex.practicum.filmorate.model.film.Genre;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
 import java.util.List;
@@ -195,13 +197,15 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     @Override
     public List<FilmDb> getPopularList(long count) {
+        log.info(GET_POPULAR_FILM_LIST.message());
         return super.getList(
                 String.format(sqlReceivePopularFilms, count),
                 new FilmMapper());
     }
 
     @Override
-    public void testMethod() {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    public List<Genre> getGenres() {
+        return jdbcTemplate.query("SELECT ID, NAME FROM GENRE",
+                new BeanPropertyRowMapper<>(Genre.class));
     }
 }

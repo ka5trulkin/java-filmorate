@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.dao;
 
 import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
+import ru.yandex.practicum.filmorate.model.film.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ public class FilmMapper implements RowMapper<FilmDb> {
         if (rs.getByte("genreId") > 0) {
             do {
                 filmDb.getGenres().add(
-                        new FilmDb.Genre(
+                        new Genre(
                                 rs.getByte("genreId"),
                                 rs.getString("genreName")));
             } while (rs.next() && (filmDb.getId() == rs.getLong("id")));

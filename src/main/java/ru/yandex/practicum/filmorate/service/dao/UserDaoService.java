@@ -90,8 +90,6 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
             jdbcTemplate.update(
                     friendAddSql,
                     (id), friendId);
-//                    Math.min(id, friendId),
-//                    Math.max(id, friendId));
             log.info(USER_FRIEND_ADDED.message(), id, friendId);
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
@@ -105,8 +103,6 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
         jdbcTemplate.update(
                 friendDeleteSql,
                 (id), friendId);
-//                Math.min(id, friendId),
-//                Math.max(id, friendId));
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 

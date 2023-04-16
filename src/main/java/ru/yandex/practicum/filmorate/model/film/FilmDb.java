@@ -24,11 +24,11 @@ public class FilmDb extends Film {
         private String name;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Genre {
-        private byte id;
-        private String name;
-    }
+//    @Data
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    public static class Genre {
+//        private byte id;
+//        private String name;
+//    }
 }
