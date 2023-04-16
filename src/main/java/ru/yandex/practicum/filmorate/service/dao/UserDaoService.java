@@ -7,7 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.user.AddFriendshipExistException;
+import ru.yandex.practicum.filmorate.exception.user.AddFriendshipException;
 import ru.yandex.practicum.filmorate.model.user.UserDb;
 import ru.yandex.practicum.filmorate.service.interfaces.UserDao;
 
@@ -38,13 +38,9 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     private final String userAddSql = "INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)";
     private final String friendAddSql = "INSERT INTO FRIENDS (FRIEND_ONE, FRIEND_TWO) VALUES(?, ?)";
     private final String friendDeleteSql = "DELETE FROM FRIENDS WHERE FRIEND_ONE = ? AND FRIEND_TWO = ?";
-    private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
     private final String userUpdateSql = "UPDATE USER_DB " +
             "SET NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? " +
             "WHERE ID = ? ";
-    private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
-    private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
-    private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
 
     @Autowired
     protected UserDaoService(JdbcTemplate jdbcTemplate) {
@@ -100,7 +96,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
         } catch (DataIntegrityViolationException e) {
-            throw new AddFriendshipExistException(id, friendId);
+            throw new AddFriendshipException(id, friendId);
         }
     }
 
@@ -115,6 +111,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
 
     @Override
     public List<UserDb> getFriendList(long id) {
+        log.info(GET_USER_FRIEND_LIST.message(), id);
         return super.getList(
                 String.format(sqlReceiveFriendList, id, id),
                 new BeanPropertyRowMapper<>(UserDb.class));
@@ -122,6 +119,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
 
     @Override
     public List<UserDb> getCommonFriendList(long id, long friendId) {
+        log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, friendId);
         return super.getList(
                 String.format(sqlReceiveCommonFriendList, id, id, friendId, friendId),
                 new BeanPropertyRowMapper<>(UserDb.class));
@@ -129,6 +127,5 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
 
     @Override
     public void testMethod() {
-
     }
 }

@@ -2,9 +2,14 @@ package ru.yandex.practicum.filmorate.service.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.film.BadFilmLikeException;
+import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
@@ -18,7 +23,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     private final String tableName = "FILM_DB";
     private final String sqlReceiveFilmList = "SELECT " +
             "f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, " +
-            "r.RATE rate, " +
+            "r.COUNTER rate, " +
             "m.ID mpaId, m.NAME mpaName, " +
             "g.ID genreId, g.NAME genreName " +
             "FROM FILM_DB f " +
@@ -29,15 +34,20 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
     private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.ID = ?");
     private final String filmAddSql = "INSERT INTO FILM_DB (NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
-    private final String rateAddSql = "INSERT INTO RATE (RATE, FILM_ID) VALUES(?, ?)";
+    private final String rateAddSql = "INSERT INTO RATE (COUNTER, FILM_ID) VALUES(?, ?)";
+    private final String rateUpdateSql = "UPDATE RATE SET COUNTER = ? WHERE FILM_ID = ?";
+    private final String incrementRateSql = "UPDATE RATE SET COUNTER = COUNTER + 1 WHERE FILM_ID = ?";
+    private final String decrementRateSql = "MERGE INTO RATE R USING (SELECT FILM_ID, USER_ID FROM LIKES) L ON (L.FILM_ID = ? AND L.USER_ID = ?) WHEN MATCHED AND R.COUNTER > 0 THEN UPDATE SET R.COUNTER = R.COUNTER - 1";
     private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
     private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
     private final String filmUpdateSql = "UPDATE FILM_DB " +
             "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
             "WHERE ID = ? ";
-    private final String rateUpdateSql = "UPDATE RATE SET RATE = ? WHERE FILM_ID = ?";
     private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
     private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
+    private final String likeAddSql = "INSERT INTO LIKES (FILM_ID, USER_ID) VALUES(?, ?)";
+    private final String likeDeleteSql = "DELETE FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
+    private final String checkIsLiked = "SELECT LIKED FROM LIKES WHERE FILM_ID = %d AND USER_ID = %d";
 
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
@@ -92,6 +102,26 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
                 filmId);
     }
 
+    private void incrementRate(long filmId) {
+        jdbcTemplate.update(
+                incrementRateSql,
+                filmId);
+    }
+
+    private void decrementRate(long filmId, long userID) {
+        jdbcTemplate.update(decrementRateSql, filmId, userID);
+    }
+
+    private void checkIsLiked(long filmId, long userId) {
+        try {
+            jdbcTemplate.queryForObject(
+                    String.format(checkIsLiked, filmId, userId),
+                    Boolean.class);
+        } catch (EmptyResultDataAccessException e) {
+            throw new FilmLikeNotFoundException(filmId, userId);
+        }
+    }
+
     @Override
     public FilmDb add(FilmDb film) {
         this.addFilmToDb(film);
@@ -131,12 +161,35 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     @Override
     public void addLike(long id, long userId) {
-
+        try {
+            jdbcTemplate.update(
+                    likeAddSql,
+                    id,
+                    userId);
+            this.incrementRate(id);
+            log.info(FILM_LIKE_ADDED.message(), id, userId);
+        } catch (DuplicateKeyException e) {
+            throw new FilmLikeAlreadyExistException(id, userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadFilmLikeException(id, userId);
+        }
     }
 
     @Override
     public void removeLike(long id, long userId) {
-
+        this.checkIsLiked(id, userId);
+        this.decrementRate(id, userId);
+        try {
+            jdbcTemplate.update(
+                    likeDeleteSql,
+                    id,
+                    userId);
+            log.info(FILM_LIKE_REMOVED.message(), id, userId);
+        } catch (DuplicateKeyException e) {
+            throw new FilmLikeAlreadyExistException(id, userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadFilmLikeException(id, userId);
+        }
     }
 
     @Override
