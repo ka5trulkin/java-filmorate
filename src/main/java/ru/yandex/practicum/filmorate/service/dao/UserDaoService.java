@@ -7,7 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.user.AddFriendshipException;
+import ru.yandex.practicum.filmorate.exception.user.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.UserDb;
 import ru.yandex.practicum.filmorate.service.interfaces.UserDao;
 
@@ -21,8 +21,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     private final String tableName = "USER_DB";
     private final String sqlReceiveList = "SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB";
     private final String sqlReceiveById = String.join(" ", sqlReceiveList, "WHERE ID = ?");
-    private final String existsFriends = "EXISTS (SELECT * FROM FRIENDS " +
-            "WHERE ID = FRIEND_ONE AND FRIEND_TWO = %d OR FRIEND_ONE = %d AND ID = FRIEND_TWO)";
+    private final String existsFriends = "EXISTS (SELECT * FROM FRIENDS f WHERE FRIEND_ONE = %d AND FRIEND_TWO = ID)";
     private final String sqlReceiveFriendList =
             String.join(
                     " ",
@@ -90,13 +89,14 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
         try {
             jdbcTemplate.update(
                     friendAddSql,
-                    Math.min(id, friendId),
-                    Math.max(id, friendId));
+                    (id), friendId);
+//                    Math.min(id, friendId),
+//                    Math.max(id, friendId));
             log.info(USER_FRIEND_ADDED.message(), id, friendId);
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
         } catch (DataIntegrityViolationException e) {
-            throw new AddFriendshipException(id, friendId);
+            throw new FriendNotFoundException(id, friendId);
         }
     }
 
@@ -104,8 +104,9 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     public void removeFriend(long id, long friendId) {
         jdbcTemplate.update(
                 friendDeleteSql,
-                Math.min(id, friendId),
-                Math.max(id, friendId));
+                (id), friendId);
+//                Math.min(id, friendId),
+//                Math.max(id, friendId));
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
     }
 
@@ -113,7 +114,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     public List<UserDb> getFriendList(long id) {
         log.info(GET_USER_FRIEND_LIST.message(), id);
         return super.getList(
-                String.format(sqlReceiveFriendList, id, id),
+                String.format(sqlReceiveFriendList, id),
                 new BeanPropertyRowMapper<>(UserDb.class));
     }
 
@@ -121,7 +122,7 @@ public class UserDaoService extends AbstractDao<UserDb> implements UserDao<UserD
     public List<UserDb> getCommonFriendList(long id, long friendId) {
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, friendId);
         return super.getList(
-                String.format(sqlReceiveCommonFriendList, id, id, friendId, friendId),
+                String.format(sqlReceiveCommonFriendList, id, friendId),
                 new BeanPropertyRowMapper<>(UserDb.class));
     }
 
