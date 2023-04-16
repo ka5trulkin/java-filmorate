@@ -33,11 +33,12 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
             "LEFT JOIN MPA m ON fm.MPA_ID = m.ID " +
             "LEFT JOIN RATE r ON f.ID = r.FILM_ID";
     private final String sqlReceiveFilmById = String.join(" ", sqlReceiveFilmList, "WHERE f.ID = ?");
+    private final String sqlReceivePopularFilms = String.join(" ", sqlReceiveFilmList, "WHERE EXISTS (SELECT * FROM RATE r2 WHERE f.ID = r2.FILM_ID) ORDER BY RATE DESC LIMIT %d");
     private final String filmAddSql = "INSERT INTO FILM_DB (NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
     private final String rateAddSql = "INSERT INTO RATE (COUNTER, FILM_ID) VALUES(?, ?)";
     private final String rateUpdateSql = "UPDATE RATE SET COUNTER = ? WHERE FILM_ID = ?";
     private final String incrementRateSql = "UPDATE RATE SET COUNTER = COUNTER + 1 WHERE FILM_ID = ?";
-    private final String decrementRateSql = "MERGE INTO RATE R USING (SELECT FILM_ID, USER_ID FROM LIKES) L ON (L.FILM_ID = ? AND L.USER_ID = ?) WHEN MATCHED AND R.COUNTER > 0 THEN UPDATE SET R.COUNTER = R.COUNTER - 1";
+    private final String decrementRateSql = "MERGE INTO RATE R USING (SELECT FILM_ID, USER_ID FROM LIKES) L ON (L.FILM_ID = ? AND L.USER_ID = ? AND L.FILM_ID = R.FILM_ID) WHEN MATCHED AND R.COUNTER > 0 THEN UPDATE SET R.COUNTER = R.COUNTER - 1";
     private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
     private final String genreAddSql = "INSERT INTO FILM_GENRE (GENRE_ID, FILM_ID) VALUES(?, ?)";
     private final String filmUpdateSql = "UPDATE FILM_DB " +
@@ -47,7 +48,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
     private final String likeAddSql = "INSERT INTO LIKES (FILM_ID, USER_ID) VALUES(?, ?)";
     private final String likeDeleteSql = "DELETE FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
-    private final String checkIsLiked = "SELECT LIKED FROM LIKES WHERE FILM_ID = %d AND USER_ID = %d";
+    private final String checkIsLiked = "SELECT LIKED FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
 
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
@@ -115,8 +116,8 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     private void checkIsLiked(long filmId, long userId) {
         try {
             jdbcTemplate.queryForObject(
-                    String.format(checkIsLiked, filmId, userId),
-                    Boolean.class);
+                    checkIsLiked,
+                    Boolean.class, filmId, userId);
         } catch (EmptyResultDataAccessException e) {
             throw new FilmLikeNotFoundException(filmId, userId);
         }
@@ -194,7 +195,9 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     @Override
     public List<FilmDb> getPopularList(long count) {
-        return null;
+        return super.getList(
+                String.format(sqlReceivePopularFilms, count),
+                new FilmMapper());
     }
 
     @Override
