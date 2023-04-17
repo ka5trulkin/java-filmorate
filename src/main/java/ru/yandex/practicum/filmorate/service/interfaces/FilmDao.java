@@ -6,5 +6,7 @@ import ru.yandex.practicum.filmorate.model.film.Genre;
 import java.util.List;
 
 public interface FilmDao<T extends Film> extends FilmService<T> {
-    List<Genre> getGenres();
+    List<Genre> getGenreList();
+
+    Genre getGenreById(short id);
 }

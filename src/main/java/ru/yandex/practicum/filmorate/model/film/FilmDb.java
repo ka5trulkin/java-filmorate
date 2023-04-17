@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.model.film;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -14,7 +14,7 @@ import java.util.List;
 public class FilmDb extends Film {
     private int rate;
     private Mpa mpa;
-    private final List<Genre> genres = new ArrayList<>();
+    private final Set<Genre> genres = new HashSet<>();
 
     @Data
     @NoArgsConstructor
@@ -23,12 +23,4 @@ public class FilmDb extends Film {
         private byte id;
         private String name;
     }
-
-//    @Data
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    public static class Genre {
-//        private byte id;
-//        private String name;
-//    }
 }

@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller.film;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.model.film.Genre;
@@ -18,7 +19,12 @@ public class FilmDependenciesDaoController extends AbstractFilmsController<FilmD
     }
 
     @GetMapping("/genres")
-    List<Genre> getGenres() {
-        return service.getGenres();
+    List<Genre> getGenreList() {
+        return service.getGenreList();
+    }
+
+    @GetMapping("/genres/{id}")
+    Genre getGenreById(@PathVariable("id") short id) {
+        return service.getGenreById(id);
     }
 }

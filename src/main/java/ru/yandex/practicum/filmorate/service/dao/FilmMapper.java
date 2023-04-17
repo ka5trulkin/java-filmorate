@@ -30,13 +30,18 @@ public class FilmMapper implements RowMapper<FilmDb> {
     }
 
     private void fillGenre(FilmDb filmDb, ResultSet rs) throws SQLException {
-        if (rs.getByte("genreId") > 0) {
+        if (rs.getShort("genreId") > 0) {
+            int counter = 0;
             do {
+                counter++;
                 filmDb.getGenres().add(
                         new Genre(
-                                rs.getByte("genreId"),
+                                rs.getShort("genreId"),
                                 rs.getString("genreName")));
-            } while (rs.next() && (filmDb.getId() == rs.getLong("id")));
+                if ((rs.isLast()) || (counter == rs.getInt("genreCounter"))) {
+                    return;
+                }
+            } while (rs.next());
         }
     }
 
