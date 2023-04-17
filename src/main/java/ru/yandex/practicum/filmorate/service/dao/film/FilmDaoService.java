@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.dao;
+package ru.yandex.practicum.filmorate.service.dao.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,45 +15,18 @@ import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.model.film.Genre;
 import ru.yandex.practicum.filmorate.model.film.Mpa;
+import ru.yandex.practicum.filmorate.service.dao.AbstractDao;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
 import java.util.List;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
+import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.*;
 
 @Slf4j
 @Service
 public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmDb> {
-    private final String tableName = "FILM_DB";
-    private final String sqlReceiveFilm =
-            "SELECT f.ID, f.NAME, f.DESCRIPTION, f.RELEASE_DATE, f.DURATION, r.COUNTER rate, m.ID mpaId, m.NAME mpaName, g.ID genreId, g.NAME genreName, (SELECT COUNT(GENRE_ID) FROM FILM_GENRE WHERE f.ID = FILM_ID) genreCounter FROM FILM_DB f LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID LEFT JOIN MPA m ON fm.MPA_ID = m.ID LEFT JOIN RATE r ON f.ID = r.FILM_ID";
-    private final String getSqlReceiveFilmList =
-            String.join(" ",
-                    sqlReceiveFilm,
-                    "ORDER BY f.ID, genreId");
-    private final String sqlReceiveFilmById =
-            String.join(" ",
-                    sqlReceiveFilm,
-                    "WHERE f.ID = ?");
-    private final String sqlReceivePopularFilms =
-            String.join(" ",
-            sqlReceiveFilm,
-            "WHERE EXISTS (SELECT * FROM RATE r2 WHERE f.ID = r2.FILM_ID) ORDER BY RATE DESC LIMIT %d");
-    private final String filmAddSql = "INSERT INTO FILM_DB (NAME, DESCRIPTION, RELEASE_DATE, DURATION) VALUES(?, ?, ?, ?)";
-    private final String rateAddSql = "INSERT INTO RATE (COUNTER, FILM_ID) VALUES(?, ?)";
-    private final String rateUpdateSql = "UPDATE RATE SET COUNTER = ? WHERE FILM_ID = ?";
-    private final String incrementRateSql = "UPDATE RATE SET COUNTER = COUNTER + 1 WHERE FILM_ID = ?";
-    private final String decrementRateSql = "MERGE INTO RATE R USING (SELECT FILM_ID, USER_ID FROM LIKES) L ON (L.FILM_ID = ? AND L.USER_ID = ? AND L.FILM_ID = R.FILM_ID) WHEN MATCHED AND R.COUNTER > 0 THEN UPDATE SET R.COUNTER = R.COUNTER - 1";
-    private final String mpaAddSql = "INSERT INTO FILM_MPA (MPA_ID, FILM_ID) VALUES(?, ?)";
-    private final String genreAddSql = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES(?, ?)";
-    private final String filmUpdateSql = "UPDATE FILM_DB " +
-            "SET NAME = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ? " +
-            "WHERE ID = ? ";
-    private final String mpaUpdateSql = "UPDATE FILM_MPA SET MPA_ID = ? WHERE FILM_ID = ?";
-    private final String genreDeleteSql = "DELETE FROM FILM_GENRE WHERE FILM_ID = ?";
-    private final String likeAddSql = "INSERT INTO LIKES (FILM_ID, USER_ID) VALUES(?, ?)";
-    private final String likeDeleteSql = "DELETE FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
-    private final String checkIsLiked = "SELECT LIKED FROM LIKES WHERE FILM_ID = ? AND USER_ID = ?";
+    private static final String TABLE_NAME = "FILM_DB";
 
     @Autowired
     protected FilmDaoService(JdbcTemplate jdbcTemplate) {
@@ -62,7 +35,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     private void addFilmToDb(FilmDb film) {
         jdbcTemplate.update(
-                filmAddSql,
+                FILM_ADD_SQL.getSql(),
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -71,7 +44,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     private void updateFilmInDb(FilmDb film) {
         jdbcTemplate.update(
-                filmUpdateSql,
+                FILM_UPDATE_SQL.getSql(),
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
@@ -82,7 +55,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     private void addGenreToDb(FilmDb film, long filmId) {
         try {
             film.getGenres().forEach(
-                    genre -> jdbcTemplate.update(genreAddSql,
+                    genre -> jdbcTemplate.update(GENRE_ADD_SQL.getSql(),
                             filmId,
                             genre.getId()));
         } catch (DuplicateKeyException e) {
@@ -91,7 +64,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     }
 
     private void updateGenreInFilm(FilmDb film) {
-        jdbcTemplate.update(genreDeleteSql, film.getId());
+        jdbcTemplate.update(GENRE_DELETE_SQL.getSql(), film.getId());
         addGenreToDb(film, film.getId());
     }
 
@@ -110,18 +83,18 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     private void incrementRate(long filmId) {
         jdbcTemplate.update(
-                incrementRateSql,
+                INCREMENT_RATE_SQL.getSql(),
                 filmId);
     }
 
     private void decrementRate(long filmId, long userID) {
-        jdbcTemplate.update(decrementRateSql, filmId, userID);
+        jdbcTemplate.update(DECREMENT_RATE_SQL.getSql(), filmId, userID);
     }
 
     private void checkIsLiked(long filmId, long userId) {
         try {
             jdbcTemplate.queryForObject(
-                    checkIsLiked,
+                    CHECK_IS_LIKED.getSql(),
                     Boolean.class, filmId, userId);
         } catch (EmptyResultDataAccessException e) {
             throw new FilmLikeNotFoundException(filmId, userId);
@@ -131,45 +104,45 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     @Override
     public FilmDb add(FilmDb film) {
         this.addFilmToDb(film);
-        long filmId = super.getLastIdFromDataBase(tableName);
-        this.putRateToDb(film, rateAddSql, filmId);
+        long filmId = super.getLastIdFromDataBase(TABLE_NAME);
+        this.putRateToDb(film, RATE_ADD_SQL.getSql(), filmId);
         if (film.getMpa() != null) {
-            this.putMpaToDb(film, mpaAddSql, filmId);
+            this.putMpaToDb(film, MPA_ADD_SQL.getSql(), filmId);
         }
         if (film.getGenres().size() > 0) {
             this.addGenreToDb(film, filmId);
         }
         log.info(FILM_ADDED.message(), film.getName());
-        return super.get(sqlReceiveFilmById, new FilmMapper(), filmId);
+        return super.get(SQL_RECEIVE_FILM_BY_ID.getSql(), new FilmMapper(), filmId);
     }
 
     @Override
     public FilmDb update(FilmDb film) {
         this.updateFilmInDb(film);
-        this.putRateToDb(film, rateUpdateSql, film.getId());
-        this.putMpaToDb(film, mpaUpdateSql, film.getId());
+        this.putRateToDb(film, RATE_UPDATE_SQL.getSql(), film.getId());
+        this.putMpaToDb(film, MPA_UPDATE_SQL.getSql(), film.getId());
         this.updateGenreInFilm(film);
         log.info(FILM_UPDATED.message(), film.getId(), film.getName());
-        return super.get(sqlReceiveFilmById, new FilmMapper(), film.getId());
+        return super.get(SQL_RECEIVE_FILM_BY_ID.getSql(), new FilmMapper(), film.getId());
     }
 
     @Override
     public FilmDb get(long id) {
         log.info(GET_FILM.message(), id);
-        return super.get(sqlReceiveFilmById, new FilmMapper(), id);
+        return super.get(SQL_RECEIVE_FILM_BY_ID.getSql(), new FilmMapper(), id);
     }
 
     @Override
     public List<FilmDb> getList() {
         log.info(GET_FILM_LIST.message());
-        return super.getList(getSqlReceiveFilmList, new FilmMapper());
+        return super.getList(SQL_RECEIVE_FILM_LIST.getSql(), new FilmMapper());
     }
 
     @Override
     public void addLike(long id, long userId) {
         try {
             jdbcTemplate.update(
-                    likeAddSql,
+                    LIKE_ADD_SQL.getSql(),
                     id,
                     userId);
             this.incrementRate(id);
@@ -187,7 +160,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
         this.decrementRate(id, userId);
         try {
             jdbcTemplate.update(
-                    likeDeleteSql,
+                    LIKE_DELETE_SQL.getSql(),
                     id,
                     userId);
             log.info(FILM_LIKE_REMOVED.message(), id, userId);
@@ -202,12 +175,13 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     public List<FilmDb> getPopularList(long count) {
         log.info(GET_POPULAR_FILM_LIST.message());
         return super.getList(
-                String.format(sqlReceivePopularFilms, count),
+                String.format(SQL_RECEIVE_POPULAR_FILMS.getSql(), count),
                 new FilmMapper());
     }
 
     @Override
     public List<Genre> getGenreList() {
+        log.info(GET_GENRE_LIST.message());
         return jdbcTemplate.query("SELECT ID, NAME FROM GENRE",
                 new BeanPropertyRowMapper<>(Genre.class));
     }
@@ -215,6 +189,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     @Override
     public Genre getGenreById(short id) {
         try {
+            log.info(GET_GENRE.message(), id);
             return jdbcTemplate.queryForObject(String.format("SELECT ID, NAME FROM GENRE WHERE ID = %d", id), new BeanPropertyRowMapper<>(Genre.class));
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(id);
@@ -223,6 +198,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
 
     @Override
     public List<Mpa> getMpaList() {
+        log.info(GET_MPA_LIST.message());
         return jdbcTemplate.query("SELECT ID, NAME FROM MPA",
                 new BeanPropertyRowMapper<>(Mpa.class));
     }
@@ -230,6 +206,7 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     @Override
     public Mpa getMpaById(short id) {
         try {
+            log.info(GET_MPA.message(), id);
             return jdbcTemplate.queryForObject(String.format("SELECT ID, NAME FROM MPA WHERE ID = %d", id), new BeanPropertyRowMapper<>(Mpa.class));
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(id);
