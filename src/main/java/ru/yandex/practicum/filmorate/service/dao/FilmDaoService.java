@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.exception.film.FilmLikeNotFoundException;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
 import java.util.List;
@@ -215,6 +216,21 @@ public class FilmDaoService extends AbstractDao<FilmDb> implements FilmDao<FilmD
     public Genre getGenreById(short id) {
         try {
             return jdbcTemplate.queryForObject(String.format("SELECT ID, NAME FROM GENRE WHERE ID = %d", id), new BeanPropertyRowMapper<>(Genre.class));
+        } catch (EmptyResultDataAccessException e) {
+            throw new ObjectNotFoundException(id);
+        }
+    }
+
+    @Override
+    public List<Mpa> getMpaList() {
+        return jdbcTemplate.query("SELECT ID, NAME FROM MPA",
+                new BeanPropertyRowMapper<>(Mpa.class));
+    }
+
+    @Override
+    public Mpa getMpaById(short id) {
+        try {
+            return jdbcTemplate.queryForObject(String.format("SELECT ID, NAME FROM MPA WHERE ID = %d", id), new BeanPropertyRowMapper<>(Mpa.class));
         } catch (EmptyResultDataAccessException e) {
             throw new ObjectNotFoundException(id);
         }

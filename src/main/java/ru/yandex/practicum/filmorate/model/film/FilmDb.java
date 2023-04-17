@@ -15,12 +15,4 @@ public class FilmDb extends Film {
     private int rate;
     private Mpa mpa;
     private final Set<Genre> genres = new HashSet<>();
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class Mpa {
-        private byte id;
-        private String name;
-    }
 }

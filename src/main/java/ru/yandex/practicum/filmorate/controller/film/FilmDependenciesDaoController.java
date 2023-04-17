@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
 import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 import ru.yandex.practicum.filmorate.service.interfaces.FilmDao;
 
 import java.util.List;
@@ -26,5 +27,15 @@ public class FilmDependenciesDaoController extends AbstractFilmsController<FilmD
     @GetMapping("/genres/{id}")
     Genre getGenreById(@PathVariable("id") short id) {
         return service.getGenreById(id);
+    }
+
+    @GetMapping("/mpa")
+    List<Mpa> getMpaList() {
+        return service.getMpaList();
+    }
+
+    @GetMapping("/mpa/{id}")
+    Mpa getMpaById(@PathVariable("id") short id) {
+        return service.getMpaById(id);
     }
 }
