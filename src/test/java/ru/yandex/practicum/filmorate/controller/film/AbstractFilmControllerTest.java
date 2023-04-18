@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 abstract class AbstractFilmControllerTest<F extends Film, U extends User> {
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
-    private MockMvc mockMvc;
+    protected MockMvc mockMvc;
     private final String indexFilm;
     private final String indexUser;
     private final F validFilm;
