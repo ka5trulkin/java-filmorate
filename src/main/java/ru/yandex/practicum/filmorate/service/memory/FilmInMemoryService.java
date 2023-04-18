@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.RequestException;
+import ru.yandex.practicum.filmorate.exception.film.BadFilmLikeException;
+import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.film.FilmInMemory;
 import ru.yandex.practicum.filmorate.service.interfaces.Dao;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
@@ -30,12 +33,20 @@ public class FilmInMemoryService extends AbstractService<FilmInMemory> implement
         this.userStorage = userStorage;
     }
 
-    private void checkUserExist(long userId) {
-        userStorage.get(userId);
+    private void checkUserExist(long filmId, long userId) {
+        try {
+            userStorage.get(userId);
+        } catch (ObjectNotFoundException e) {
+            throw new BadFilmLikeException(filmId, userId);
+        }
     }
 
     private Set<Long> getLikeList(long id) {
-        return super.get(id).getLikes();
+        try {
+            return super.get(id).getLikes();
+        } catch (ObjectNotFoundException e) {
+            throw new RequestException(e.getMessage());
+        }
     }
 
     @Override
@@ -64,7 +75,7 @@ public class FilmInMemoryService extends AbstractService<FilmInMemory> implement
 
     @Override
     public void addLike(long id, long userId) {
-        this.checkUserExist(userId);
+        this.checkUserExist(id, userId);
         Set<Long> likeList = this.getLikeList(id);
         if (likeList.add(userId)) {
             log.info(FILM_LIKE_ADDED.message(), id, userId);
@@ -75,7 +86,7 @@ public class FilmInMemoryService extends AbstractService<FilmInMemory> implement
 
     @Override
     public void removeLike(long id, long userId) {
-        this.checkUserExist(userId);
+        this.checkUserExist(id, userId);
         Set<Long> likeList = this.getLikeList(id);
         if (likeList.remove(userId)) {
             log.info(FILM_LIKE_REMOVED.message(), id, userId);

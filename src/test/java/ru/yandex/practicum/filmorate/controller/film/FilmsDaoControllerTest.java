@@ -1,60 +1,49 @@
 package ru.yandex.practicum.filmorate.controller.film;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.film.FilmDb;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
+import ru.yandex.practicum.filmorate.model.user.UserDb;
 
 import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+class FilmsDaoControllerTest extends AbstractFilmControllerTest<FilmDb, UserDb> {
+    private static final String indexFilm = "/films";
+    private static final String indexUser = "/users";
+    private static final FilmDb validFilm = FilmDb.filmBuilder()
+            .name("Чебуратино")
+            .description("Римейк Филиппа Киркорова")
+            .releaseDate(LocalDate.of(2023, 3, 6))
+            .duration(90)
+            .build();
+    private static final UserDb validUser = UserDb.userBuilder()
+            .email("email@new.org")
+            .login("temp")
+            .name("Иннокентий")
+            .birthday(LocalDate.of(1986, 11, 10))
+            .build();
+    private static final FilmDb testFilm = FilmDb.filmBuilder()
+            .name("Чебуратино")
+            .description("Римейк Филиппа Киркорова")
+            .releaseDate(LocalDate.of(2023, 3, 6))
+            .duration(90)
+            .rate(1)
+            .mpa(new Mpa((short) 1, "G"))
+            .build();
 
-class FilmsDaoControllerTest {
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private MockMvc mockMvc;
-    private FilmDb validFilm;
-
-    @BeforeEach
-    void beforeEach() {
-        validFilm = FilmDb.filmBuilder()
-                .name("Чебуратино")
-                .description("Римейк Филиппа Киркорова")
-                .releaseDate(LocalDate.of(2023, 3, 6))
-                .duration(90)
-                .build();
+    public FilmsDaoControllerTest() {
+        super(indexFilm, indexUser, validFilm, validUser, testFilm);
     }
 
-    @Test
-    void add() {
-
-    }
-
-    @Test
-    void shouldBeCreated() throws Exception {
-        mockMvc.perform(post("/films")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validFilm)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.name").value("Чебуратино"))
-                .andExpect(jsonPath("$.description").value("Римейк Филиппа Киркорова"))
-                .andExpect(jsonPath("$.releaseDate").value("2023-03-06"))
-                .andExpect(jsonPath("$.duration").value("90"));
+    @Override
+    void shouldBeUpdated() throws Exception {
+        super.shouldBeUpdated();
     }
 }
