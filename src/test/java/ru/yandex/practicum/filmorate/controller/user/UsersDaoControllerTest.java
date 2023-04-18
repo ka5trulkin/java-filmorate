@@ -1,55 +1,42 @@
 package ru.yandex.practicum.filmorate.controller.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.user.UserDb;
 
 import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+class UsersDaoControllerTest extends AbstractUserControllerTest<UserDb> {
+    private static final UserDb validUser = UserDb.userBuilder()
+            .id(1)
+            .email("email@new.org")
+            .login("temp")
+            .name("Иннокентий")
+            .birthday(LocalDate.of(1986, 11, 10))
+            .build();
+    private static final UserDb firstFriend = UserDb.userBuilder()
+        .id(2)
+        .email("temp@email.com")
+        .login("firstFriend")
+        .name("Кеша")
+        .birthday(LocalDate.of(1986, 11, 11))
+        .build();
+    private static final UserDb secondFriend = UserDb.userBuilder()
+            .id(3)
+            .email("temptwo@email.com")
+            .login("secondFriend")
+            .name("Петя")
+            .birthday(LocalDate.of(1986, 11, 12))
+            .build();
+    private static final String indexUser = "/users";
 
-class UsersDaoControllerTest {
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private MockMvc mockMvc;
-    private UserDb validUser;
-
-    @BeforeEach
-    void beforeEach() {
-        validUser = UserDb.userBuilder()
-                .name("Chucky")
-                .email("toy@scary.brr")
-                .login("KindGuy")
-                .birthday(LocalDate.of(1988, 11, 9))
-                .build();
-    }
-
-    @Test
-    void shouldBeCreated() throws Exception {
-        mockMvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validUser)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.name").value("Chucky"))
-                .andExpect(jsonPath("$.email").value("toy@scary.brr"))
-                .andExpect(jsonPath("$.login").value("KindGuy"))
-                .andExpect(jsonPath("$.birthday").value("1988-11-09"));
+    public UsersDaoControllerTest() {
+        super(validUser, firstFriend, secondFriend, indexUser);
     }
 }

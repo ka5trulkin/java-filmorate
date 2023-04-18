@@ -20,8 +20,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "userBuilder")
 @DefaultUserName
-public abstract class User extends IdHolder {
-//    @DefaultUserName
+public class User extends IdHolder {
     private String name;
     @Email(message = "Email не соответствует формату электронной почты")
     private String email;

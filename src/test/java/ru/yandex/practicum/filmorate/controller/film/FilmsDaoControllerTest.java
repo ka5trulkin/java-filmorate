@@ -41,6 +41,11 @@ class FilmsDaoControllerTest {
     }
 
     @Test
+    void add() {
+
+    }
+
+    @Test
     void shouldBeCreated() throws Exception {
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
