@@ -2,24 +2,27 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.user.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
-import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.SQL_RECEIVE_BY_ID;
-import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.USER_ADD_SQL;
+import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
+import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.*;
 
 @Slf4j
 @Repository
-public class UserStorage extends AbstractStorage<User> implements Storage<User> {
+public class UserStorage extends AbstractStorage<User> {
     @Autowired
     public UserStorage(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
@@ -29,7 +32,7 @@ public class UserStorage extends AbstractStorage<User> implements Storage<User> 
     public User add(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(USER_ADD_SQL.getSql(), new String[]{"ID"});
+            PreparedStatement ps = connection.prepareStatement(ADD_SQL.getSql(), new String[]{"ID"});
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getLogin());
@@ -41,8 +44,15 @@ public class UserStorage extends AbstractStorage<User> implements Storage<User> 
     }
 
     @Override
-    public User update(User object) {
-        return null;
+    public User update(User user) {
+                jdbcTemplate.update(
+                UPDATE_SQL.getSql(),
+                user.getName(),
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday(),
+                user.getId());
+        return super.get(SQL_RECEIVE_BY_ID.getSql(),  user.getId(), new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
@@ -51,7 +61,7 @@ public class UserStorage extends AbstractStorage<User> implements Storage<User> 
     }
 
     @Override
-    public List<User> getList(String sql) {
+    public Collection<User> getList(String sql) {
         return super.getList(sql, new BeanPropertyRowMapper<>(User.class));
     }
 }

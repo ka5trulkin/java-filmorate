@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.storage.Service;
 
 @Slf4j
 @AllArgsConstructor
-public abstract class AbstractController<T extends IdHolder, S extends Service<T>> {
+public abstract class AbstractController<S extends Service<IdHolder>> {
     protected final S service;
 //
 //    @Autowired

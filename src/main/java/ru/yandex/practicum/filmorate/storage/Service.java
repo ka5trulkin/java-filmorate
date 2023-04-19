@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.IdHolder;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface Service<T extends IdHolder> {
     T add(T object);
@@ -11,5 +11,5 @@ public interface Service<T extends IdHolder> {
 
     T get(long id);
 
-    List<T> getList();
+    Collection<T> getList();
 }

@@ -14,10 +14,10 @@ public enum UserSql {
                     SQL_RECEIVE_FRIEND_LIST.getSql(),
                     "AND",
                     EXISTS_FRIENDS.getSql())),
-    USER_ADD_SQL("INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)"),
+    ADD_SQL("INSERT INTO USER_DB (NAME, EMAIL, LOGIN, BIRTHDAY) VALUES(?, ?, ?, ?)"),
     FRIEND_ADD_SQL("INSERT INTO FRIENDS (FRIEND_ONE, FRIEND_TWO) VALUES(?, ?)"),
     FRIEND_DELETE_SQL("DELETE FROM FRIENDS WHERE FRIEND_ONE = ? AND FRIEND_TWO = ?"),
-    USER_UPDATE_SQL("UPDATE USER_DB SET NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? WHERE ID = ? ");
+    UPDATE_SQL("UPDATE USER_DB SET NAME = ?, EMAIL = ?, LOGIN = ?, BIRTHDAY = ? WHERE ID = ? ");
 
     private final String sql;
 

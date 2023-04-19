@@ -27,31 +27,31 @@
 //        super(jdbcTemplate);
 //    }
 //
-//    @Override
-//    public User add(User user) {
-//        jdbcTemplate.update(
-//                USER_ADD_SQL.getSql(),
-//                user.getName(),
-//                user.getEmail(),
-//                user.getLogin(),
-//                user.getBirthday());
-//        long userId = super.getLastIdFromDataBase(TABLE_NAME);
-//        log.info(USER_ADDED.message(), user.getLogin());
-//        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), userId);
-//    }
-//
-//    @Override
-//    public User update(User user) {
-//        jdbcTemplate.update(
-//                USER_UPDATE_SQL.getSql(),
-//                user.getName(),
-//                user.getEmail(),
-//                user.getLogin(),
-//                user.getBirthday(),
-//                user.getId());
-//        log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
-//        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), user.getId());
-//    }
+////    @Override
+////    public User add(User user) {
+////        jdbcTemplate.update(
+////                USER_ADD_SQL.getSql(),
+////                user.getName(),
+////                user.getEmail(),
+////                user.getLogin(),
+////                user.getBirthday());
+////        long userId = super.getLastIdFromDataBase(TABLE_NAME);
+////        log.info(USER_ADDED.message(), user.getLogin());
+////        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), userId);
+////    }
+////
+////    @Override
+////    public User update(User user) {
+////        jdbcTemplate.update(
+////                USER_UPDATE_SQL.getSql(),
+////                user.getName(),
+////                user.getEmail(),
+////                user.getLogin(),
+////                user.getBirthday(),
+////                user.getId());
+////        log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
+////        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), user.getId());
+////    }
 //
 //    @Override
 //    public User get(long id) {
