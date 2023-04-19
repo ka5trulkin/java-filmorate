@@ -10,7 +10,6 @@
 //
 //import javax.validation.Valid;
 //
-//import static ru.yandex.practicum.filmorate.message.FilmLogMessage.REQUEST_ADD_FILM;
 //
 //@RestController
 //@RequestMapping("/films")

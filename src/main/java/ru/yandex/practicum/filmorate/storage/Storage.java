@@ -14,4 +14,6 @@ public interface Storage<T extends IdHolder> {
     T get(String sql, long id);
 
     Collection<T> getList(String sql);
+
+    void delete(String sql, long id, long friendId);
 }

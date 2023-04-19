@@ -12,4 +12,6 @@ public interface Service<T extends IdHolder> {
     T get(long id);
 
     Collection<T> getList();
+
+    void delete(String sql, long id, long friendId);
 }

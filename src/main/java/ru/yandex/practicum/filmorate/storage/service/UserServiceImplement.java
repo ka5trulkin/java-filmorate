@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,25 +31,9 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     }
 
     @Override
-    public void addFriend(long id, long friendId) {
-        try {
-            super.add(FRIEND_ADD_SQL.getSql(), id, friendId);
-        } catch (DuplicateKeyException e) {
-            log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
-        } catch (DataIntegrityViolationException e) {
-            throw new FriendNotFoundException(id, friendId);
-        }
-    }
-
-    @Override
     public User update(User user) {
         log.info(USER_UPDATED.message(), user.getId(), user.getLogin());
         return super.update(user);
-    }
-
-    @Override
-    public void removeFriend(long id, long friendId) {
-
     }
 
     @Override
@@ -65,12 +49,33 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     }
 
     @Override
-    public Collection<User> getFriendList(long id) {
-        return null;
+    public void addFriend(long id, long friendId) {
+        try {
+            super.add(FRIEND_ADD_SQL.getSql(), id, friendId);
+        } catch (DuplicateKeyException e) {
+            log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
+        } catch (DataIntegrityViolationException e) {
+            throw new FriendNotFoundException(id, friendId);
+        }
     }
 
     @Override
-    public Collection<User> getCommonFriendList(long id, long otherId) {
-        return null;
+    public void removeFriend(long id, long friendId) {
+        log.info(USER_FRIEND_REMOVED.message(), id, friendId);
+        super.delete(FRIEND_DELETE_SQL.getSql(), id, friendId);
+    }
+
+    @Override
+    public Collection<User> getFriendList(long id) {
+        log.info(GET_USER_FRIEND_LIST.message(), id);
+        return super.getList(
+                String.format(SQL_RECEIVE_FRIEND_LIST.getSql(), id));
+    }
+
+    @Override
+    public Collection<User> getCommonFriendList(long id, long friendId) {
+        log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, friendId);
+        return super.getList(
+                String.format(SQL_RECEIVE_COMMON_FRIEND_LIST.getSql(), id, friendId));
     }
 }

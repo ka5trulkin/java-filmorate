@@ -1,25 +1,17 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage.service;
 
+import lombok.AllArgsConstructor;
 import ru.yandex.practicum.filmorate.model.IdHolder;
-import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.Service;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.Collection;
-import java.util.List;
 
-import static ru.yandex.practicum.filmorate.message.UserLogMessage.GET_USER;
-import static ru.yandex.practicum.filmorate.message.UserLogMessage.GET_USER_LIST;
-import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.SQL_RECEIVE_BY_ID;
-import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.SQL_RECEIVE_LIST;
-
+@AllArgsConstructor
 public abstract class AbstractService<T extends IdHolder> implements Service<T> {
     private final Storage<T> storage;
 
-    protected AbstractService(Storage<T> storage) {
-        this.storage = storage;
-    }
-
+    @Override
     public T add(T object) {
         return storage.add(object);
     }
@@ -28,6 +20,7 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
         storage.add(sql, id, otherId);
     }
 
+    @Override
     public T update(T object) {
         return storage.update(object);
     }
@@ -38,5 +31,10 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
 
     public Collection<T> getList(String sql) {
         return storage.getList(sql);
+    }
+
+    @Override
+    public void delete(String sql, long id, long friendId) {
+        storage.delete(sql, id, friendId);
     }
 }

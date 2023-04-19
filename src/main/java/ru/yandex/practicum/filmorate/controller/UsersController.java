@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.Service;
 import ru.yandex.practicum.filmorate.storage.UserService;
 
 import javax.validation.Valid;
-
 import java.util.Collection;
 
 import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
