@@ -1,53 +1,36 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import ru.yandex.practicum.filmorate.service.interfaces.Dao;
-import ru.yandex.practicum.filmorate.exception.object.ObjectAlreadyExistException;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import ru.yandex.practicum.filmorate.exception.object.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.IdHolder;
+import ru.yandex.practicum.filmorate.model.user.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-public abstract class AbstractStorage<T extends IdHolder> implements Dao<T> {
-    private final Map<Long, T> data = new HashMap<>();
-    private long idCounter;
+import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.SQL_RECEIVE_BY_ID;
+import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.USER_ADD_SQL;
 
-    private boolean isContain(T object) {
-        return data.containsKey(object.getId());
+@AllArgsConstructor
+public abstract class AbstractStorage<T extends IdHolder> {
+    protected final JdbcTemplate jdbcTemplate;
+
+    public T get(String sql, long id, RowMapper<T> mapper) {
+        return jdbcTemplate.query((sql), mapper, id)
+                .stream()
+                .findAny()
+                .orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
-    public T add(T object) {
-        if (isContain(object)) {
-            throw new ObjectAlreadyExistException(object.getId());
-        }
-        object.setId(++idCounter);
-        data.put(object.getId(), object);
-        return data.get(object.getId());
-    }
-
-    public T update(T object) {
-        if (!isContain(object)) {
-            throw new ObjectNotFoundException(object.getId());
-        }
-        data.put(object.getId(), object);
-        return data.get(object.getId());
-    }
-
-    public T get(long id) {
-        if (!data.containsKey(id)) {
-            throw new ObjectNotFoundException(id);
-        }
-        return data.get(id);
-    }
-
-    public List<T> getList() {
-        return new ArrayList<>(data.values());
-    }
-
-    public void clear() {
-        data.clear();
-        idCounter = 0;
+    public List<T> getList(String sql, RowMapper<T> mapper) {
+        return jdbcTemplate.query(sql, mapper);
     }
 }
