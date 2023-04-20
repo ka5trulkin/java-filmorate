@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.user.User;
@@ -15,13 +15,9 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UsersController {
     private final UserService service;
-
-    @Autowired
-    public UsersController(UserService service) {
-        this.service = service;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

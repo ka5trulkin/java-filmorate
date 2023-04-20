@@ -25,7 +25,7 @@ import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.*;
 
 @Slf4j
 @Repository
-public class FilmStorage extends AbstractStorage<Film> {
+public class FilmStorage extends AbstractStorage<Film> implements Storage<Film> {
     @Autowired
     public FilmStorage(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);

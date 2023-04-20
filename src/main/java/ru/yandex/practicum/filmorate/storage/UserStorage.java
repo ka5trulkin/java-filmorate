@@ -18,7 +18,7 @@ import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.*;
 
 @Slf4j
 @Repository
-public class UserStorage extends AbstractStorage<User> {
+public class UserStorage extends AbstractStorage<User> implements Storage<User> {
     @Autowired
     public UserStorage(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
