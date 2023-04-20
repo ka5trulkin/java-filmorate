@@ -36,25 +36,24 @@ public class UserStorage extends AbstractStorage<User> {
             return ps;
         }, keyHolder);
         user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
-        return super.get(SQL_RECEIVE_BY_ID.getSql(), user.getId(), new BeanPropertyRowMapper<>(User.class));
+        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), user.getId());
     }
 
     @Override
     public User update(User user) {
         super.update(
                 UPDATE_SQL.getSql(),
-                new Object[]{
-                        user.getName(),
-                        user.getEmail(),
-                        user.getLogin(),
-                        user.getBirthday(),
-                        user.getId()});
-        return super.get(SQL_RECEIVE_BY_ID.getSql(), user.getId(), new BeanPropertyRowMapper<>(User.class));
+                user.getName(),
+                user.getEmail(),
+                user.getLogin(),
+                user.getBirthday(),
+                user.getId());
+        return super.get(SQL_RECEIVE_BY_ID.getSql(), new BeanPropertyRowMapper<>(User.class), user.getId());
     }
 
     @Override
-    public User get(String sql, long id) {
-        return super.get(sql, id, new BeanPropertyRowMapper<>(User.class));
+    public User get(String sql, Object... args) {
+        return super.get(sql, new BeanPropertyRowMapper<>(User.class), args);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class UserStorage extends AbstractStorage<User> {
     }
 
     @Override
-    public Collection<User> getList(String sql, Object[] args) {
-        return super.getList(sql, args, new BeanPropertyRowMapper<>(User.class));
+    public Collection<User> getList(String sql, Object... args) {
+        return super.getList(sql, new BeanPropertyRowMapper<>(User.class), args);
     }
 }

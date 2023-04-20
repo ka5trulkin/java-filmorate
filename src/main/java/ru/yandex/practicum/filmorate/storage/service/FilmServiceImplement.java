@@ -29,6 +29,13 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
         super.update(INCREMENT_RATE_SQL.getSql(), filmId);
     }
 
+    private void decrementRate(long filmId, long userID) {
+        super.update(
+                DECREMENT_RATE_SQL.getSql(),
+                filmId,
+                userID);
+    }
+
     @Override
     public Film add(Film film) {
         log.info(FILM_ADDED.message(), film.getName());
@@ -56,10 +63,10 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
     @Override
     public void addLike(long id, long userId) {
         try {
-            storage.add(LIKE_ADD_SQL.getSql(),
-                    new Object[]{
-                            id,
-                            userId});
+            super.add(
+                    LIKE_ADD_SQL.getSql(),
+                    id,
+                    userId);
             this.incrementRate(id);
             log.info(FILM_LIKE_ADDED.message(), id, userId);
         } catch (DuplicateKeyException e) {
@@ -71,12 +78,25 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
 
     @Override
     public void removeLike(long id, long userId) {
-
+        try {
+            super.delete(
+                    LIKE_DELETE_SQL.getSql(),
+                    id,
+                    userId);
+            this.decrementRate(id, userId);
+            log.info(FILM_LIKE_REMOVED.message(), id, userId);
+        } catch (DuplicateKeyException e) {
+            throw new FilmLikeAlreadyExistException(id, userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadFilmLikeException(id, userId);
+        }
     }
 
     @Override
     public Collection<Film> getPopularList(long count) {
         log.info(GET_POPULAR_FILM_LIST.message());
-        return super.getList(SQL_RECEIVE_POPULAR_FILMS.getSql(), new Object[]{count});
+        return super.getList(
+                SQL_RECEIVE_POPULAR_FILMS.getSql(),
+                count);
     }
 }

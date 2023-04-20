@@ -32,26 +32,26 @@ public class FilmStorage extends AbstractStorage<Film> {
     }
 
     private void updateFilmInDb(Film film) {
-        super.update(UPDATE_SQL.getSql(),
-                new Object[]{
-                        film.getName(),
-                        film.getDescription(),
-                        film.getReleaseDate(),
-                        film.getDuration(),
-                        film.getRate(),
-                        film.getId()});
+        super.update(
+                UPDATE_SQL.getSql(),
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getRate(),
+                film.getId());
     }
 
     private void updateGenreInFilm(Film film) {
         super.update(GENRE_DELETE_SQL.getSql(), film.getId());
-        addGenreToDb(film);
+        this.addGenreToDb(film);
     }
 
     private void putMpaToDb(Film film, String sql) {
-        super.update(sql,
-                new Object[]{
-                        film.getMpa().getId(),
-                        film.getId()});
+        super.update(
+                sql,
+                film.getMpa().getId(),
+                film.getId());
     }
 
     private void addGenreToDb(Film film) {
@@ -96,12 +96,15 @@ public class FilmStorage extends AbstractStorage<Film> {
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         if (film.getMpa() != null) {
-            putMpaToDb(film, MPA_ADD_SQL.getSql());
+            this.putMpaToDb(film, MPA_ADD_SQL.getSql());
         }
         if (film.getGenres() != null) {
-            addGenreToDb(film);
+            this.addGenreToDb(film);
         }
-        return super.get(SQL_RECEIVE_BY_ID.getSql(), film.getId(), new FilmMapper());
+        return super.get(
+                SQL_RECEIVE_BY_ID.getSql(),
+                new FilmMapper(),
+                film.getId());
     }
 
     @Override
@@ -109,12 +112,15 @@ public class FilmStorage extends AbstractStorage<Film> {
         this.updateFilmInDb(film);
         this.putMpaToDb(film, MPA_UPDATE_SQL.getSql());
         this.updateGenreInFilm(film);
-        return super.get(SQL_RECEIVE_BY_ID.getSql(), film.getId(), new FilmMapper());
+        return super.get(
+                SQL_RECEIVE_BY_ID.getSql(),
+                new FilmMapper(),
+                film.getId());
     }
 
     @Override
-    public Film get(String sql, long id) {
-        return super.get(sql, id, new FilmMapper());
+    public Film get(String sql, Object... args) {
+        return super.get(sql, new FilmMapper(), args);
     }
 
     @Override
@@ -124,6 +130,6 @@ public class FilmStorage extends AbstractStorage<Film> {
 
     @Override
     public Collection<Film> getList(String sql, Object[] args) {
-        return super.getList(sql, args, new FilmMapper());
+        return super.getList(sql, new FilmMapper(), args);
     }
 }

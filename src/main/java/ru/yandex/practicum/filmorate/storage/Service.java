@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface Service<T extends IdHolder> {
     T add(T object);
 
-    void add(String sql, Object[] args);
+    void add(String sql, Object... args);
 
     T update(T object);
 
@@ -15,5 +15,5 @@ public interface Service<T extends IdHolder> {
 
     Collection<T> getList();
 
-    void delete(String sql, Object[] args);
+    void delete(String sql, Object... args);
 }

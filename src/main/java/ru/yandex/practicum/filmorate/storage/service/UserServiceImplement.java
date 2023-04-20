@@ -39,7 +39,9 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     @Override
     public User get(long id) {
         log.info(GET_USER.message(), id);
-        return super.get(SQL_RECEIVE_BY_ID.getSql(), id);
+        return super.get(
+                SQL_RECEIVE_BY_ID.getSql(),
+                id);
     }
 
     @Override
@@ -53,9 +55,8 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
         try {
             super.add(
                     FRIEND_ADD_SQL.getSql(),
-                    new Object[]{
-                            id,
-                            friendId});
+                    id,
+                    friendId);
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
         } catch (DataIntegrityViolationException e) {
@@ -66,10 +67,10 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     @Override
     public void removeFriend(long id, long friendId) {
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
-        super.delete(FRIEND_DELETE_SQL.getSql(),
-                new Object[]{
-                        id,
-                        friendId});
+        super.delete(
+                FRIEND_DELETE_SQL.getSql(),
+                id,
+                friendId);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
         log.info(GET_USER_FRIEND_LIST.message(), id);
         return super.getList(
                 SQL_RECEIVE_FRIEND_LIST.getSql(),
-                new Object[]{id});
+                id);
     }
 
     @Override
@@ -85,8 +86,7 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, friendId);
         return super.getList(
                 SQL_RECEIVE_COMMON_FRIEND_LIST.getSql(),
-                new Object[]{
-                        id,
-                        friendId});
+                id,
+                friendId);
     }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 
 @AllArgsConstructor
 public abstract class AbstractService<T extends IdHolder> implements Service<T> {
-    protected final Storage<T> storage;
+    private final Storage<T> storage;
 
     @Override
     public T add(T object) {
@@ -17,7 +17,7 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
     }
 
     @Override
-    public void add(String sql, Object[] args) {
+    public void add(String sql, Object... args) {
         storage.add(sql, args);
     }
 
@@ -26,24 +26,24 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
         return storage.update(object);
     }
 
-    public void update(String sql, long id) {
-        storage.update(sql, id);
+    public void update(String sql, Object... args) {
+        storage.update(sql, args);
     }
 
-    public T get(String sql, long id) {
-        return storage.get(sql, id);
+    public T get(String sql, Object... args) {
+        return storage.get(sql, args);
     }
 
     public Collection<T> getList(String sql) {
         return storage.getList(sql);
     }
 
-    public Collection<T> getList(String sql, Object[] args) {
+    public Collection<T> getList(String sql, Object... args) {
         return storage.getList(sql, args);
     }
 
     @Override
-    public void delete(String sql, Object[] args) {
+    public void delete(String sql, Object... args) {
         storage.delete(sql, args);
     }
 }
