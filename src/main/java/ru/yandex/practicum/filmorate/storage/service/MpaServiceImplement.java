@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.storage.TinyStorage;
 
 import java.util.Collection;
 
+import static ru.yandex.practicum.filmorate.message.MpaLogMessage.GET_MPA;
+import static ru.yandex.practicum.filmorate.message.MpaLogMessage.GET_MPA_LIST;
 import static ru.yandex.practicum.filmorate.service.dao.film.MpaSql.MPA_GET_LIST_SQL;
 import static ru.yandex.practicum.filmorate.service.dao.film.MpaSql.MPA_GET_SQL;
 
@@ -23,11 +25,13 @@ public class MpaServiceImplement extends AbstractTinyService<Mpa> implements Mpa
 
     @Override
     public Mpa get(long id) {
+        log.info(GET_MPA.message(), id);
         return super.get(MPA_GET_SQL.getSql(), id);
     }
 
     @Override
     public Collection<Mpa> getList() {
+        log.info(GET_MPA_LIST.message());
         return super.getList(MPA_GET_LIST_SQL.getSql());
     }
 }

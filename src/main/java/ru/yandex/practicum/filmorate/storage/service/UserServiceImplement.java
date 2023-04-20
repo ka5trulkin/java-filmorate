@@ -57,6 +57,7 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
                     FRIEND_ADD_SQL.getSql(),
                     id,
                     friendId);
+            log.info(USER_FRIEND_ADDED.message(), id, friendId);
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
         } catch (DataIntegrityViolationException e) {
