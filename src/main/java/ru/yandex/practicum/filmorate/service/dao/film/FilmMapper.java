@@ -1,16 +1,16 @@
 package ru.yandex.practicum.filmorate.service.dao.film;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.yandex.practicum.filmorate.model.film.FilmDb;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.Genre;
 import ru.yandex.practicum.filmorate.model.film.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FilmMapper implements RowMapper<FilmDb> {
-    private FilmDb getFilmDb(ResultSet rs) throws SQLException {
-        FilmDb filmDb = FilmDb.filmBuilder()
+public class FilmMapper implements RowMapper<Film> {
+    private Film getFilm(ResultSet rs) throws SQLException {
+        Film film = Film.filmBuilder()
                 .id(rs.getLong("id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
@@ -18,24 +18,24 @@ public class FilmMapper implements RowMapper<FilmDb> {
                 .duration(rs.getInt("duration"))
                 .rate(rs.getInt("rate"))
                 .build();
-        this.fillMpa(filmDb, rs);
-        this.fillGenre(filmDb, rs);
-        return filmDb;
+        this.fillMpa(film, rs);
+        this.fillGenre(film, rs);
+        return film;
     }
 
-    private void fillMpa(FilmDb filmDb, ResultSet rs) throws SQLException {
-        filmDb.setMpa(
+    private void fillMpa(Film film, ResultSet rs) throws SQLException {
+        film.setMpa(
                 new Mpa(
                         rs.getShort("mpaId"),
                         rs.getString("mpaName")));
     }
 
-    private void fillGenre(FilmDb filmDb, ResultSet rs) throws SQLException {
+    private void fillGenre(Film film, ResultSet rs) throws SQLException {
         if (rs.getShort("genreId") > 0) {
             int counter = 0;
             do {
                 counter++;
-                filmDb.getGenres().add(
+                film.getGenres().add(
                         new Genre(
                                 rs.getShort("genreId"),
                                 rs.getString("genreName")));
@@ -47,7 +47,7 @@ public class FilmMapper implements RowMapper<FilmDb> {
     }
 
     @Override
-    public FilmDb mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return this.getFilmDb(rs);
+    public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return this.getFilm(rs);
     }
 }

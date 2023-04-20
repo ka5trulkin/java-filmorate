@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase
-class AbstractUserControllerTest{
+class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -32,8 +32,6 @@ class AbstractUserControllerTest{
     private User validUser;
     private User firstFriend;
     private User secondFriend;
-//    private User testUser;
-
 
     @BeforeEach
     void beforeEach() {

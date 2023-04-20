@@ -12,6 +12,15 @@ import java.util.Collection;
 public abstract class AbstractStorage<T extends IdHolder> implements Storage<T> {
     protected final JdbcTemplate jdbcTemplate;
 
+//
+//    protected PreparedStatementSetter newArgPreparedStatementSetter(@Nullable Object[] args) {
+//        return new ArgumentPreparedStatementSetter(args);
+//    }
+//
+//    private Object getObject(Object[] args) {
+//        return Arrays.stream(args).findAny()
+//    }
+//
     @Override
     public void add(String sql, long id, long friendId) {
         jdbcTemplate.update(sql, (id), friendId);
@@ -26,6 +35,10 @@ public abstract class AbstractStorage<T extends IdHolder> implements Storage<T> 
 
     public Collection<T> getList(String sql, RowMapper<T> mapper) {
         return jdbcTemplate.query(sql, mapper);
+    }
+
+    public void update(String sql, Object[] args){
+        jdbcTemplate.update(sql, args);
     }
 
     @Override

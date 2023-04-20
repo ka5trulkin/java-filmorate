@@ -2,14 +2,11 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.user.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.sql.Date;
@@ -17,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.Objects;
 
-import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.*;
 
 @Slf4j

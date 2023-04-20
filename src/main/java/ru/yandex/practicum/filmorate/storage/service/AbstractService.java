@@ -9,7 +9,7 @@ import java.util.Collection;
 
 @AllArgsConstructor
 public abstract class AbstractService<T extends IdHolder> implements Service<T> {
-    private final Storage<T> storage;
+    protected final Storage<T> storage;
 
     @Override
     public T add(T object) {

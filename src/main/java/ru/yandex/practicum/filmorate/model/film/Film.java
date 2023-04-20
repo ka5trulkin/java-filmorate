@@ -10,6 +10,8 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashSet;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -17,7 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @NonNull
-public abstract class Film extends IdHolder {
+public class Film extends IdHolder {
     @NotBlank(message = "Name не должно быть пустым")
     private String name;
     @NotBlank(message = "Description не должно быть пустым")
@@ -28,4 +30,7 @@ public abstract class Film extends IdHolder {
     private LocalDate releaseDate;
     @Positive(message = "Duration должна быть больше 0")
     private int duration;
+    private int rate;
+    private Mpa mpa;
+    private final Collection<Genre> genres = new HashSet<>();
 }
