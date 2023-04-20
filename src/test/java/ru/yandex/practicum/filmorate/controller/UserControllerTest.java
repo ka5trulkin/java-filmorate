@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller.user;
+package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,6 @@ class UserControllerTest {
                 .name("Петя")
                 .birthday(LocalDate.of(1986, 11, 12))
                 .build();
-//        testUser = validUser;
     }
 
     @Test
@@ -112,6 +111,8 @@ class UserControllerTest {
         mockMvc.perform(post(urlPath)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstFriend)));
+        mockMvc.perform(put(String.format("%s/1/friends/2", urlPath)))
+                .andExpect(status().isOk());
         mockMvc.perform(delete(String.format("%s/1/friends/2", urlPath)))
                 .andExpect(status().isOk());
     }
