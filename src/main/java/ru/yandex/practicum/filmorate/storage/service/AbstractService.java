@@ -16,13 +16,18 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
         return storage.add(object);
     }
 
-    public void add(String sql, long id, long otherId) {
-        storage.add(sql, id, otherId);
+    @Override
+    public void add(String sql, Object[] args) {
+        storage.add(sql, args);
     }
 
     @Override
     public T update(T object) {
         return storage.update(object);
+    }
+
+    public void update(String sql, long id) {
+        storage.update(sql, id);
     }
 
     public T get(String sql, long id) {
@@ -33,8 +38,12 @@ public abstract class AbstractService<T extends IdHolder> implements Service<T> 
         return storage.getList(sql);
     }
 
+    public Collection<T> getList(String sql, Object[] args) {
+        return storage.getList(sql, args);
+    }
+
     @Override
-    public void delete(String sql, long id, long friendId) {
-        storage.delete(sql, id, friendId);
+    public void delete(String sql, Object[] args) {
+        storage.delete(sql, args);
     }
 }

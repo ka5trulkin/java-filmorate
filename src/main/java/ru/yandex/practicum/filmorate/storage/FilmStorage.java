@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,7 +15,10 @@ import ru.yandex.practicum.filmorate.service.dao.film.FilmMapper;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.WARN_ADD_GENRE;
 import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.*;
@@ -38,25 +40,18 @@ public class FilmStorage extends AbstractStorage<Film> {
                         film.getDuration(),
                         film.getRate(),
                         film.getId()});
-//        jdbcTemplate.update(
-//                UPDATE_SQL.getSql(),
-//                film.getName(),
-//                film.getDescription(),
-//                film.getReleaseDate(),
-//                film.getDuration(),
-//                film.getRate(),
-//                film.getId());
     }
 
     private void updateGenreInFilm(Film film) {
-        jdbcTemplate.update(GENRE_DELETE_SQL.getSql(), film.getId());
+        super.update(GENRE_DELETE_SQL.getSql(), film.getId());
         addGenreToDb(film);
     }
 
     private void putMpaToDb(Film film, String sql) {
-        jdbcTemplate.update(sql,
-                film.getMpa().getId(),
-                film.getId());
+        super.update(sql,
+                new Object[]{
+                        film.getMpa().getId(),
+                        film.getId()});
     }
 
     private void addGenreToDb(Film film) {
@@ -83,11 +78,9 @@ public class FilmStorage extends AbstractStorage<Film> {
         }
     }
 
-//    private void incrementRate(long filmId) {
-//        super.update(
-//                INCREMENT_RATE_SQL.getSql(),
-//                filmId);
-//    }
+    private void incrementRate(long filmId) {
+        super.update(INCREMENT_RATE_SQL.getSql(), filmId);
+    }
 
     @Override
     public Film add(Film film) {
@@ -119,11 +112,6 @@ public class FilmStorage extends AbstractStorage<Film> {
         return super.get(SQL_RECEIVE_BY_ID.getSql(), film.getId(), new FilmMapper());
     }
 
-    public void addLike(long id, long userId) {
-        super.add(LIKE_ADD_SQL.getSql(), id, userId);
-    }
-
-
     @Override
     public Film get(String sql, long id) {
         return super.get(sql, id, new FilmMapper());
@@ -131,6 +119,11 @@ public class FilmStorage extends AbstractStorage<Film> {
 
     @Override
     public Collection<Film> getList(String sql) {
-        return super.getList(sql, new BeanPropertyRowMapper<>(Film.class));
+        return super.getList(sql, new FilmMapper());
+    }
+
+    @Override
+    public Collection<Film> getList(String sql, Object[] args) {
+        return super.getList(sql, args, new FilmMapper());
     }
 }

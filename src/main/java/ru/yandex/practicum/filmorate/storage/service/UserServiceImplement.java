@@ -51,7 +51,11 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     @Override
     public void addFriend(long id, long friendId) {
         try {
-            super.add(FRIEND_ADD_SQL.getSql(), id, friendId);
+            super.add(
+                    FRIEND_ADD_SQL.getSql(),
+                    new Object[]{
+                            id,
+                            friendId});
         } catch (DuplicateKeyException e) {
             log.warn(WARN_FRIENDSHIP_ALREADY_EXIST.message(), id, friendId);
         } catch (DataIntegrityViolationException e) {
@@ -62,20 +66,27 @@ public class UserServiceImplement extends AbstractService<User> implements UserS
     @Override
     public void removeFriend(long id, long friendId) {
         log.info(USER_FRIEND_REMOVED.message(), id, friendId);
-        super.delete(FRIEND_DELETE_SQL.getSql(), id, friendId);
+        super.delete(FRIEND_DELETE_SQL.getSql(),
+                new Object[]{
+                        id,
+                        friendId});
     }
 
     @Override
     public Collection<User> getFriendList(long id) {
         log.info(GET_USER_FRIEND_LIST.message(), id);
         return super.getList(
-                String.format(SQL_RECEIVE_FRIEND_LIST.getSql(), id));
+                SQL_RECEIVE_FRIEND_LIST.getSql(),
+                new Object[]{id});
     }
 
     @Override
     public Collection<User> getCommonFriendList(long id, long friendId) {
         log.info(GET_USER_COMMON_FRIEND_LIST.message(), id, friendId);
         return super.getList(
-                String.format(SQL_RECEIVE_COMMON_FRIEND_LIST.getSql(), id, friendId));
+                SQL_RECEIVE_COMMON_FRIEND_LIST.getSql(),
+                new Object[]{
+                        id,
+                        friendId});
     }
 }

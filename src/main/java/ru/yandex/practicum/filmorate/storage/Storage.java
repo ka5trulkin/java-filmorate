@@ -7,13 +7,17 @@ import java.util.Collection;
 public interface Storage<T extends IdHolder> {
     T add(T object);
 
-    void add(String sql, long id, long friendId);
+    void add(String sql, Object[] args);
 
     T update(T object);
+
+    void update(String sql, long id);
 
     T get(String sql, long id);
 
     Collection<T> getList(String sql);
 
-    void delete(String sql, long id, long friendId);
+    Collection<T> getList(String sql, Object[] args);
+
+    void delete(String sql, Object[] args);
 }

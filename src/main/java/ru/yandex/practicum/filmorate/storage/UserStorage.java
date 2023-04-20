@@ -41,14 +41,15 @@ public class UserStorage extends AbstractStorage<User> {
 
     @Override
     public User update(User user) {
-                jdbcTemplate.update(
+        super.update(
                 UPDATE_SQL.getSql(),
-                user.getName(),
-                user.getEmail(),
-                user.getLogin(),
-                user.getBirthday(),
-                user.getId());
-        return super.get(SQL_RECEIVE_BY_ID.getSql(),  user.getId(), new BeanPropertyRowMapper<>(User.class));
+                new Object[]{
+                        user.getName(),
+                        user.getEmail(),
+                        user.getLogin(),
+                        user.getBirthday(),
+                        user.getId()});
+        return super.get(SQL_RECEIVE_BY_ID.getSql(), user.getId(), new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
@@ -59,5 +60,10 @@ public class UserStorage extends AbstractStorage<User> {
     @Override
     public Collection<User> getList(String sql) {
         return super.getList(sql, new BeanPropertyRowMapper<>(User.class));
+    }
+
+    @Override
+    public Collection<User> getList(String sql, Object[] args) {
+        return super.getList(sql, args, new BeanPropertyRowMapper<>(User.class));
     }
 }

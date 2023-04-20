@@ -3,7 +3,11 @@ package ru.yandex.practicum.filmorate.storage.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.film.BadFilmLikeException;
+import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storage.FilmService;
 import ru.yandex.practicum.filmorate.storage.Storage;
@@ -11,7 +15,7 @@ import ru.yandex.practicum.filmorate.storage.Storage;
 import java.util.Collection;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
-import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.SQL_RECEIVE_BY_ID;
+import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.*;
 
 @Slf4j
 @Service
@@ -19,6 +23,10 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
     @Autowired
     protected FilmServiceImplement(@Qualifier("filmStorage") Storage<Film> storage) {
         super(storage);
+    }
+
+    private void incrementRate(long filmId) {
+        super.update(INCREMENT_RATE_SQL.getSql(), filmId);
     }
 
     @Override
@@ -40,15 +48,25 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
     }
 
     @Override
+    public Collection<Film> getList() {
+        log.info(GET_FILM_LIST.message());
+        return super.getList(SQL_RECEIVE_LIST.getSql());
+    }
+
+    @Override
     public void addLike(long id, long userId) {
-//        try {
-//            storage
-//            this.incrementRate(id);
-//        } catch (DuplicateKeyException e) {
-//            throw new FilmLikeAlreadyExistException(id, userId);
-//        } catch (DataIntegrityViolationException e) {
-//            throw new BadFilmLikeException(id, userId);
-//        }
+        try {
+            storage.add(LIKE_ADD_SQL.getSql(),
+                    new Object[]{
+                            id,
+                            userId});
+            this.incrementRate(id);
+            log.info(FILM_LIKE_ADDED.message(), id, userId);
+        } catch (DuplicateKeyException e) {
+            throw new FilmLikeAlreadyExistException(id, userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadFilmLikeException(id, userId);
+        }
     }
 
     @Override
@@ -58,11 +76,7 @@ public class FilmServiceImplement extends AbstractService<Film> implements FilmS
 
     @Override
     public Collection<Film> getPopularList(long count) {
-        return null;
-    }
-
-    @Override
-    public Collection<Film> getList() {
-        return null;
+        log.info(GET_POPULAR_FILM_LIST.message());
+        return super.getList(SQL_RECEIVE_POPULAR_FILMS.getSql(), new Object[]{count});
     }
 }

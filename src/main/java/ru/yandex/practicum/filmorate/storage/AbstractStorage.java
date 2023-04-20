@@ -12,18 +12,9 @@ import java.util.Collection;
 public abstract class AbstractStorage<T extends IdHolder> implements Storage<T> {
     protected final JdbcTemplate jdbcTemplate;
 
-//
-//    protected PreparedStatementSetter newArgPreparedStatementSetter(@Nullable Object[] args) {
-//        return new ArgumentPreparedStatementSetter(args);
-//    }
-//
-//    private Object getObject(Object[] args) {
-//        return Arrays.stream(args).findAny()
-//    }
-//
     @Override
-    public void add(String sql, long id, long friendId) {
-        jdbcTemplate.update(sql, (id), friendId);
+    public void add(String sql, Object[] args) {
+        jdbcTemplate.update(sql, args);
     }
 
     public T get(String sql, long id, RowMapper<T> mapper) {
@@ -37,12 +28,20 @@ public abstract class AbstractStorage<T extends IdHolder> implements Storage<T> 
         return jdbcTemplate.query(sql, mapper);
     }
 
+    public Collection<T> getList(String sql, Object[] args, RowMapper<T> mapper) {
+        return jdbcTemplate.query(sql, mapper, args);
+    }
+
+    public void update(String sql, long id){
+        jdbcTemplate.update(sql, id);
+    }
+
     public void update(String sql, Object[] args){
         jdbcTemplate.update(sql, args);
     }
 
     @Override
-    public void delete(String sql, long id, long friendId) {
-        jdbcTemplate.update(sql, (id), friendId);
+    public void delete(String sql, Object[] args) {
+        jdbcTemplate.update(sql, args);
     }
 }

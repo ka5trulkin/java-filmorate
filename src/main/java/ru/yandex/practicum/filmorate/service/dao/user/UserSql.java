@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.service.dao.user;
 public enum UserSql {
     SQL_RECEIVE_LIST("SELECT ID, NAME, EMAIL, LOGIN, BIRTHDAY FROM USER_DB"),
     SQL_RECEIVE_BY_ID(String.join(" ", SQL_RECEIVE_LIST.getSql(), "WHERE ID = ?")),
-    EXISTS_FRIENDS("EXISTS (SELECT * FROM FRIENDS f WHERE FRIEND_ONE = %d AND FRIEND_TWO = ID)"),
+    EXISTS_FRIENDS("EXISTS (SELECT * FROM FRIENDS f WHERE FRIEND_ONE = ? AND FRIEND_TWO = ID)"),
     SQL_RECEIVE_FRIEND_LIST(
             String.join(" ",
                     SQL_RECEIVE_LIST.getSql(),
