@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.interfaces.storage.TinyStorage;
 import java.util.Collection;
 
 @AllArgsConstructor
-public abstract class AbstractTinyService<T>{
+public abstract class AbstractTinyService<T> {
     private final TinyStorage<T> storage;
 
     public T get(String sql, Object... args) {
