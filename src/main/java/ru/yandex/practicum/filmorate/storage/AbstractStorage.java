@@ -10,7 +10,7 @@ import java.util.Collection;
 import static ru.yandex.practicum.filmorate.message.ExceptionMessage.OBJECT_NOT_FOUND;
 
 @AllArgsConstructor
-public abstract class AbstractStorage<T>{
+public abstract class AbstractStorage<T> {
     protected final JdbcTemplate jdbcTemplate;
 
     public void add(String sql, Object... args) {
@@ -32,7 +32,7 @@ public abstract class AbstractStorage<T>{
         return jdbcTemplate.query(sql, mapper, args);
     }
 
-    public void update(String sql, Object... args){
+    public void update(String sql, Object... args) {
         jdbcTemplate.update(sql, args);
     }
 
