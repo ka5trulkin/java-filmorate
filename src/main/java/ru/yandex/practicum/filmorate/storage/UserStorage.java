@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.interfaces.storage.Storage;
 import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.sql.Date;
@@ -14,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.Objects;
 
-import static ru.yandex.practicum.filmorate.service.dao.user.UserSql.*;
+import static ru.yandex.practicum.filmorate.sql.UserSql.*;
 
 @Slf4j
 @Repository

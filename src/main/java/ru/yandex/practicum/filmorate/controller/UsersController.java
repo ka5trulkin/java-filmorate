@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.UserService;
+import ru.yandex.practicum.filmorate.interfaces.service.UserService;
 
 import javax.validation.Valid;
 import java.util.Collection;

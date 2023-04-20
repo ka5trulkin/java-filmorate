@@ -8,9 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.interfaces.storage.Storage;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.Genre;
-import ru.yandex.practicum.filmorate.service.dao.film.FilmMapper;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.WARN_ADD_GENRE;
-import static ru.yandex.practicum.filmorate.service.dao.film.FilmSql.*;
+import static ru.yandex.practicum.filmorate.sql.FilmSql.*;
 
 @Slf4j
 @Repository
