@@ -79,10 +79,6 @@ public class FilmStorage extends AbstractStorage<Film> implements Storage<Film> 
         }
     }
 
-    private void incrementRate(long filmId) {
-        super.update(INCREMENT_RATE_SQL.getSql(), filmId);
-    }
-
     @Override
     public Film add(Film film) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
