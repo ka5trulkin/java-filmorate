@@ -14,11 +14,11 @@ public abstract class AbstractStorage<T> {
     protected final JdbcTemplate jdbcTemplate;
 
     public void add(String sql, Object... args) {
-        jdbcTemplate.update(sql, args);
+        this.update(sql, args);
     }
 
     public T get(String sql, RowMapper<T> mapper, Object... args) {
-        return jdbcTemplate.query((sql), mapper, args)
+        return this.getList(sql, mapper, args)
                 .stream()
                 .findAny()
                 .orElseThrow(() -> new NotFoundException(OBJECT_NOT_FOUND.message()));
@@ -32,12 +32,12 @@ public abstract class AbstractStorage<T> {
         return jdbcTemplate.query(sql, mapper, args);
     }
 
-    public void update(String sql, Object... args) {
-        jdbcTemplate.update(sql, args);
+    public int update(String sql, Object... args) {
+        return jdbcTemplate.update(sql, args);
     }
 
     public void delete(String sql, Object... args) {
-        int rowCount = jdbcTemplate.update(sql, args);
+        int rowCount = this.update(sql, args);
         if (rowCount == 0) {
             throw new NotFoundException(OBJECT_NOT_FOUND.message());
         }

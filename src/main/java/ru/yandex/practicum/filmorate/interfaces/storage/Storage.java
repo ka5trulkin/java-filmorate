@@ -9,7 +9,7 @@ public interface Storage<T> extends TinyStorage<T> {
 
     T update(T object);
 
-    void update(String sql, Object... args);
+    int update(String sql, Object... args);
 
     Collection<T> getList(String sql, Object... args);
 
