@@ -16,9 +16,9 @@ public abstract class AbstractService<T, S extends Storage<T>> {
         return storage.add(object);
     }
 
-    public void add(Object... args) {
-        storage.add(args);
-    }
+//    public void add(Object... args) {
+//        storage.add(args);
+//    }
 
     public T update(T object) {
         return storage.update(object);

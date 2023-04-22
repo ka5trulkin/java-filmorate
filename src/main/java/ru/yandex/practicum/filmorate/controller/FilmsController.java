@@ -16,7 +16,7 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 @RestController
 @RequestMapping("/films")
 @AllArgsConstructor
-public class FilmController {
+public class FilmsController {
     private final FilmService service;
 
     @PostMapping

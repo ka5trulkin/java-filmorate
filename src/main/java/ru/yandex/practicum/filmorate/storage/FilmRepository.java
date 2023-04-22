@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.interfaces.storage.FilmRepStorage;
+import ru.yandex.practicum.filmorate.interfaces.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.Genre;
@@ -23,9 +23,9 @@ import static ru.yandex.practicum.filmorate.sql.FilmSql.*;
 
 @Slf4j
 @Repository
-public class FilmStorage extends AbstractStorage<Film> implements FilmRepStorage<Film> {
+public class FilmRepository extends AbstractStorage<Film> implements FilmStorage {
     @Autowired
-    public FilmStorage(JdbcTemplate jdbcTemplate) {
+    public FilmRepository(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 
@@ -131,14 +131,14 @@ public class FilmStorage extends AbstractStorage<Film> implements FilmRepStorage
         this.decrementRate(id, userId);
     }
 
-    @Override
-    public void add(Object... args) {
-        long filmId = (long) Arrays.stream(args).findFirst().orElseThrow();
-        super.add(
-                LIKE_ADD_SQL.getSql(),
-                args);
-        incrementRate(filmId);
-    }
+//    @Override
+//    public void add(Object... args) {
+//        long filmId = (long) Arrays.stream(args).findFirst().orElseThrow();
+//        super.add(
+//                LIKE_ADD_SQL.getSql(),
+//                args);
+//        incrementRate(filmId);
+//    }
 
     @Override
     public Film update(Film film) {

@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.interfaces.storage;
 public interface Storage<T> extends TinyStorage<T> {
     T add(T object);
 
-    void add(Object... args);
+//    void add(Object... args);
 
     T update(T object);
 

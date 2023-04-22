@@ -4,7 +4,7 @@ import ru.yandex.practicum.filmorate.model.film.Film;
 
 import java.util.Collection;
 
-public interface FilmRepStorage<T> extends Storage<T> {
+public interface FilmStorage extends Storage<Film> {
     void addLike(long filmId, long userId);
 
     void removeLike(long id, long userId);

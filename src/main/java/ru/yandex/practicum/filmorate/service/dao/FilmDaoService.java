@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.film.BadFilmLikeException;
 import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistException;
 import ru.yandex.practicum.filmorate.interfaces.service.FilmService;
-import ru.yandex.practicum.filmorate.interfaces.storage.FilmRepStorage;
+import ru.yandex.practicum.filmorate.interfaces.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.service.abstracts.AbstractService;
 
@@ -18,9 +18,9 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmDaoService extends AbstractService<Film, FilmRepStorage<Film>> implements FilmService {
+public class FilmDaoService extends AbstractService<Film, FilmStorage> implements FilmService {
     @Autowired
-    protected FilmDaoService(FilmRepStorage<Film> storage) {
+    protected FilmDaoService(FilmStorage storage) {
         super(storage);
     }
 
