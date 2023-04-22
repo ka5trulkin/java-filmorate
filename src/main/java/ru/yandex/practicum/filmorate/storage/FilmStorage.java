@@ -8,28 +8,36 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.interfaces.storage.Storage;
+import ru.yandex.practicum.filmorate.interfaces.storage.FilmRepStorage;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.Genre;
-import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.WARN_ADD_GENRE;
 import static ru.yandex.practicum.filmorate.sql.FilmSql.*;
 
 @Slf4j
 @Repository
-public class FilmStorage extends AbstractStorage<Film> implements Storage<Film> {
+public class FilmStorage extends AbstractStorage<Film> implements FilmRepStorage<Film> {
     @Autowired
     public FilmStorage(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
+    }
+
+    private void incrementRate(long filmId) {
+        super.update(INCREMENT_RATE_SQL.getSql(), filmId);
+    }
+
+    private void decrementRate(long filmId, long userID) {
+        super.update(
+                DECREMENT_RATE_SQL.getSql(),
+                filmId,
+                userID);
     }
 
     private void updateFilmInDb(Film film) {
@@ -105,6 +113,34 @@ public class FilmStorage extends AbstractStorage<Film> implements Storage<Film> 
     }
 
     @Override
+    public void addLike(long filmId, long userId) {
+        super.add(
+                LIKE_ADD_SQL.getSql(),
+                filmId,
+                userId);
+        incrementRate(filmId);
+
+    }
+
+    @Override
+    public void removeLike(long id, long userId) {
+        super.delete(
+                LIKE_DELETE_SQL.getSql(),
+                id,
+                userId);
+        this.decrementRate(id, userId);
+    }
+
+    @Override
+    public void add(Object... args) {
+        long filmId = (long) Arrays.stream(args).findFirst().orElseThrow();
+        super.add(
+                LIKE_ADD_SQL.getSql(),
+                args);
+        incrementRate(filmId);
+    }
+
+    @Override
     public Film update(Film film) {
         this.updateFilmInDb(film);
         this.putMpaToDb(film, MPA_UPDATE_SQL.getSql());
@@ -115,18 +151,17 @@ public class FilmStorage extends AbstractStorage<Film> implements Storage<Film> 
                 film.getId());
     }
 
-    @Override
-    public Film get(String sql, Object... args) {
-        return super.get(sql, new FilmMapper(), args);
+    public Film get(Object... args) {
+        return super.get(SQL_RECEIVE_BY_ID.getSql(), new FilmMapper(), args);
     }
 
     @Override
-    public Collection<Film> getList(String sql) {
-        return super.getList(sql, new FilmMapper());
+    public Collection<Film> getList() {
+        return super.getList(SQL_RECEIVE_LIST.getSql(), new FilmMapper());
     }
 
     @Override
-    public Collection<Film> getList(String sql, Object[] args) {
-        return super.getList(sql, new FilmMapper(), args);
+    public Collection<Film> getPopularList(int count) {
+        return super.getList(SQL_RECEIVE_POPULAR_FILMS.getSql(), new FilmMapper(), count);
     }
 }

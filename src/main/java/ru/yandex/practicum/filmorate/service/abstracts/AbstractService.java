@@ -1,20 +1,23 @@
 package ru.yandex.practicum.filmorate.service.abstracts;
 
-import lombok.AllArgsConstructor;
 import ru.yandex.practicum.filmorate.interfaces.storage.Storage;
 
 import java.util.Collection;
 
-@AllArgsConstructor
-public abstract class AbstractService<T> {
-    private final Storage<T> storage;
+//@AllArgsConstructor
+public abstract class AbstractService<T, S extends Storage<T>> {
+    protected final S storage;
+
+    public AbstractService(S storage) {
+        this.storage = storage;
+    }
 
     public T add(T object) {
         return storage.add(object);
     }
 
-    public void add(String sql, Object... args) {
-        storage.add(sql, args);
+    public void add(Object... args) {
+        storage.add(args);
     }
 
     public T update(T object) {
@@ -25,19 +28,19 @@ public abstract class AbstractService<T> {
         storage.update(sql, args);
     }
 
-    public T get(String sql, Object... args) {
-        return storage.get(sql, args);
+    public T get(Object... args) {
+        return storage.get(args);
     }
 
-    public Collection<T> getList(String sql) {
-        return storage.getList(sql);
+    public Collection<T> getList() {
+        return storage.getList();
     }
 
-    public Collection<T> getList(String sql, Object... args) {
-        return storage.getList(sql, args);
-    }
+//    public Collection<T> getList(String sql, Object... args) {
+//        return storage.getList(sql, args);
+//    }
 
-    public void delete(String sql, Object... args) {
-        storage.delete(sql, args);
-    }
+//    public void delete(Object... args) {
+//        storage.delete(args);
+//    }
 }

@@ -13,7 +13,7 @@ public abstract class AbstractTinyService<T> {
         return storage.get(sql, args);
     }
 
-    public Collection<T> getList(String sql) {
-        return storage.getList(sql);
+    public Collection<T> getList() {
+        return storage.getList();
     }
 }

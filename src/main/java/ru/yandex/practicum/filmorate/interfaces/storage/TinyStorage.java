@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.interfaces.storage;
 import java.util.Collection;
 
 public interface TinyStorage<T> {
-    T get(String sql, Object... args);
+    T get(Object... args);
 
-    Collection<T> getList(String sql);
+    Collection<T> getList();
 }
