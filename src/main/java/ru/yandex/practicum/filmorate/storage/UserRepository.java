@@ -94,9 +94,4 @@ public class UserRepository extends AbstractStorage<User> implements UserStorage
                 id,
                 friendId);
     }
-
-//    @Override
-//    public Collection<User> getList(String sql, Object... args) {
-//        return super.getList(sql, new BeanPropertyRowMapper<>(User.class), args);
-//    }
 }

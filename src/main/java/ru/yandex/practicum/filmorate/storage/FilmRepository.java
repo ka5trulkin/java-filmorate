@@ -131,15 +131,6 @@ public class FilmRepository extends AbstractStorage<Film> implements FilmStorage
         this.decrementRate(id, userId);
     }
 
-//    @Override
-//    public void add(Object... args) {
-//        long filmId = (long) Arrays.stream(args).findFirst().orElseThrow();
-//        super.add(
-//                LIKE_ADD_SQL.getSql(),
-//                args);
-//        incrementRate(filmId);
-//    }
-
     @Override
     public Film update(Film film) {
         this.updateFilmInDb(film);
