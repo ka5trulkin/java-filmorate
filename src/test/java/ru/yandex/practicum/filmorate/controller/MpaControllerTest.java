@@ -30,7 +30,7 @@ class MpaControllerTest {
     private Mpa mpa;
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         mpa = Mpa.builder()
                 .id(777)
                 .name("New Mpa")

@@ -30,7 +30,7 @@ class GenreControllerTest {
     private Genre genre;
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         genre = Genre.builder()
                 .id(777)
                 .name("New Genre")
