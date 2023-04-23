@@ -2,13 +2,12 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.model.film.Mpa;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.interfaces.service.MpaService;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 import static ru.yandex.practicum.filmorate.message.MpaLogMessage.*;
@@ -19,6 +18,19 @@ import static ru.yandex.practicum.filmorate.message.MpaLogMessage.*;
 @AllArgsConstructor
 public class MpaController {
     private final MpaService service;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mpa add(@Valid @RequestBody Mpa mpa) {
+        log.info(REQUEST_ADD_MPA.message(), mpa.getId(), mpa.getName());
+        return service.add(mpa);
+    }
+
+    @PutMapping
+    public Mpa update(@Valid @RequestBody Mpa mpa) {
+        log.info(REQUEST_UPDATE_MPA.message(), mpa.getId(), mpa.getName());
+        return service.update(mpa);
+    }
 
     @GetMapping("/{id}")
     public Mpa get(@PathVariable("id") long id) {

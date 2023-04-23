@@ -26,18 +26,18 @@ public class FilmMapper implements RowMapper<Film> {
     private void fillMpa(Film film, ResultSet rs) throws SQLException {
         film.setMpa(
                 new Mpa(
-                        rs.getShort("mpaId"),
+                        rs.getInt("mpaId"),
                         rs.getString("mpaName")));
     }
 
     private void fillGenre(Film film, ResultSet rs) throws SQLException {
-        if (rs.getShort("genreId") > 0) {
+        if (rs.getInt("genreId") > 0) {
             int counter = 0;
             do {
                 counter++;
                 film.getGenres().add(
                         new Genre(
-                                rs.getShort("genreId"),
+                                rs.getInt("genreId"),
                                 rs.getString("genreName")));
                 if ((rs.isLast()) || (counter == rs.getInt("genreCounter"))) {
                     return;

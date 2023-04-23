@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.dao;
+package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.exception.film.FilmLikeAlreadyExistExceptio
 import ru.yandex.practicum.filmorate.interfaces.service.FilmService;
 import ru.yandex.practicum.filmorate.interfaces.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.service.abstracts.AbstractService;
 
 import java.util.Collection;
 
@@ -18,9 +17,9 @@ import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
 @Slf4j
 @Service
-public class FilmDaoService extends AbstractService<Film, FilmStorage> implements FilmService {
+public class FilmServiceImpl extends AbstractService<Film, FilmStorage> implements FilmService {
     @Autowired
-    protected FilmDaoService(FilmStorage storage) {
+    protected FilmServiceImpl(FilmStorage storage) {
         super(storage);
     }
 

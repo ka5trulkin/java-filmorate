@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.dao;
+package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.exception.user.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.interfaces.service.UserService;
 import ru.yandex.practicum.filmorate.interfaces.storage.UserStorage;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.service.abstracts.AbstractService;
 
 import java.util.Collection;
 
@@ -17,9 +16,9 @@ import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
 @Slf4j
 @Service
-public class UserDaoService extends AbstractService<User, UserStorage> implements UserService {
+public class UserServiceImpl extends AbstractService<User, UserStorage> implements UserService {
     @Autowired
-    protected UserDaoService(UserStorage storage) {
+    protected UserServiceImpl(UserStorage storage) {
         super(storage);
     }
 

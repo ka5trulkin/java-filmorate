@@ -21,6 +21,18 @@ public class GenreRepository extends AbstractStorage<Genre> implements GenreStor
     }
 
     @Override
+    public Genre add(Genre genre) {
+        super.add(GENRE_PUT_SQL.getSql(), genre.getId(), genre.getName());
+        return super.get(GENRE_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Genre.class), genre.getId());
+    }
+
+    @Override
+    public Genre update(Genre genre) {
+        super.update(GENRE_PUT_SQL.getSql(), genre.getId(), genre.getName());
+        return super.get(GENRE_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Genre.class), genre.getId());
+    }
+
+    @Override
     public Genre get(Object... args) {
         return super.get(GENRE_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Genre.class), args);
     }

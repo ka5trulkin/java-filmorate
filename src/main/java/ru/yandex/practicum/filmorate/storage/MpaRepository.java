@@ -21,6 +21,18 @@ public class MpaRepository extends AbstractStorage<Mpa> implements MpaStorage {
     }
 
     @Override
+    public Mpa add(Mpa mpa) {
+        super.add(MPA_PUT_SQL.getSql(), mpa.getId(), mpa.getName());
+        return super.get(MPA_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Mpa.class), mpa.getId());
+    }
+
+    @Override
+    public Mpa update(Mpa mpa) {
+        super.update(MPA_PUT_SQL.getSql(), mpa.getId(), mpa.getName());
+        return super.get(MPA_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Mpa.class), mpa.getId());
+    }
+
+    @Override
     public Mpa get(Object... args) {
         return super.get(MPA_GET_SQL.getSql(), new BeanPropertyRowMapper<>(Mpa.class), args);
     }

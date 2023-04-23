@@ -1,16 +1,19 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,11 +26,49 @@ class MpaControllerTest {
     protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
-    private final String indexMpa = "/mpa";
+    private final String urlPath = "/mpa";
+    private Mpa mpa;
+
+    @BeforeEach
+    void BeforeEach() {
+        mpa = Mpa.builder()
+                .id(777)
+                .name("New Mpa")
+                .build();
+    }
+
+    @Test
+    void add() throws Exception {
+        mockMvc.perform(post(urlPath)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(mpa)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("777"))
+                .andExpect(jsonPath("$.name").value("New Mpa"));
+    }
+
+    @Test
+    void update() throws Exception {
+        mockMvc.perform(post(urlPath)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(mpa)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("777"))
+                .andExpect(jsonPath("$.name").value("New Mpa"));
+        String updName = "UpdMpa";
+        final Mpa updMpa = mpa;
+        updMpa.setName(updName);
+        mockMvc.perform(put(urlPath)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updMpa)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(mpa.getId()))
+                .andExpect(jsonPath("$.name").value(updName));
+    }
 
     @Test
     void getMpaList() throws Exception {
-        mockMvc.perform(get(indexMpa))
+        mockMvc.perform(get(urlPath))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(5)))
@@ -45,7 +86,7 @@ class MpaControllerTest {
 
     @Test
     void getMpaById() throws Exception {
-        mockMvc.perform(get(String.format("%s/%d", indexMpa, 4)))
+        mockMvc.perform(get(String.format("%s/%d", urlPath, 4)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(4))
                 .andExpect(jsonPath("$.name").value("R"));

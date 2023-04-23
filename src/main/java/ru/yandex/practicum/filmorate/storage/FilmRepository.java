@@ -72,7 +72,7 @@ public class FilmRepository extends AbstractStorage<Film> implements FilmStorage
                         @Override
                         public void setValues(PreparedStatement ps, int i) throws SQLException {
                             long filmId = film.getId();
-                            short genreId = genres.get(i).getId();
+                            int genreId = genres.get(i).getId();
                             ps.setLong(1, filmId);
                             ps.setLong(2, genreId);
                         }
