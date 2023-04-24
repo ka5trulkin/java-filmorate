@@ -51,7 +51,7 @@ public class FilmRepository extends AbstractStorage<Film> implements FilmStorage
                 film.getId());
     }
 
-    private void updateGenreInFilm(Film film) {
+    private void updateGenreInDb(Film film) {
         super.update(GENRE_DELETE_SQL.getSql(), film.getId());
         this.addGenreToDb(film);
     }
@@ -119,7 +119,6 @@ public class FilmRepository extends AbstractStorage<Film> implements FilmStorage
                 filmId,
                 userId);
         incrementRate(filmId);
-
     }
 
     @Override
@@ -135,7 +134,7 @@ public class FilmRepository extends AbstractStorage<Film> implements FilmStorage
     public Film update(Film film) {
         this.updateFilmInDb(film);
         this.putMpaToDb(film, MPA_UPDATE_SQL.getSql());
-        this.updateGenreInFilm(film);
+        this.updateGenreInDb(film);
         return super.get(
                 SQL_RECEIVE_BY_ID.getSql(),
                 new FilmMapper(),
