@@ -42,8 +42,8 @@
 **MPA** - список Mpa
 - **id** - ID Mpa
 - **name** - название Mpa
-- 
-  **Film_mpa** - данные Mpa фильма
+
+**Film_mpa** - данные Mpa фильма
 - **film_id** - ID фильма
 - **mpa_id** - ID Mpa
 
