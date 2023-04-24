@@ -22,14 +22,14 @@ public class ErrorHandler {
 
     @ExceptionHandler(RequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseError dataAlreadyExist(RequestException exception) {
+    public ResponseError badRequest(RequestException exception) {
         log.error(exception.getMessage(), exception);
         return new ResponseError(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseError noData(NotFoundException exception) {
+    public ResponseError notFound(NotFoundException exception) {
         log.error(exception.getMessage(), exception);
         return new ResponseError(exception.getMessage(), HttpStatus.NOT_FOUND);
     }

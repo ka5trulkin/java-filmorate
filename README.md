@@ -8,63 +8,92 @@
 
 ### Что хранится в таблице
 
-**User** - данные о пользователе
-- **user_id** - ID пользователя
+**User_DB** - данные о пользователе
+- **id** - ID пользователя
 - **name** - имя
 - **email** - почта
 - **login** - логин
 - **birthday** - дата рождения
 
-**Film** - данные о фильме
-- **film_id** - ID фильма
+**Film_DB** - данные о фильме
+- **id** - ID фильма
 - **name** - название фильма
 - **description** - описание
 - **release_date** - дата выпуска
 - **duration** - продолжительность
-- **rating_id** - ID рейтинга
+- **rate** - рейтинг фильма
 
-**Friend** - список друзей
-- **friend_one_id** - ID первого друга
-- **friend_two_id** - ID второго друга
-- **status** - статус дружбы
+**Friends** - список друзей
+- **friend_one** - ID первого друга
+- **friend_two** - ID второго друга
 
-**Film_likes** - данные о лайках фильма
+**Likes** - данные о лайках фильма
 - **film_id** - ID фильма
 - **user_id** - ID пользователя, который поставил лайк
 
 **Genre** - список жанров
-- **genre_id** - ID жанра
+- **id** - ID жанра
 - **name** - название жанра
 
 **Film_genre** - данные о жанре фильма
 - **film_id** - ID фильма
 - **genre_id** - ID жанра
 
-**Rating** - список жанров
-- **rating_id** - ID рейтинга
-- **name** - название рейтинга
+**MPA** - список Mpa
+- **id** - ID Mpa
+- **name** - название Mpa
+- 
+  **Film_mpa** - данные Mpa фильма
+- **film_id** - ID фильма
+- **mpa_id** - ID Mpa
 
 ### Примеры SQL запросов
 
 **Получение данных о фильме**
 ```
-SELECT name, 
-    description, 
-    release_date, 
-    duration 
-FROM film 
-WHERE film_id=1
-GROUP BY name 
-ORDER BY name;
+SELECT
+    f.ID,
+    f.NAME,
+    f.DESCRIPTION,
+    f.RELEASE_DATE,
+    f.DURATION,
+    f.RATE,
+    m.ID mpaId,
+    m.NAME mpaName,
+    g.ID genreId,
+    g.NAME genreName,
+    (SELECT COUNT(GENRE_ID) FROM FILM_GENRE WHERE f.ID = FILM_ID) genreCounter
+FROM FILM_DB f
+    LEFT JOIN FILM_GENRE fg ON f.ID = fg.FILM_ID
+    LEFT JOIN GENRE g ON fg.GENRE_ID = g.ID
+    LEFT JOIN FILM_MPA fm ON fm.FILM_ID = f.ID
+    LEFT JOIN MPA m ON fm.MPA_ID = m.ID
+WHERE f.ID = ?
 ```
 **Получение данных о пользователе**
 ```
-SELECT name, 
-    email, 
-    login, 
-    birthday 
-FROM user
-WHERE user_id=1
-GROUP BY name 
-ORDER BY name;
+SELECT
+    ID, 
+    NAME, 
+    EMAIL, 
+    LOGIN, 
+    BIRTHDAY 
+FROM USER_DB
+WHERE id= ?
+```
+**Получение данных о жанре**
+```
+SELECT 
+    ID, 
+    NAME 
+FROM GENRE 
+WHERE ID = ?
+```
+**Получение данных Mpa**
+```
+SELECT 
+    ID, 
+    NAME 
+FROM MPA 
+WHERE ID = ?
 ```

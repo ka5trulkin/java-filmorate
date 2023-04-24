@@ -1,23 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.interfaces.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 import static ru.yandex.practicum.filmorate.message.UserLogMessage.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
-@Slf4j
-public class UserController {
-    @Autowired
-    private UserService service;
+@AllArgsConstructor
+public class UsersController {
+    private final UserService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getList() {
+    public Collection<User> getList() {
         log.info(GET_USER_LIST.message());
         return service.getList();
     }
@@ -57,13 +57,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getFriendList(@PathVariable long id) {
+    public Collection<User> getFriendList(@PathVariable long id) {
         log.info(REQUEST_GET_USER_FRIEND_LIST.message(), id);
         return service.getFriendList(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriendList(@PathVariable long id, @PathVariable long otherId) {
+    public Collection<User> getCommonFriendList(@PathVariable long id, @PathVariable long otherId) {
         log.info(REQUEST_GET_USER_COMMON_FRIEND_LIST.message(), id, otherId);
         return service.getCommonFriendList(id, otherId);
     }

@@ -1,23 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.interfaces.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Collection;
 
 import static ru.yandex.practicum.filmorate.message.FilmLogMessage.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/films")
-@Slf4j
-public class FilmController {
-    @Autowired
-    private FilmService service;
+@AllArgsConstructor
+public class FilmsController {
+    private final FilmService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,13 +33,13 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    protected Film get(@PathVariable("id") long id) {
+    public Film get(@PathVariable("id") long id) {
         log.info(REQUEST_GET_FILM.message(), id);
         return service.get(id);
     }
 
     @GetMapping
-    public List<Film> getList() {
+    public Collection<Film> getList() {
         log.info(REQUEST_GET_FILM_LIST.message());
         return service.getList();
     }
@@ -57,7 +57,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularList(@RequestParam(defaultValue = "10") long count) {
+    public Collection<Film> getPopularList(@RequestParam(defaultValue = "10") int count) {
         log.info(REQUEST_GET_POPULAR_FILM_LIST.message());
         return service.getPopularList(count);
     }

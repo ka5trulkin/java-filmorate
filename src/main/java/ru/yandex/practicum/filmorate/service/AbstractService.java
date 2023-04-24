@@ -1,16 +1,13 @@
 package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.model.IdHolder;
-import ru.yandex.practicum.filmorate.storage.Storage;
+import lombok.AllArgsConstructor;
+import ru.yandex.practicum.filmorate.interfaces.storage.Storage;
 
-import java.util.List;
+import java.util.Collection;
 
-public abstract class AbstractService<T extends IdHolder> {
-    private final Storage<T> storage;
-
-    protected AbstractService(Storage<T> storage) {
-        this.storage = storage;
-    }
+@AllArgsConstructor
+public abstract class AbstractService<T, S extends Storage<T>> {
+    protected final S storage;
 
     public T add(T object) {
         return storage.add(object);
@@ -20,11 +17,11 @@ public abstract class AbstractService<T extends IdHolder> {
         return storage.update(object);
     }
 
-    public T get(long id) {
-        return storage.get(id);
+    public T get(Object... args) {
+        return storage.get(args);
     }
 
-    public List<T> getList() {
+    public Collection<T> getList() {
         return storage.getList();
     }
 }

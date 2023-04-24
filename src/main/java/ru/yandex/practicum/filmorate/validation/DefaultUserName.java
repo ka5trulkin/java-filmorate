@@ -6,15 +6,15 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({FIELD})
+@Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = NotContainSpaceValidator.class)
+@Constraint(validatedBy = DefaultUserNameValidator.class)
 @Documented
-public @interface NotContainSpace {
-    String message() default "Поле не должно содержать пробелы";
+public @interface DefaultUserName {
+    String message() default "Name не должно быть пустым";
 
     Class<?>[] groups() default {};
 
